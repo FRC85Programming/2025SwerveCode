@@ -11,15 +11,15 @@
       "style": "0",
       "userScale": "2",
       "width": "1280",
-      "xpos": "193",
-      "ypos": "106"
+      "xpos": "473",
+      "ypos": "348"
     }
   },
   "Window": {
     "###/FMSInfo": {
       "Collapsed": "0",
       "Pos": "60,60",
-      "Size": "181,167"
+      "Size": "254,221"
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
@@ -29,12 +29,12 @@
     "###FMS": {
       "Collapsed": "0",
       "Pos": "4,414",
-      "Size": "169,184"
+      "Size": "235,244"
     },
     "###Joysticks": {
       "Collapsed": "0",
       "Pos": "250,465",
-      "Size": "796,189"
+      "Size": "1156,248"
     },
     "###Keyboard 0 Settings": {
       "Collapsed": "0",
@@ -59,12 +59,12 @@
     "###System Joysticks": {
       "Collapsed": "0",
       "Pos": "205,308",
-      "Size": "192,218"
+      "Size": "273,290"
     },
     "###Timing": {
       "Collapsed": "0",
       "Pos": "5,150",
-      "Size": "135,219"
+      "Size": "188,273"
     },
     "Debug##Default": {
       "Collapsed": "0",
@@ -74,7 +74,7 @@
     "Robot State": {
       "Collapsed": "0",
       "Pos": "7,20",
-      "Size": "92,116"
+      "Size": "126,152"
     }
   }
 }

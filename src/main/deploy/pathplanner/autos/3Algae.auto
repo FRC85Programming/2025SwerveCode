@@ -1,0 +1,61 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 7.725657894736843,
+      "y": 2.3041353383458643
+    },
+    "rotation": -71.93952806380089
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3AlgaePath1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3AlgaePath2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceToScore"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScoreToSource"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceToScore"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScoreToSource"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceToScore"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
