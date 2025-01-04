@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -20,6 +22,9 @@ import frc.robot.Constants.PositionConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import swervelib.SwerveInputStream;
 
 /**
@@ -109,6 +114,8 @@ public class RobotContainer
 
   Command driveSetpointGenSim = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngleSim);
 
+  SendableChooser<Command> autoChooser = new SendableChooser<>();
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -116,6 +123,7 @@ public class RobotContainer
   {
     // Configure the trigger bindings
     configureBindings();
+    configureAutoChooser();
   }
 
   /**
@@ -162,6 +170,12 @@ public class RobotContainer
 
   }
 
+  public void configureAutoChooser() {
+    autoChooser.addOption("Circle Auto", new PathPlannerAuto("CircleAuto"));
+
+    SmartDashboard.putData(autoChooser);
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -170,7 +184,7 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New Auto");
+    return autoChooser.getSelected();
   }
 
   public void setDriveMode()

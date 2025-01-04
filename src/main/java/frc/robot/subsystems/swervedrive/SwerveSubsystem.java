@@ -314,11 +314,14 @@ public class SwerveSubsystem extends SubsystemBase
    * @param pathName PathPlanner path name.
    * @return {@link AutoBuilder#followPath(PathPlannerPath)} path command.
    */
-  public Command getAutonomousCommand(String pathName)
+
+  // MOVED TO ROBOT CONTAINER
+  
+  /*public Command getAutonomousCommand(String pathName)
   {
     // Create a path following command using AutoBuilder. This will also trigger event markers.
     return new PathPlannerAuto(pathName);
-  }
+  }*/
 
   /**
    * Use PathPlanner Path finding to go to a point on the field.
