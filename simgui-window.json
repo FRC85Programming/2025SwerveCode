@@ -11,8 +11,8 @@
       "style": "0",
       "userScale": "2",
       "width": "1280",
-      "xpos": "193",
-      "ypos": "106"
+      "xpos": "412",
+      "ypos": "560"
     }
   },
   "Window": {
@@ -23,13 +23,18 @@
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
-      "Pos": "166,24",
+      "Pos": "245,35",
       "Size": "740,373"
+    },
+    "###/SmartDashboard/SendableChooser[0]": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "254,54"
     },
     "###FMS": {
       "Collapsed": "0",
       "Pos": "4,414",
-      "Size": "169,184"
+      "Size": "283,140"
     },
     "###Joysticks": {
       "Collapsed": "0",
@@ -43,7 +48,7 @@
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "399,253",
+      "Pos": "453,426",
       "Size": "750,236"
     },
     "###NetworkTables Info": {

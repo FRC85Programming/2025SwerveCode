@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -47,5 +49,25 @@ public final class Constants
     public static final double LEFT_Y_DEADBAND = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 6;
+  }
+
+  public static class PositionConstants
+  {
+    // Top right side of the reef is position 1
+    // Positions are labled clockwise from position 1
+
+    // Reef positions
+    public static final Pose2d reefPosition1 = new Pose2d(5.2, 5.2, new Rotation2d(60));
+    public static final Pose2d reefPosition2 = new Pose2d(5.9, 4, new Rotation2d(0));
+    public static final Pose2d reefPosition3 = new Pose2d(5.2, 2.8, new Rotation2d(-60));
+    public static final Pose2d reefPosition4 = new Pose2d(3.65, 2.65, new Rotation2d(70));
+    public static final Pose2d reefPosition5 = new Pose2d(3.1, 4, new Rotation2d(180));
+    public static final Pose2d reefPosition6 = new Pose2d(3.7, 5.3, new Rotation2d(120));
+
+    // Source positions
+    public static final Pose2d sourcePosition1 = new Pose2d(1.2, 7, new Rotation2d(125));
+    public static final Pose2d sourcePosition2 = new Pose2d(1.2, 1, new Rotation2d(-125));
+
+
   }
 }
