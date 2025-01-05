@@ -31,11 +31,15 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
+import frc.robot.Constants.PositionConstants;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +48,9 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+
+import javax.swing.text.Position;
+
 import org.json.simple.parser.ParseException;
 import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
@@ -75,6 +82,8 @@ public class SwerveSubsystem extends SubsystemBase
    * PhotonVision class to keep an accurate odometry.
    */
   private       Vision              vision;
+
+  SendableChooser<Pose2d> scorePositionChooser = new SendableChooser<>();
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -125,7 +134,10 @@ public class SwerveSubsystem extends SubsystemBase
       // Stop the odometry thread if we are using vision that way we can synchronize updates better.
       swerveDrive.stopOdometryThread();
     }
+
     setupPathPlanner();
+
+    configureScorePositionChooser();
   }
 
   /**
@@ -791,5 +803,26 @@ public class SwerveSubsystem extends SubsystemBase
   public SwerveDrive getSwerveDrive()
   {
     return swerveDrive;
+  }
+
+  // Set up a smart dashboard dropdown to choose a position to drive to
+  private void configureScorePositionChooser() {
+    scorePositionChooser.addOption("Position 1", PositionConstants.reefPosition1);
+    scorePositionChooser.addOption("Position 2", PositionConstants.reefPosition2);
+    scorePositionChooser.addOption("Position 3", PositionConstants.reefPosition3);
+    scorePositionChooser.addOption("Position 4", PositionConstants.reefPosition4);
+    scorePositionChooser.addOption("Position 5", PositionConstants.reefPosition5);
+    scorePositionChooser.addOption("Position 6", PositionConstants.reefPosition6);
+
+    SmartDashboard.putData(scorePositionChooser);
+  }
+
+  public Command driveToScorePosition() {
+    return new InstantCommand(() -> {
+        Pose2d selectedPose = scorePositionChooser.getSelected();
+        if (selectedPose != null) {
+            driveToPose(selectedPose).schedule(); // Schedule the command dynamically
+        }
+    });
   }
 }
