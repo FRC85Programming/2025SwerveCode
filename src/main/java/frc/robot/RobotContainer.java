@@ -112,7 +112,7 @@ public class RobotContainer
                                                                                                       (Math.PI * 2))
                                                                      .headingWhile(true);
 
-  Command driveFieldOrientedDirectAngleSim = drivebase.driveFieldOriented(driveDirectAngleSim);
+  Command driveFieldOrientedDirectAngleSim = drivebase.driveFieldOriented(driveAngularVelocitySim);
 
   Command driveSetpointGenSim = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngleSim);
 
