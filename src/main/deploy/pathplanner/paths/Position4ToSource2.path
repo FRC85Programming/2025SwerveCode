@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 3.6512414383561644,
+        "y": 2.6426369863013703
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 3.155393835616438,
+        "y": 2.2369434931506853
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ReefPosition4"
     },
     {
       "anchor": {
-        "x": 3.831549657534247,
-        "y": 5.257106164383561
+        "x": 1.4124143835616438,
+        "y": 1.079965753424658
       },
       "prevControl": {
-        "x": 4.369113869863009,
-        "y": 5.294670376712328
+        "x": 1.7730308219178081,
+        "y": 1.3804794520547943
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Source2"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 119.27525427725259
+    "rotation": 51.74557964748283
   },
   "reversed": false,
-  "folder": null,
+  "folder": "LowAutos",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 58.81502534126159
   },
   "useDefaultConstraints": true
 }

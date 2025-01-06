@@ -52,6 +52,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -258,6 +259,7 @@ public class SwerveDrive
                                                                                   KilogramSquareMeters.of(0.02),
                                                                                   config.physicalCharacteristics.wheelGripCoefficientOfFriction)
                                                                                                );
+
       mapleSimDrive = new SwerveDriveSimulation(simulationConfig, startingPose);
 
       // feed module simulation instances to modules
@@ -731,7 +733,6 @@ public class SwerveDrive
   /**
    * Drive the robot using the {@link SwerveModuleState}, it is recommended to have
    * {@link SwerveDrive#setCosineCompensator(boolean)} set to false for this.<br/>
-   * <p>
    *
    * @param robotRelativeVelocity Robot relative {@link ChassisSpeeds}
    * @param states                Corresponding {@link SwerveModuleState} to use (not checked against the

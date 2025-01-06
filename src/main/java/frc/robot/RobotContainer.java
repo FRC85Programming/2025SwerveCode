@@ -175,8 +175,10 @@ public class RobotContainer
   }
 
    public void configureAutoChooser() {
-    autoChooser.addOption("1Algae", new PathPlannerAuto("1Algae"));
-    autoChooser.addOption("3Algae", new PathPlannerAuto("3Algae"));
+    autoChooser.addOption("1CoralLow", new PathPlannerAuto("1CoralLow"));
+    autoChooser.addOption("3CoralLow", new PathPlannerAuto("3CoralLow"));
+    autoChooser.addOption("1CoralHigh", new PathPlannerAuto("1CoralHigh"));
+    autoChooser.addOption("3CoralHigh", new PathPlannerAuto("3CoralHigh"));
 
 
     SmartDashboard.putData(autoChooser);
