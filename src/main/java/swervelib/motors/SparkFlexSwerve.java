@@ -445,17 +445,13 @@ public class SparkFlexSwerve extends SwerveMotor
       configureSparkFlex(() ->
                              pid.setReference(
                                  setpoint,
-                                 ControlType.kVelocity,
-                                 pidSlot,
-                                 feedforward));
+                                 ControlType.kVelocity));
     } else
     {
       configureSparkFlex(() ->
                              pid.setReference(
                                  setpoint,
-                                 ControlType.kPosition,
-                                 pidSlot,
-                                 feedforward));
+                                 ControlType.kPosition));
       if (SwerveDriveTelemetry.isSimulation)
       {
         encoder.setPosition(setpoint);

@@ -57,6 +57,8 @@ import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
+
 import swervelib.encoders.CANCoderSwerve;
 import swervelib.imu.Pigeon2Swerve;
 import swervelib.imu.SwerveIMU;
@@ -243,7 +245,7 @@ public class SwerveDrive
                                                                               .withRobotMass(Kilograms.of(config.physicalCharacteristics.robotMassKg))
                                                                               .withCustomModuleTranslations(config.moduleLocationsMeters)
                                                                               .withGyro(config.getGyroSim())
-                                                                              .withSwerveModule(() -> new SwerveModuleSimulation(
+                                                                              .withSwerveModule(new SwerveModuleSimulationConfig(
                                                                                   config.getDriveMotorSim(),
                                                                                   config.getAngleMotorSim(),
                                                                                   config.physicalCharacteristics.conversionFactor.drive.gearRatio,
@@ -254,8 +256,8 @@ public class SwerveDrive
                                                                                       config.physicalCharacteristics.conversionFactor.drive.diameter /
                                                                                       2),
                                                                                   KilogramSquareMeters.of(0.02),
-                                                                                  config.physicalCharacteristics.wheelGripCoefficientOfFriction));
-
+                                                                                  config.physicalCharacteristics.wheelGripCoefficientOfFriction)
+                                                                                               );
       mapleSimDrive = new SwerveDriveSimulation(simulationConfig, startingPose);
 
       // feed module simulation instances to modules

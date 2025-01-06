@@ -19,7 +19,7 @@
     "###/FMSInfo": {
       "Collapsed": "0",
       "Pos": "60,60",
-      "Size": "181,167"
+      "Size": "254,221"
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
@@ -29,17 +29,17 @@
     "###/SmartDashboard/SendableChooser[0]": {
       "Collapsed": "0",
       "Pos": "60,60",
-      "Size": "254,54"
+      "Size": "403,66"
     },
     "###FMS": {
       "Collapsed": "0",
       "Pos": "4,414",
-      "Size": "283,140"
+      "Size": "235,244"
     },
     "###Joysticks": {
       "Collapsed": "0",
       "Pos": "250,465",
-      "Size": "796,189"
+      "Size": "1156,248"
     },
     "###Keyboard 0 Settings": {
       "Collapsed": "0",
@@ -64,12 +64,12 @@
     "###System Joysticks": {
       "Collapsed": "0",
       "Pos": "205,308",
-      "Size": "192,218"
+      "Size": "273,290"
     },
     "###Timing": {
       "Collapsed": "0",
       "Pos": "5,150",
-      "Size": "135,219"
+      "Size": "188,273"
     },
     "Debug##Default": {
       "Collapsed": "0",
@@ -79,7 +79,7 @@
     "Robot State": {
       "Collapsed": "0",
       "Pos": "7,20",
-      "Size": "92,116"
+      "Size": "137,152"
     }
   }
 }
