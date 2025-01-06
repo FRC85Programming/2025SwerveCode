@@ -124,10 +124,10 @@ public class ThriftyNovaSwerve extends SwerveMotor
       configureCANStatusFrames(0.25, 0.1, 0.25, 0.5, 0.50);
       motor.setSoftLimits(0, 0);
       configurePIDF(new PIDFConfig());
-      motor.pid1.setP(0)
-          .pid1.setI(0)
-          .pid1.setD(0)
-          .pid1.setFF(0.0);
+      motor.pid1.setP(0);
+      motor.pid1.setI(0);
+      motor.pid1.setD(0);
+      motor.pid1.setFF(0.0);
       DriverStation.reportWarning("Factory defaults not implemented for ThriftyNovaSwerve", true);
       factoryDefaultOccurred = true;
     }
@@ -210,7 +210,9 @@ public class ThriftyNovaSwerve extends SwerveMotor
   @Override
   public void configurePIDF(PIDFConfig config)
   {
-    motor.pid0.setP(config.p).pid0.setI(config.i).pid0.setD(config.d);
+    motor.pid0.setP(config.p);
+    motor.pid0.setI(config.i);
+    motor.pid0.setD(config.d);
     checkErrors("Configuring PIDF failed: ");
   }
 
