@@ -1,0 +1,55 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StartToPositionI"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PositionIToSource1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Source1ToPositionK"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PositionKToSource1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Source1ToPositionL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PositionLToSource1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Source1ToPositionL"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

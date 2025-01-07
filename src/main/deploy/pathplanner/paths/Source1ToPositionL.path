@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.753914141414142,
-        "y": 5.326010101010101
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 3.518478663515433,
-        "y": 5.41009420025964
-      },
-      "isLocked": false,
-      "linkedName": "ReefPosition6"
-    },
-    {
-      "anchor": {
         "x": 1.5279671717171714,
         "y": 7.104734848484849
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.8023989898989896,
+        "y": 6.9014520202020195
+      },
+      "isLocked": false,
+      "linkedName": "Source1"
+    },
+    {
+      "anchor": {
+        "x": 3.6319444444444446,
+        "y": 5.193876262626263
+      },
       "prevControl": {
-        "x": 1.934532828282828,
-        "y": 6.820138888888889
+        "x": 3.418497474747475,
+        "y": 5.3768308080808085
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Source1"
+      "linkedName": "ReefPositionL"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -54.94057303311306
+    "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": "HighAutos",
+  "folder": "4CoralHigh",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -60.689992929083964
+    "rotation": -55.0
   },
   "useDefaultConstraints": true
 }

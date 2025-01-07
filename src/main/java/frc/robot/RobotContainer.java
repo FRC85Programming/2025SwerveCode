@@ -179,6 +179,7 @@ public class RobotContainer
     autoChooser.addOption("3CoralLow", new PathPlannerAuto("3CoralLow"));
     autoChooser.addOption("1CoralHigh", new PathPlannerAuto("1CoralHigh"));
     autoChooser.addOption("3CoralHigh", new PathPlannerAuto("3CoralHigh"));
+    autoChooser.addOption("4CoralHigh", new PathPlannerAuto("4CoralHigh"));
 
 
     SmartDashboard.putData(autoChooser);
