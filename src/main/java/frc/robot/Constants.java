@@ -57,12 +57,20 @@ public final class Constants
     // Positions are labled clockwise from position 1
 
     // Reef positions
-    public static final Pose2d reefPosition1 = new Pose2d(5.3, 5.4, new Rotation2d(Math.toRadians(240)));
-    public static final Pose2d reefPosition2 = new Pose2d(6.1, 4, new Rotation2d(Math.toRadians(180)));
-    public static final Pose2d reefPosition3 = new Pose2d(5.3, 2.6, new Rotation2d(Math.toRadians(120)));
-    public static final Pose2d reefPosition4 = new Pose2d(3.75, 2.8, new Rotation2d(Math.toRadians(60)));
-    public static final Pose2d reefPosition5 = new Pose2d(2.85, 4, new Rotation2d(Math.toRadians(0)));
-    public static final Pose2d reefPosition6 = new Pose2d(3.75, 5.25, new Rotation2d(Math.toRadians(300)));
+    public static final Pose2d reefPositionA = new Pose2d(3.150, 4.19, new Rotation2d(Math.toRadians(0)));
+    public static final Pose2d reefPositionB = new Pose2d(3.150, 3.855, new Rotation2d(Math.toRadians(0)));
+    public static final Pose2d reefPositionC = new Pose2d(3.675, 2.950, new Rotation2d(Math.toRadians(60)));
+    public static final Pose2d reefPositionD = new Pose2d(3.960, 2.790, new Rotation2d(Math.toRadians(60)));
+    public static final Pose2d reefPositionE = new Pose2d(5.00, 2.790, new Rotation2d(Math.toRadians(120)));
+    public static final Pose2d reefPositionF = new Pose2d(5.300, 2.95, new Rotation2d(Math.toRadians(120)));
+    public static final Pose2d reefPositionG = new Pose2d(5.82, 3.855, new Rotation2d(Math.toRadians(120)));
+    public static final Pose2d reefPositionH = new Pose2d(5.82, 4.19, new Rotation2d(Math.toRadians(120)));
+    public static final Pose2d reefPositionI = new Pose2d(5.300, 5.1, new Rotation2d(Math.toRadians(-120)));
+    public static final Pose2d reefPositionJ = new Pose2d(5.0, 5.26, new Rotation2d(Math.toRadians(-120)));
+    public static final Pose2d reefPositionK = new Pose2d(3.97, 5.26, new Rotation2d(Math.toRadians(-60)));
+    public static final Pose2d reefPositionL = new Pose2d(3.68, 5.1, new Rotation2d(Math.toRadians(-60)));
+
+
 
     // Source positions
     public static final Pose2d sourcePosition1 = new Pose2d(1, 6.9, new Rotation2d(Math.toRadians(305)));

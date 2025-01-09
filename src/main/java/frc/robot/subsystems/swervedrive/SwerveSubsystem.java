@@ -51,7 +51,11 @@ import java.util.function.Supplier;
 
 import javax.swing.text.Position;
 
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnField;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoral;
 import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -84,6 +88,7 @@ public class SwerveSubsystem extends SubsystemBase
   private       Vision              vision;
 
   SendableChooser<Pose2d> scorePositionChooser = new SendableChooser<>();
+  
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -106,6 +111,11 @@ public class SwerveSubsystem extends SubsystemBase
     System.out.println("\t\"drive\": {\"factor\": " + driveConversionFactor + " }");
     System.out.println("}");
 
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeCoral(
+    // We must specify a heading since the coral is a tube
+    new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
+
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(2,2)));
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try
@@ -807,12 +817,18 @@ public class SwerveSubsystem extends SubsystemBase
 
   // Set up a smart dashboard dropdown to choose a position to drive to
   private void configureScorePositionChooser() {
-    scorePositionChooser.addOption("Position 1", PositionConstants.reefPosition1);
-    scorePositionChooser.addOption("Position 2", PositionConstants.reefPosition2);
-    scorePositionChooser.addOption("Position 3", PositionConstants.reefPosition3);
-    scorePositionChooser.addOption("Position 4", PositionConstants.reefPosition4);
-    scorePositionChooser.addOption("Position 5", PositionConstants.reefPosition5);
-    scorePositionChooser.addOption("Position 6", PositionConstants.reefPosition6);
+    scorePositionChooser.addOption("Position A", PositionConstants.reefPositionA);
+    scorePositionChooser.addOption("Position B", PositionConstants.reefPositionB);
+    scorePositionChooser.addOption("Position C", PositionConstants.reefPositionC);
+    scorePositionChooser.addOption("Position D", PositionConstants.reefPositionD);
+    scorePositionChooser.addOption("Position E", PositionConstants.reefPositionE);
+    scorePositionChooser.addOption("Position F", PositionConstants.reefPositionF);
+    scorePositionChooser.addOption("Position G", PositionConstants.reefPositionG);
+    scorePositionChooser.addOption("Position H", PositionConstants.reefPositionH);
+    scorePositionChooser.addOption("Position I", PositionConstants.reefPositionI);
+    scorePositionChooser.addOption("Position J", PositionConstants.reefPositionJ);
+    scorePositionChooser.addOption("Position K", PositionConstants.reefPositionK);
+    scorePositionChooser.addOption("Position L", PositionConstants.reefPositionL);
 
     SmartDashboard.putData(scorePositionChooser);
   }
