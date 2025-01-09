@@ -88,7 +88,7 @@ public class SwerveSubsystem extends SubsystemBase
   private       Vision              vision;
 
   SendableChooser<Pose2d> scorePositionChooser = new SendableChooser<>();
-  
+  SendableChooser<Pose2d> sourceChooser = new SendableChooser<>();
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -148,6 +148,8 @@ public class SwerveSubsystem extends SubsystemBase
     setupPathPlanner();
 
     configureScorePositionChooser();
+
+    configureSourceChooser();
   }
 
   /**
@@ -226,9 +228,9 @@ public class SwerveSubsystem extends SubsystemBase
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
           new PPHolonomicDriveController(
               // PPHolonomicController is the built in path following controller for holonomic drive trains
-              new PIDConstants(5.0, 0.0, 0.0),
+              new PIDConstants(10.0, 0.0, 0.0), // Changed from 5 for testing purposes
               // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0)
+              new PIDConstants(10.0, 0.0, 0.0) // Changed from 5 for testing purposes
               // Rotation PID constants
           ),
           config,
@@ -836,6 +838,22 @@ public class SwerveSubsystem extends SubsystemBase
   public Command driveToScorePosition() {
     return new InstantCommand(() -> {
         Pose2d selectedPose = scorePositionChooser.getSelected();
+        if (selectedPose != null) {
+            driveToPose(selectedPose).schedule(); // Schedule the command dynamically
+        }
+    });
+  }
+
+  private void configureSourceChooser() {
+    sourceChooser.addOption("Lower Source", PositionConstants.sourcePosition2);
+    sourceChooser.addOption("Upper Source", PositionConstants.sourcePosition1);
+
+    SmartDashboard.putData(sourceChooser);
+  }
+
+  public Command driveToSource() {
+    return new InstantCommand(() -> {
+        Pose2d selectedPose = sourceChooser.getSelected();
         if (selectedPose != null) {
             driveToPose(selectedPose).schedule(); // Schedule the command dynamically
         }
