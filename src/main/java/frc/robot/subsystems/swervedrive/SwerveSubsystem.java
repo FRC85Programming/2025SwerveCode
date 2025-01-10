@@ -111,13 +111,7 @@ public class SwerveSubsystem extends SubsystemBase
     System.out.println("\t\"drive\": {\"factor\": " + driveConversionFactor + " }");
     System.out.println("}");
 
-    SimulatedArena.getInstance().addGamePiece(new ReefscapeCoral(
-    // We must specify a heading since the coral is a tube
-    new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
-
-    SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(2,2)));
-    // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+    
     try
     {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_SPEED,
