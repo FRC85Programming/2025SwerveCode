@@ -41,6 +41,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.PositionConstants;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
+import frc.robot.subsystems.webserver.WebServer;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -87,8 +89,9 @@ public class SwerveSubsystem extends SubsystemBase
    */
   private       Vision              vision;
 
-  SendableChooser<Pose2d> scorePositionChooser = new SendableChooser<>();
   SendableChooser<Pose2d> sourceChooser = new SendableChooser<>();
+
+  private final WebServer webServer = new WebServer();
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -141,8 +144,6 @@ public class SwerveSubsystem extends SubsystemBase
 
     setupPathPlanner();
 
-    configureScorePositionChooser();
-
     configureSourceChooser();
   }
 
@@ -178,6 +179,8 @@ public class SwerveSubsystem extends SubsystemBase
       swerveDrive.updateOdometry();
       vision.updatePoseEstimation(swerveDrive);
     }
+
+    SmartDashboard.putString("Selected Position", webServer.getSelectedPosition());
   }
 
   @Override
@@ -222,9 +225,9 @@ public class SwerveSubsystem extends SubsystemBase
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
           new PPHolonomicDriveController(
               // PPHolonomicController is the built in path following controller for holonomic drive trains
-              new PIDConstants(10.0, 0.0, 0.0), // Changed from 5 for testing purposes
+              new PIDConstants(5.0, 0.0, 0.0), // Changed from 5 for testing purposes
               // Translation PID constants
-              new PIDConstants(10.0, 0.0, 0.0) // Changed from 5 for testing purposes
+              new PIDConstants(5.0, 0.0, 0.0) // Changed from 5 for testing purposes
               // Rotation PID constants
           ),
           config,
@@ -812,26 +815,21 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   // Set up a smart dashboard dropdown to choose a position to drive to
-  private void configureScorePositionChooser() {
-    scorePositionChooser.addOption("Position A", PositionConstants.reefPositionA);
-    scorePositionChooser.addOption("Position B", PositionConstants.reefPositionB);
-    scorePositionChooser.addOption("Position C", PositionConstants.reefPositionC);
-    scorePositionChooser.addOption("Position D", PositionConstants.reefPositionD);
-    scorePositionChooser.addOption("Position E", PositionConstants.reefPositionE);
-    scorePositionChooser.addOption("Position F", PositionConstants.reefPositionF);
-    scorePositionChooser.addOption("Position G", PositionConstants.reefPositionG);
-    scorePositionChooser.addOption("Position H", PositionConstants.reefPositionH);
-    scorePositionChooser.addOption("Position I", PositionConstants.reefPositionI);
-    scorePositionChooser.addOption("Position J", PositionConstants.reefPositionJ);
-    scorePositionChooser.addOption("Position K", PositionConstants.reefPositionK);
-    scorePositionChooser.addOption("Position L", PositionConstants.reefPositionL);
-
-    SmartDashboard.putData(scorePositionChooser);
+  private Pose2d getSelectedScorePositionPose() {
+    if (webServer.getSelectedPosition().equals("positionA")) {
+      return PositionConstants.reefPositionA;
+    } else if (webServer.getSelectedPosition().equals("positionB")) {
+      return PositionConstants.reefPositionB;
+    } else if (webServer.getSelectedPosition().equals("positionC")) {
+      return PositionConstants.reefPositionC;
+    } else {
+      return PositionConstants.reefPositionL;
+    }
   }
 
   public Command driveToScorePosition() {
     return new InstantCommand(() -> {
-        Pose2d selectedPose = scorePositionChooser.getSelected();
+        Pose2d selectedPose = getSelectedScorePositionPose();
         if (selectedPose != null) {
             driveToPose(selectedPose).schedule(); // Schedule the command dynamically
         }

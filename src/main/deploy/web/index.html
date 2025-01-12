@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reef Position Selector</title>
+</head>
+<body>
+    <h1>Simple NetworkTables Toggle</h1>
+
+    <!-- Add buttons with unique classes and onclick events -->
+    <button class="positionAButton" onclick="updateNetworkTables('positionA')">Change to Position A</button>
+    <button class="positionBButton" onclick="updateNetworkTables('positionB')">Change to Position B</button>
+    <button class="positionCButton" onclick="updateNetworkTables('positionC')">Change to Position C</button>
+
+    <script>
+        // Define the updateNetworkTables function
+        function updateNetworkTables(valueToPost) {
+            fetch("/toggle", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ value: valueToPost }) // Post as JSON
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log(`NetworkTables value updated to ${valueToPost}!`);
+                } else {
+                    console.error("Failed to update NetworkTables value.");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+</body>
+</html>
