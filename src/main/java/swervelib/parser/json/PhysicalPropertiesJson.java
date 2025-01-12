@@ -28,7 +28,7 @@ public class PhysicalPropertiesJson
   /**
    * Robot mass in lb (pounds)
    */
-  public double                robotMass                      = 110.2311;
+  public double                robotMass                      = 45.00;
   /**
    * Conversion Factors composition. Auto-calculates the conversion factors.
    */
