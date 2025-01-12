@@ -822,8 +822,26 @@ public class SwerveSubsystem extends SubsystemBase
       return PositionConstants.reefPositionB;
     } else if (webServer.getSelectedPosition().equals("positionC")) {
       return PositionConstants.reefPositionC;
-    } else {
+    } else if (webServer.getSelectedPosition().equals("positionD")) {
+      return PositionConstants.reefPositionD;
+    } else if (webServer.getSelectedPosition().equals("positionE")) {
+      return PositionConstants.reefPositionE;
+    } else if (webServer.getSelectedPosition().equals("positionF")) {
+      return PositionConstants.reefPositionF;
+    } else if (webServer.getSelectedPosition().equals("positionG")) {
+      return PositionConstants.reefPositionG;
+    } else if (webServer.getSelectedPosition().equals("positionH")) {
+      return PositionConstants.reefPositionH;
+    } else if (webServer.getSelectedPosition().equals("positionI")) {
+      return PositionConstants.reefPositionI;
+    } else if (webServer.getSelectedPosition().equals("positionJ")) {
+      return PositionConstants.reefPositionJ;
+    } else if (webServer.getSelectedPosition().equals("positionK")) {
+      return PositionConstants.reefPositionK;
+    } else if (webServer.getSelectedPosition().equals("positionL")) {
       return PositionConstants.reefPositionL;
+    } else {
+      return PositionConstants.reefPositionA;
     }
   }
 

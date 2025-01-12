@@ -2,24 +2,192 @@
 <html>
 <head>
     <title>Reef Position Selector</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #121318;
+        }
+
+        .container {
+            position: relative; 
+            display: inline-block; 
+            top: 50px; 
+            left: 100px;
+            margin: 100px auto; 
+            text-align: center;
+        }
+
+        /* Reef Image size */
+        .reef {
+            display: block;
+            width: 300px;  /* Adjust the size of the reef image */
+        }
+
+
+        /* Positioning the buttons */
+        .positionAButton {
+            top: 35%; 
+            left: -60px; 
+            transform: translateY(-50%);
+            position: absolute; 
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+        }
+
+        .positionBButton {
+            top: 65%; 
+            left: -60px; 
+            transform: translateY(-50%);
+            position: absolute; 
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+        }
+
+        .positionCButton {
+            bottom: -15px;
+            left: 5%; 
+            transform: translateX(-50%);
+            position: absolute; 
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+        }
+
+        .positionDButton {
+            bottom: -60px;
+            left: 30%; 
+            transform: translateX(-50%);
+            position: absolute; 
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+        }
+
+        .positionEButton {
+            bottom: -60px;
+            right: 30%; 
+            transform: translateX(50%);
+            position: absolute; 
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+        }
+
+        .positionFButton {
+            bottom: -15px;
+            right: 5%; 
+            transform: translateX(50%);
+            position: absolute; 
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+        }
+
+        .positionGButton {
+            top: 65%; 
+            right: -60px; 
+            transform: translateY(-50%);
+            position: absolute; 
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+        }
+
+        .positionHButton {
+            top: 35%; 
+            right: -60px; 
+            transform: translateY(-50%);
+            position: absolute; 
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+        }
+
+        .positionIButton {
+            top: -60px;
+            right: 30%; 
+            transform: translateX(50%);
+            position: absolute; 
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+        }
+
+        .positionJButton {
+            top: -15px;
+            right: 5%; 
+            transform: translateX(50%);
+            position: absolute; 
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+        }
+
+        .positionKButton {
+            top: -15px;
+            left: 5%; 
+            transform: translateX(-50%);
+            position: absolute; 
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+        }
+
+        .positionLButton {
+            top: -60px;
+            left: 30%; 
+            transform: translateX(-50%);
+            position: absolute; 
+            width: 60px;
+            height: 60px;
+            border: 3px solid #9c27b0;
+            border-radius: 15px;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Simple NetworkTables Toggle</h1>
+    <div class="container">
+        <img class="reef" src="images/reef.jpg" alt="Reef Image">
+        
+        <!-- Coral Images as Buttons -->
+        <img class="positionAButton" src="images/coral.jpg" onclick="updateNetworkTables('positionA')" alt="Coral A">
+        <img class="positionBButton" src="images/coral.jpg" onclick="updateNetworkTables('positionB')" alt="Coral B">
+        <img class="positionCButton" src="images/coral.jpg" onclick="updateNetworkTables('positionC')" alt="Coral C">
+        <img class="positionDButton" src="images/coral.jpg" onclick="updateNetworkTables('positionD')" alt="Coral D">
+        <img class="positionEButton" src="images/coral.jpg" onclick="updateNetworkTables('positionE')" alt="Coral E">
+        <img class="positionFButton" src="images/coral.jpg" onclick="updateNetworkTables('positionF')" alt="Coral F">
+        <img class="positionGButton" src="images/coral.jpg" onclick="updateNetworkTables('positionG')" alt="Coral G">
+        <img class="positionHButton" src="images/coral.jpg" onclick="updateNetworkTables('positionH')" alt="Coral H">
+        <img class="positionIButton" src="images/coral.jpg" onclick="updateNetworkTables('positionI')" alt="Coral I">
+        <img class="positionJButton" src="images/coral.jpg" onclick="updateNetworkTables('positionJ')" alt="Coral J">
+        <img class="positionKButton" src="images/coral.jpg" onclick="updateNetworkTables('positionK')" alt="Coral K">
+        <img class="positionLButton" src="images/coral.jpg" onclick="updateNetworkTables('positionL')" alt="Coral L">
 
-    <!-- Add buttons with unique classes and onclick events -->
-    <button class="positionAButton" onclick="updateNetworkTables('positionA')">Change to Position A</button>
-    <button class="positionBButton" onclick="updateNetworkTables('positionB')">Change to Position B</button>
-    <button class="positionCButton" onclick="updateNetworkTables('positionC')">Change to Position C</button>
+    </div>
 
     <script>
-        // Define the updateNetworkTables function
         function updateNetworkTables(valueToPost) {
             fetch("/toggle", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ value: valueToPost }) // Post as JSON
+                body: JSON.stringify({ value: valueToPost }) 
             })
             .then(response => {
                 if (response.ok) {
@@ -31,6 +199,5 @@
             .catch(error => console.error("Error:", error));
         }
     </script>
-
 </body>
 </html>
