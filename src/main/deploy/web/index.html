@@ -18,14 +18,11 @@
             text-align: center;
         }
 
-        /* Reef Image size */
         .reef {
             display: block;
-            width: 300px;  /* Adjust the size of the reef image */
+            width: 300px;  
         }
 
-
-        /* Positioning the buttons */
         .positionAButton {
             top: 35%; 
             left: -60px; 
@@ -158,13 +155,33 @@
             border-radius: 15px;
         }
 
+        img.positionAButton:hover,
+        img.positionBButton:hover,
+        img.positionCButton:hover,
+        img.positionDButton:hover,
+        img.positionEButton:hover,
+        img.positionFButton:hover,
+        img.positionGButton:hover,
+        img.positionHButton:hover,
+        img.positionIButton:hover,
+        img.positionJButton:hover,
+        img.positionKButton:hover,
+        img.positionLButton:hover {
+            filter: brightness(0.7); 
+            cursor: pointer; 
+        }
+
+        img.selected {
+            border: 4px solid #ff5722;
+            filter: brightness(0.5);
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <img class="reef" src="images/reef.jpg" alt="Reef Image">
         
-        <!-- Coral Images as Buttons -->
         <img class="positionAButton" src="images/coral.jpg" onclick="updateNetworkTables('positionA')" alt="Coral A">
         <img class="positionBButton" src="images/coral.jpg" onclick="updateNetworkTables('positionB')" alt="Coral B">
         <img class="positionCButton" src="images/coral.jpg" onclick="updateNetworkTables('positionC')" alt="Coral C">
@@ -177,11 +194,17 @@
         <img class="positionJButton" src="images/coral.jpg" onclick="updateNetworkTables('positionJ')" alt="Coral J">
         <img class="positionKButton" src="images/coral.jpg" onclick="updateNetworkTables('positionK')" alt="Coral K">
         <img class="positionLButton" src="images/coral.jpg" onclick="updateNetworkTables('positionL')" alt="Coral L">
-
     </div>
-
     <script>
         function updateNetworkTables(valueToPost) {
+            const buttons = document.querySelectorAll(".container img");
+            buttons.forEach(button => button.classList.remove("selected"));
+    
+            const clickedButton = document.querySelector(`img[onclick*="${valueToPost}"]`);
+            if (clickedButton) {
+                clickedButton.classList.add("selected");
+            }
+    
             fetch("/toggle", {
                 method: "POST",
                 headers: {
@@ -198,6 +221,6 @@
             })
             .catch(error => console.error("Error:", error));
         }
-    </script>
+    </script>    
 </body>
 </html>

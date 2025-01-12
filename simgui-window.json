@@ -11,15 +11,15 @@
       "style": "0",
       "userScale": "2",
       "width": "736",
-      "xpos": "647",
-      "ypos": "900"
+      "xpos": "488",
+      "ypos": "705"
     }
   },
   "Window": {
     "###/FMSInfo": {
       "Collapsed": "0",
       "Pos": "63,175",
-      "Size": "169,167"
+      "Size": "181,167"
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
@@ -39,7 +39,7 @@
     "###FMS": {
       "Collapsed": "0",
       "Pos": "4,414",
-      "Size": "175,184"
+      "Size": "169,184"
     },
     "###Joysticks": {
       "Collapsed": "0",
@@ -48,7 +48,7 @@
     },
     "###Keyboard 0 Settings": {
       "Collapsed": "0",
-      "Pos": "205,66",
+      "Pos": "280,85",
       "Size": "300,560"
     },
     "###NetworkTables": {
