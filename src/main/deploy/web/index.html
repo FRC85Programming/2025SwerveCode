@@ -9,18 +9,33 @@
             background-color: #121318;
         }
 
-        .container {
+        .reefcontainer {
             position: relative; 
             display: inline-block; 
-            top: 50px; 
-            left: 100px;
+            top: -20px; 
+            left: 800px;
             margin: 100px auto; 
             text-align: center;
+        }
+
+        .sourcecontainer {
+            position: relative; 
+            display: inline-block; 
+            top: -150px; 
+            left: -100px;
+            margin: 100px auto; 
+            text-align: center;
+            transform: rotate(-90deg);
         }
 
         .reef {
             display: block;
             width: 300px;  
+        }
+        .source {
+            display: block;
+            width: 150px;  
+            height: 300px;
         }
 
         .positionAButton {
@@ -179,7 +194,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="reefcontainer">
         <img class="reef" src="images/reef.jpg" alt="Reef Image">
         
         <img class="positionAButton" src="images/coral.jpg" onclick="updateNetworkTables('positionA')" alt="Coral A">
@@ -195,9 +210,12 @@
         <img class="positionKButton" src="images/coral.jpg" onclick="updateNetworkTables('positionK')" alt="Coral K">
         <img class="positionLButton" src="images/coral.jpg" onclick="updateNetworkTables('positionL')" alt="Coral L">
     </div>
+    <div class="sourcecontainer">
+        <img class="source" src="images/source.jpg" alt="Source Image">
+    </div>
     <script>
         function updateNetworkTables(valueToPost) {
-            const buttons = document.querySelectorAll(".container img");
+            const buttons = document.querySelectorAll(".reefcontainer img");
             buttons.forEach(button => button.classList.remove("selected"));
     
             const clickedButton = document.querySelector(`img[onclick*="${valueToPost}"]`);
