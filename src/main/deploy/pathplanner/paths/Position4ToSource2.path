@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 51.74557964748283
+    "rotation": 53.343891584033074
   },
   "reversed": false,
   "folder": "LowAutos",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 58.81502534126159
+    "rotation": 57.14427804956701
   },
   "useDefaultConstraints": true
 }
