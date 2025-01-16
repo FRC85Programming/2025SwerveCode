@@ -15,14 +15,20 @@ import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 
 public class WebServer {
-    private final StringPublisher positionPublisher;
-    private final StringSubscriber positionSubscriber;
+    private final StringPublisher reefPositionPublisher;
+    private final StringSubscriber reefPositionSubscriber;
+    private final StringPublisher sourcePositionPublisher;
+    private final StringSubscriber sourcePositionSubscriber;
+
 
     public WebServer() {
         // Initialize NetworkTables
-        var table = NetworkTableInstance.getDefault().getTable("reefTable");
-        positionPublisher = table.getStringTopic("positionValue").publish();
-        positionSubscriber = table.getStringTopic("positionValue").subscribe(new String(), PubSubOption.sendAll(true));
+        var reefTable = NetworkTableInstance.getDefault().getTable("reefTable");
+        var sourceTable = NetworkTableInstance.getDefault().getTable("sourceTable");
+        reefPositionPublisher = reefTable.getStringTopic("positionValue").publish();
+        reefPositionSubscriber = reefTable.getStringTopic("positionValue").subscribe(new String(), PubSubOption.sendAll(true));
+        sourcePositionPublisher = sourceTable.getStringTopic("sourcePositionValue").publish();
+        sourcePositionSubscriber = sourceTable.getStringTopic("sourcePositionValue").subscribe(new String(), PubSubOption.sendAll(true));
         // Start the web server
         var app =
             Javalin.create(
@@ -37,28 +43,34 @@ public class WebServer {
 
         // Handle POST request to toggle value
         app.post("/toggle", ctx -> {
-            // Parse the JSON body
             var mapper = new ObjectMapper();
             Map<String, Object> body = mapper.readValue(ctx.body(), Map.class);
-
-            // Update NetworkTables value
-            if (body.containsKey("value") && body.get("value") instanceof String) {
+        
+            if (body.containsKey("variable") && body.get("variable") instanceof String &&
+                body.containsKey("value") && body.get("value") instanceof String) {
+                String variable = (String) body.get("variable");
                 String value = (String) body.get("value");
-                positionPublisher.set(value);
+        
+                if (variable.equals("reefPositionValue")) {
+                    reefPositionPublisher.set(value); // Update reef position
+                } else if (variable.equals("sourcePositionValue")) {
+                    sourcePositionPublisher.set(value); // Update source position
+                }
+        
                 ctx.status(200);
             } else {
                 ctx.status(400).result("Invalid input");
             }
         });
-
+    
         app.start(5800);
-
-        System.out.println("Server started on http://localhost:5800");
     }
 
-    public String getSelectedPosition() {
-        return positionSubscriber.get();
+    public String getSelectedReefPosition() {
+        return reefPositionSubscriber.get();
     }
 
-
+    public String getSelectedSourcePosition() {
+        return sourcePositionSubscriber.get();
+    }
 }

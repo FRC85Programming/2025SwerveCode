@@ -11,8 +11,8 @@
       "style": "0",
       "userScale": "2",
       "width": "736",
-      "xpos": "689",
-      "ypos": "366"
+      "xpos": "820",
+      "ypos": "727"
     }
   },
   "Window": {
@@ -39,7 +39,7 @@
     "###FMS": {
       "Collapsed": "0",
       "Pos": "4,414",
-      "Size": "388,176"
+      "Size": "244,244"
     },
     "###Joysticks": {
       "Collapsed": "0",
@@ -53,8 +53,8 @@
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "173,733",
-      "Size": "750,236"
+      "Pos": "65,487",
+      "Size": "750,373"
     },
     "###NetworkTables Info": {
       "Collapsed": "1",

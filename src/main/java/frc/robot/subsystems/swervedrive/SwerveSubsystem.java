@@ -181,7 +181,9 @@ public class SwerveSubsystem extends SubsystemBase
       vision.updatePoseEstimation(swerveDrive);
     }
 
-    SmartDashboard.putString("Selected Position", webServer.getSelectedPosition());
+    SmartDashboard.putString("Selected Reef Position", webServer.getSelectedReefPosition());
+    SmartDashboard.putString("Selected Source Position", webServer.getSelectedSourcePosition());
+
   }
 
   @Override
@@ -226,9 +228,9 @@ public class SwerveSubsystem extends SubsystemBase
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
           new PPHolonomicDriveController(
               // PPHolonomicController is the built in path following controller for holonomic drive trains
-              new PIDConstants(5.0, 0.0, 0.0), // Changed from 5 for testing purposes
+              new PIDConstants(5.0, 0.0, 0.0),
               // Translation PID constants
-              new PIDConstants(1.0, 0.0, 0.0) // Changed from 5 for testing purposes
+              new PIDConstants(1.0, 0.0, 0.0) 
               // Rotation PID constants
           ),
           config,
@@ -817,29 +819,29 @@ public class SwerveSubsystem extends SubsystemBase
 
   // Set up a smart dashboard dropdown to choose a position to drive to
   private Pose2d getSelectedScorePositionPose() {
-    if (webServer.getSelectedPosition().equals("positionA")) {
+    if (webServer.getSelectedReefPosition().equals("positionA")) {
       return PositionConstants.reefPositionA;
-    } else if (webServer.getSelectedPosition().equals("positionB")) {
+    } else if (webServer.getSelectedReefPosition().equals("positionB")) {
       return PositionConstants.reefPositionB;
-    } else if (webServer.getSelectedPosition().equals("positionC")) {
+    } else if (webServer.getSelectedReefPosition().equals("positionC")) {
       return PositionConstants.reefPositionC;
-    } else if (webServer.getSelectedPosition().equals("positionD")) {
+    } else if (webServer.getSelectedReefPosition().equals("positionD")) {
       return PositionConstants.reefPositionD;
-    } else if (webServer.getSelectedPosition().equals("positionE")) {
+    } else if (webServer.getSelectedReefPosition().equals("positionE")) {
       return PositionConstants.reefPositionE;
-    } else if (webServer.getSelectedPosition().equals("positionF")) {
+    } else if (webServer.getSelectedReefPosition().equals("positionF")) {
       return PositionConstants.reefPositionF;
-    } else if (webServer.getSelectedPosition().equals("positionG")) {
+    } else if (webServer.getSelectedReefPosition().equals("positionG")) {
       return PositionConstants.reefPositionG;
-    } else if (webServer.getSelectedPosition().equals("positionH")) {
+    } else if (webServer.getSelectedReefPosition().equals("positionH")) {
       return PositionConstants.reefPositionH;
-    } else if (webServer.getSelectedPosition().equals("positionI")) {
+    } else if (webServer.getSelectedReefPosition().equals("positionI")) {
       return PositionConstants.reefPositionI;
-    } else if (webServer.getSelectedPosition().equals("positionJ")) {
+    } else if (webServer.getSelectedReefPosition().equals("positionJ")) {
       return PositionConstants.reefPositionJ;
-    } else if (webServer.getSelectedPosition().equals("positionK")) {
+    } else if (webServer.getSelectedReefPosition().equals("positionK")) {
       return PositionConstants.reefPositionK;
-    } else if (webServer.getSelectedPosition().equals("positionL")) {
+    } else if (webServer.getSelectedReefPosition().equals("positionL")) {
       return PositionConstants.reefPositionL;
     } else {
       return PositionConstants.reefPositionA;
@@ -855,6 +857,14 @@ public class SwerveSubsystem extends SubsystemBase
     });
   }
 
+  private Pose2d getSelectedIntakePositionPose() {
+    if (webServer.getSelectedSourcePosition().equals("positionSA")) {
+      return PositionConstants.sourcePosition1;
+    } else {
+      return PositionConstants.sourcePosition2;
+    }
+  }
+
   private void configureSourceChooser() {
     sourceChooser.addOption("Lower Source", PositionConstants.sourcePosition2);
     sourceChooser.addOption("Upper Source", PositionConstants.sourcePosition1);
@@ -864,7 +874,7 @@ public class SwerveSubsystem extends SubsystemBase
 
   public Command driveToSource() {
     return new InstantCommand(() -> {
-        Pose2d selectedPose = sourceChooser.getSelected();
+        Pose2d selectedPose = getSelectedIntakePositionPose();
         if (selectedPose != null) {
             driveToPose(selectedPose).schedule(); // Schedule the command dynamically
         }

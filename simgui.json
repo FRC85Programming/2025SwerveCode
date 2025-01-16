@@ -1,6 +1,11 @@
 {
   "HALProvider": {
     "Other Devices": {
+      "SPARK MAX [22] RELATIVE ENCODER": {
+        "header": {
+          "open": true
+        }
+      },
       "SPARK MAX [2]": {
         "header": {
           "open": true

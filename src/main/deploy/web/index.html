@@ -9,237 +9,136 @@
             background-color: #121318;
         }
 
-        .reefcontainer {
-            position: relative; 
-            display: inline-block; 
-            top: -20px; 
-            left: 800px;
-            margin-right: 100px auto; 
+        .reef {
+            display: block;
+            width: 350px;  
+        }
+
+        .source {
+            display: block;
+            width: 150px;  
+            height: 450px;
+        }
+
+        .logo {
+            position: absolute;
+            right: 0px;
+            bottom: 0px;
+            height: 80px;
+            width: 80px;
+        }
+
+        .container {
+            position: relative;
+            display: inline-block;
             text-align: center;
+        }
+
+        .reefcontainer {
+            top: -10px;
+            left: 800px;
             transform: rotate(-90deg);
         }
 
         .sourcecontainer {
-            position: relative; 
-            display: inline-block; 
-            top: -150px; 
-            left: -100px;
-            text-align: center;
-            margin-top: 100px;
+            top: -90px;
+            left: -80px;
             transform: rotate(-90deg);
         }
 
-        .reef {
+        .container img {
             display: block;
-            width: 300px;  
-        }
-        .source {
-            display: block;
-            width: 150px;  
-            height: 400px;
         }
 
-        .positionAButton {
-            top: 35%; 
-            left: -60px; 
-            transform: translateY(-50%);
-            position: absolute; 
+        .button {
+            position: absolute;
             width: 60px;
             height: 60px;
             border: 2px solid #9c27b0;
             border-radius: 15px;
+            cursor: pointer;
         }
 
-        .positionBButton {
-            top: 65%; 
-            left: -60px; 
-            transform: translateY(-50%);
-            position: absolute; 
-            width: 60px;
-            height: 60px;
-            border: 2px solid #9c27b0;
-            border-radius: 15px;
+        .button:hover {
+            filter: brightness(0.7);
         }
 
-        .positionCButton {
-            bottom: -15px;
-            left: 5%; 
-            transform: translateX(-50%);
-            position: absolute; 
-            width: 60px;
-            height: 60px;
-            border: 2px solid #9c27b0;
-            border-radius: 15px;
-        }
-
-        .positionDButton {
-            bottom: -60px;
-            left: 30%; 
-            transform: translateX(-50%);
-            position: absolute; 
-            width: 60px;
-            height: 60px;
-            border: 2px solid #9c27b0;
-            border-radius: 15px;
-        }
-
-        .positionEButton {
-            bottom: -60px;
-            right: 30%; 
-            transform: translateX(50%);
-            position: absolute; 
-            width: 60px;
-            height: 60px;
-            border: 2px solid #9c27b0;
-            border-radius: 15px;
-        }
-
-        .positionFButton {
-            bottom: -15px;
-            right: 5%; 
-            transform: translateX(50%);
-            position: absolute; 
-            width: 60px;
-            height: 60px;
-            border: 2px solid #9c27b0;
-            border-radius: 15px;
-        }
-
-        .positionGButton {
-            top: 65%; 
-            right: -60px; 
-            transform: translateY(-50%);
-            position: absolute; 
-            width: 60px;
-            height: 60px;
-            border: 2px solid #9c27b0;
-            border-radius: 15px;
-        }
-
-        .positionHButton {
-            top: 35%; 
-            right: -60px; 
-            transform: translateY(-50%);
-            position: absolute; 
-            width: 60px;
-            height: 60px;
-            border: 2px solid #9c27b0;
-            border-radius: 15px;
-        }
-
-        .positionIButton {
-            top: -60px;
-            right: 30%; 
-            transform: translateX(50%);
-            position: absolute; 
-            width: 60px;
-            height: 60px;
-            border: 2px solid #9c27b0;
-            border-radius: 15px;
-        }
-
-        .positionJButton {
-            top: -15px;
-            right: 5%; 
-            transform: translateX(50%);
-            position: absolute; 
-            width: 60px;
-            height: 60px;
-            border: 2px solid #9c27b0;
-            border-radius: 15px;
-        }
-
-        .positionKButton {
-            top: -15px;
-            left: 5%; 
-            transform: translateX(-50%);
-            position: absolute; 
-            width: 60px;
-            height: 60px;
-            border: 2px solid #9c27b0;
-            border-radius: 15px;
-        }
-
-        .positionLButton {
-            top: -60px;
-            left: 30%; 
-            transform: translateX(-50%);
-            position: absolute; 
-            width: 60px;
-            height: 60px;
-            border: 3px solid #9c27b0;
-            border-radius: 15px;
-        }
-
-        img.positionAButton:hover,
-        img.positionBButton:hover,
-        img.positionCButton:hover,
-        img.positionDButton:hover,
-        img.positionEButton:hover,
-        img.positionFButton:hover,
-        img.positionGButton:hover,
-        img.positionHButton:hover,
-        img.positionIButton:hover,
-        img.positionJButton:hover,
-        img.positionKButton:hover,
-        img.positionLButton:hover {
-            filter: brightness(0.7); 
-            cursor: pointer; 
-        }
-
-        img.selected {
+        .selected {
             border: 4px solid #ff5722;
             filter: brightness(0.5);
         }
 
+        /* Button positions */
+        .positionA { top: 35%; left: -60px; transform: translateY(-50%); }
+        .positionB { top: 65%; left: -60px; transform: translateY(-50%); }
+        .positionC { bottom: -15px; left: 5%; transform: translateX(-50%); }
+        .positionD { bottom: -60px; left: 30%; transform: translateX(-50%); }
+        .positionE { bottom: -60px; right: 30%; transform: translateX(50%); }
+        .positionF { bottom: -15px; right: 5%; transform: translateX(50%); }
+        .positionG { top: 65%; right: -60px; transform: translateY(-50%); }
+        .positionH { top: 35%; right: -60px; transform: translateY(-50%); }
+        .positionI { top: -60px; right: 30%; transform: translateX(50%); }
+        .positionJ { top: -15px; right: 5%; transform: translateX(50%); }
+        .positionK { top: -15px; left: 5%; transform: translateX(-50%); }
+        .positionL { top: -60px; left: 30%; transform: translateX(-50%); }
+        .positionSA { top: 70px; left: 50%; transform: translateX(-50%); }
+        .positionSB { top: 310px; left: 50%; transform: translateX(-50%); }
     </style>
 </head>
 <body>
-    <div class="reefcontainer">
+    <div class="container reefcontainer">
         <img class="reef" src="images/reef.jpg" alt="Reef Image">
-        
-        <img class="positionAButton" src="images/coral.jpg" onclick="updateNetworkTables('positionA')" alt="Coral A">
-        <img class="positionBButton" src="images/coral.jpg" onclick="updateNetworkTables('positionB')" alt="Coral B">
-        <img class="positionCButton" src="images/coral.jpg" onclick="updateNetworkTables('positionC')" alt="Coral C">
-        <img class="positionDButton" src="images/coral.jpg" onclick="updateNetworkTables('positionD')" alt="Coral D">
-        <img class="positionEButton" src="images/coral.jpg" onclick="updateNetworkTables('positionE')" alt="Coral E">
-        <img class="positionFButton" src="images/coral.jpg" onclick="updateNetworkTables('positionF')" alt="Coral F">
-        <img class="positionGButton" src="images/coral.jpg" onclick="updateNetworkTables('positionG')" alt="Coral G">
-        <img class="positionHButton" src="images/coral.jpg" onclick="updateNetworkTables('positionH')" alt="Coral H">
-        <img class="positionIButton" src="images/coral.jpg" onclick="updateNetworkTables('positionI')" alt="Coral I">
-        <img class="positionJButton" src="images/coral.jpg" onclick="updateNetworkTables('positionJ')" alt="Coral J">
-        <img class="positionKButton" src="images/coral.jpg" onclick="updateNetworkTables('positionK')" alt="Coral K">
-        <img class="positionLButton" src="images/coral.jpg" onclick="updateNetworkTables('positionL')" alt="Coral L">
+        <img class="button positionA" src="images/coral.jpg" onclick="updateNetworkTables('positionA', 'reef')" alt="Coral A">
+        <img class="button positionB" src="images/coral.jpg" onclick="updateNetworkTables('positionB', 'reef')" alt="Coral B">
+        <img class="button positionC" src="images/coral.jpg" onclick="updateNetworkTables('positionC', 'reef')" alt="Coral C">
+        <img class="button positionD" src="images/coral.jpg" onclick="updateNetworkTables('positionD', 'reef')" alt="Coral D">
+        <img class="button positionE" src="images/coral.jpg" onclick="updateNetworkTables('positionE', 'reef')" alt="Coral E">
+        <img class="button positionF" src="images/coral.jpg" onclick="updateNetworkTables('positionF', 'reef')" alt="Coral F">
+        <img class="button positionG" src="images/coral.jpg" onclick="updateNetworkTables('positionG', 'reef')" alt="Coral G">
+        <img class="button positionH" src="images/coral.jpg" onclick="updateNetworkTables('positionH', 'reef')" alt="Coral H">
+        <img class="button positionI" src="images/coral.jpg" onclick="updateNetworkTables('positionI', 'reef')" alt="Coral I">
+        <img class="button positionJ" src="images/coral.jpg" onclick="updateNetworkTables('positionJ', 'reef')" alt="Coral J">
+        <img class="button positionK" src="images/coral.jpg" onclick="updateNetworkTables('positionK', 'reef')" alt="Coral K">
+        <img class="button positionL" src="images/coral.jpg" onclick="updateNetworkTables('positionL', 'reef')" alt="Coral L">
     </div>
-    <div class="sourcecontainer">
-        <img class="source" src="images/source.jpg" alt="Source Image">
-    </div>
-    <script>
-        function updateNetworkTables(valueToPost) {
-            const buttons = document.querySelectorAll(".reefcontainer img");
-            buttons.forEach(button => button.classList.remove("selected"));
     
+    <div class="container sourcecontainer">
+        <img class="source" src="images/source.jpg" alt="Source Image">
+        <img class="button positionSA" src="images/coral.jpg" onclick="updateNetworkTables('positionSA', 'source')" alt="Source A">
+        <img class="button positionSB" src="images/coral.jpg" onclick="updateNetworkTables('positionSB', 'source')" alt="Source B">
+    </div>
+
+    <img class="logo" src="images/boblogo.jpg" alt="Logo">
+
+
+    <script>
+        function updateNetworkTables(valueToPost, group) {
+            const buttons = document.querySelectorAll(`.${group}container .button`);
+            buttons.forEach(button => button.classList.remove("selected"));
+
             const clickedButton = document.querySelector(`img[onclick*="${valueToPost}"]`);
             if (clickedButton) {
                 clickedButton.classList.add("selected");
             }
-    
+
+            const variable = group === "reef" ? "reefPositionValue" : "sourcePositionValue";
+
             fetch("/toggle", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ value: valueToPost }) 
+                body: JSON.stringify({ variable: variable, value: valueToPost })
             })
             .then(response => {
                 if (response.ok) {
-                    console.log(`NetworkTables value updated to ${valueToPost}!`);
+                    console.log(`NetworkTables ${variable} updated to ${valueToPost}!`);
                 } else {
                     console.error("Failed to update NetworkTables value.");
                 }
             })
             .catch(error => console.error("Error:", error));
         }
-    </script>    
+    </script>
 </body>
 </html>
