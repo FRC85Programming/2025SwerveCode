@@ -25,3 +25,23 @@ function updateNetworkTables(valueToPost, group) {
     })
     .catch(error => console.error("Error:", error));
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Wait until NetworkTables is ready
+    NetworkTables.addGlobalListener((key, value) => {
+        if (key === "allianceTable/isBlue") {
+            const isBlue = value === true;
+            const reefImage = document.querySelector(".reef");
+            const buttons = document.querySelectorAll(".button");
+
+            // Set reef image
+            reefImage.src = `images/reefs/reef-${isBlue ? "blue" : "red"}.jpg`;
+
+            // Set button border colors
+            buttons.forEach(button => {
+                button.style.borderColor = isBlue ? "#0048a7" : "#a20010";
+            });
+        }
+    }, true);
+});
+

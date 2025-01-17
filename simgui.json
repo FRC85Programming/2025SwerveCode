@@ -141,16 +141,19 @@
       "open": false
     },
     "transitory": {
-      "FMSInfo": {
-        "open": true
-      },
       "SmartDashboard": {
         "Field": {
           "open": true
         },
         "open": true
       },
+      "allianceTable": {
+        "open": true
+      },
       "reefTable": {
+        "open": true
+      },
+      "sourceTable": {
         "open": true
       }
     }

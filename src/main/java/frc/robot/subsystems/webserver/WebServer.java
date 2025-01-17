@@ -7,10 +7,11 @@ import java.util.Map;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.PubSubOption;
-import edu.wpi.first.networktables.PubSubOptions;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StringSubscriber;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 
@@ -19,16 +20,21 @@ public class WebServer {
     private final StringSubscriber reefPositionSubscriber;
     private final StringPublisher sourcePositionPublisher;
     private final StringSubscriber sourcePositionSubscriber;
+    private static BooleanPublisher alliancePublisher;
+    
+    
+        public WebServer() {
+            // Initialize NetworkTables
+            var reefTable = NetworkTableInstance.getDefault().getTable("reefTable");
+            var sourceTable = NetworkTableInstance.getDefault().getTable("sourceTable");
+            var allianceTable = NetworkTableInstance.getDefault().getTable("allianceTable");
+            reefPositionPublisher = reefTable.getStringTopic("positionValue").publish();
+            reefPositionSubscriber = reefTable.getStringTopic("positionValue").subscribe(new String(), PubSubOption.sendAll(true));
+            sourcePositionPublisher = sourceTable.getStringTopic("sourcePositionValue").publish();
+            sourcePositionSubscriber = sourceTable.getStringTopic("sourcePositionValue").subscribe(new String(), PubSubOption.sendAll(true));
+            // This value should return TRUE if the alliance is blue
+            alliancePublisher = allianceTable.getBooleanTopic("isBlue").publish();
 
-
-    public WebServer() {
-        // Initialize NetworkTables
-        var reefTable = NetworkTableInstance.getDefault().getTable("reefTable");
-        var sourceTable = NetworkTableInstance.getDefault().getTable("sourceTable");
-        reefPositionPublisher = reefTable.getStringTopic("positionValue").publish();
-        reefPositionSubscriber = reefTable.getStringTopic("positionValue").subscribe(new String(), PubSubOption.sendAll(true));
-        sourcePositionPublisher = sourceTable.getStringTopic("sourcePositionValue").publish();
-        sourcePositionSubscriber = sourceTable.getStringTopic("sourcePositionValue").subscribe(new String(), PubSubOption.sendAll(true));
         // Start the web server
         var app =
             Javalin.create(
@@ -64,6 +70,10 @@ public class WebServer {
         });
     
         app.start(5800);
+    }
+
+    public void setAlliance() {
+        alliancePublisher.set(DriverStation.getAlliance().get() == Alliance.Blue);
     }
 
     public String getSelectedReefPosition() {

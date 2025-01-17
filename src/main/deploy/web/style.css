@@ -56,8 +56,11 @@ body {
     filter: brightness(0.7);
 }
 
+/* Blue hex: #0048a7 */
+/* Red hex: #a20010 */
+/* OG orange hex: #ff5722 */
 .selected {
-    border: 4px solid #ff5722;
+    border: 4px solid #a20010;
     filter: brightness(0.5);
 }
 

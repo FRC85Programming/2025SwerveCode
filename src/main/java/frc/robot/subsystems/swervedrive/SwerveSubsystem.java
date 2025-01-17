@@ -100,7 +100,6 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public SwerveSubsystem(File directory)
   {
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
     //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
     //  The encoder resolution per motor revolution is 1 per motor revolution.
@@ -228,7 +227,7 @@ public class SwerveSubsystem extends SubsystemBase
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
           new PPHolonomicDriveController(
               // PPHolonomicController is the built in path following controller for holonomic drive trains
-              new PIDConstants(5.0, 0.0, 0.0),
+              new PIDConstants(3.1, 0.0, 0.0),
               // Translation PID constants
               new PIDConstants(1.0, 0.0, 0.0) 
               // Rotation PID constants
@@ -354,7 +353,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
 // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
-        swerveDrive.getMaximumChassisVelocity(), 4.0,
+        swerveDrive.getMaximumChassisVelocity(), 3.0,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
 
 // Since AutoBuilder is configured, we can use it to build pathfinding commands
@@ -879,5 +878,9 @@ public class SwerveSubsystem extends SubsystemBase
             driveToPose(selectedPose).schedule(); // Schedule the command dynamically
         }
     });
+  }
+
+  public WebServer getWebServer() {
+    return webServer;
   }
 }
