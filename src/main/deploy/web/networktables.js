@@ -29,9 +29,9 @@ function updateNetworkTables(valueToPost, group) {
 document.addEventListener("DOMContentLoaded", function () {
     // Wait until NetworkTables is ready
     NetworkTables.addGlobalListener((key, value) => {
-        if (key === "allianceTable/isBlue") {
+        if (key === "/isBlue") {
             const isBlue = value === true;
-            const reefImage = document.querySelector(".reef");
+            const reefImage = document.querySelector("reef");
             const buttons = document.querySelectorAll(".button");
 
             // Set reef image

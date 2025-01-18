@@ -183,6 +183,7 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putString("Selected Reef Position", webServer.getSelectedReefPosition());
     SmartDashboard.putString("Selected Source Position", webServer.getSelectedSourcePosition());
 
+    publishDriveMetersPerSecond();
   }
 
   @Override
@@ -362,6 +363,12 @@ public class SwerveSubsystem extends SubsystemBase
         constraints,
         edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
                                      );
+  }
+
+  public void publishDriveMetersPerSecond() {
+    SmartDashboard.putNumber("X Speed MPS", SwerveDriveTelemetry.measuredChassisSpeedsObj.vxMetersPerSecond);
+    SmartDashboard.putNumber("Y Speed MPS", SwerveDriveTelemetry.measuredChassisSpeedsObj.vyMetersPerSecond);
+    SmartDashboard.putNumber("Max Speed MPS", SwerveDriveTelemetry.maxSpeed);
   }
 
   /**

@@ -52,7 +52,7 @@ public class Vision
   /**
    * April Tag Field Layout of the year.
    */
-  public static final AprilTagFieldLayout fieldLayout                     = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
+  public static final AprilTagFieldLayout fieldLayout                     = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
   /**
    * Ambiguity defined as a value between (0,1). Used in {@link Vision#filterPose}.
    */
@@ -344,6 +344,7 @@ public class Vision
                                Units.inchesToMeters(8.44)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     /**
+     *
      * Right Camera
      */
     RIGHT_CAM("right",
