@@ -142,6 +142,8 @@ public class SwerveSubsystem extends SubsystemBase
       swerveDrive.stopOdometryThread();
     }
 
+    setupPhotonVision();
+
     setupPathPlanner();
 
     configureSourceChooser();
@@ -179,6 +181,9 @@ public class SwerveSubsystem extends SubsystemBase
       swerveDrive.updateOdometry();
       vision.updatePoseEstimation(swerveDrive);
     }
+
+    swerveDrive.updateOdometry();
+    vision.updatePoseEstimation(swerveDrive);
 
     SmartDashboard.putString("Selected Reef Position", webServer.getSelectedReefPosition());
     SmartDashboard.putString("Selected Source Position", webServer.getSelectedSourcePosition());
