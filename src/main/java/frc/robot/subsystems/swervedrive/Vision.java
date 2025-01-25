@@ -60,6 +60,10 @@ public class Vision
   private final       double              maximumAmbiguity                = 0.25;
 
   private Field2d cameraField = new Field2d();
+
+  private Field2d visionField = new Field2d();
+
+  static int updates = 0;
   /**
    * Photon Vision Simulation
    */
@@ -88,6 +92,7 @@ public class Vision
   {
     this.currentPose = currentPose;
     this.field2d = field;
+    SmartDashboard.putData("Vision Field", visionField);
 
     if (Robot.isSimulation())
     {
@@ -131,6 +136,7 @@ public class Vision
    */
   public void updatePoseEstimation(SwerveDrive swerveDrive)
   {
+
     if (SwerveDriveTelemetry.isSimulation && swerveDrive.getSimulationDriveTrainPose().isPresent())
     {
       /*
@@ -151,6 +157,8 @@ public class Vision
         swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                                          pose.timestampSeconds,
                                          camera.curStdDevs);
+        visionField.setRobotPose(pose.estimatedPose.toPose2d());
+
       }
     }
 
@@ -335,16 +343,16 @@ public class Vision
   /**
    * Camera Enum to select each camera
    */
-  enum Cameras
+  public enum Cameras
   {
     /**
      * Front Camera
      */
     FRONT_CAM("camera-front",
-             new Rotation3d(0, Math.toRadians(26), 0),
-             new Translation3d(Units.inchesToMeters(0),
+             new Rotation3d(0, 0, 0),
+             new Translation3d(Units.inchesToMeters(0.125),
                                Units.inchesToMeters(-16.5),
-                               Units.inchesToMeters(7.125)),
+                               Units.inchesToMeters(6.25)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
     /**
      *
@@ -468,6 +476,7 @@ public class Vision
       {
         systemSim.addCamera(cameraSim, robotToCamTransform);
       }
+
     }
 
     /**
@@ -528,9 +537,13 @@ public class Vision
       double mostRecentTimestamp = resultsList.isEmpty() ? 0.0 : resultsList.get(0).getTimestampSeconds();
       double currentTimestamp    = Microseconds.of(NetworkTablesJNI.now()).in(Seconds);
       double debounceTime        = Milliseconds.of(15).in(Seconds);
+      SmartDashboard.putNumber("Current Stamp", currentTimestamp);
+      SmartDashboard.putNumber("Recent Stamp", mostRecentTimestamp);
+
       for (PhotonPipelineResult result : resultsList)
       {
         mostRecentTimestamp = Math.max(mostRecentTimestamp, result.getTimestampSeconds());
+        SmartDashboard.putNumber("Most Recent Timestamp", mostRecentTimestamp);
       }
       if ((resultsList.isEmpty() || (currentTimestamp - mostRecentTimestamp >= debounceTime)) &&
           (currentTimestamp - lastReadTimestamp) >= debounceTime)
