@@ -7,43 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartToPositionI"
+            "pathName": "Start-J"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "PositionIToSource1"
+            "pathName": "J-LeftSource"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Source1ToPositionK"
+            "pathName": "LeftSource-K"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "PositionKToSource1"
+            "pathName": "K-LeftSource"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Source1ToPositionL"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "PositionLToSource1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Source1ToPositionL"
+            "pathName": "LeftSource-L"
           }
         }
       ]

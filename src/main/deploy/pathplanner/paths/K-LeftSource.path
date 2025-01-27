@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.1565656565656575,
-        "y": 5.071906565656565
+        "x": 3.936868686868687,
+        "y": 5.366666666666666
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.921130178666948,
-        "y": 5.1559906649061045
+        "x": 4.2527930747990625,
+        "y": 5.289116710474496
       },
       "isLocked": false,
-      "linkedName": "ReefPosition6"
+      "linkedName": "PositionK"
     },
     {
       "anchor": {
-        "x": 1.4161616161616164,
-        "y": 7.236868686868687
+        "x": 1.1112373737373737,
+        "y": 6.972601010101011
       },
       "prevControl": {
-        "x": 1.822727272727273,
-        "y": 6.952272727272726
+        "x": 0.8797816784287346,
+        "y": 7.067090486283252
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Source1"
+      "linkedName": "LeftSource"
     }
   ],
   "rotationTargets": [],
@@ -45,10 +45,10 @@
     "rotation": -55.0
   },
   "reversed": false,
-  "folder": "HighAutos",
+  "folder": "LeftJKL",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -61.46001481204001
+    "rotation": -59.99999999999999
   },
   "useDefaultConstraints": true
 }
