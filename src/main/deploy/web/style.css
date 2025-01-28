@@ -64,6 +64,29 @@ body {
     filter: brightness(0.5);
 }
 
+.container.dropdown {
+    position: absolute; /* Allows the container to move freely */
+    top: 50%; /* Position from the top of the viewport */
+    left: 15%; /* Position from the left of the viewport */
+    transform: translate(-50%, -50%); /* Centers the container */
+    width: 300px;
+    padding: 10px;
+    background-color: #9b27b06f;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+#autoselector {
+    width: 100%; /* Make the select box full width */
+    padding: 10px; /* Padding inside the select box */
+    font-size: 16px; /* Adjust the font size */
+    border: 1px solid #bfbcbc; /* Light border */
+    border-radius: 5px; /* Rounded corners for the select */
+    background-color: #bfbcbc; /* White background for the dropdown */
+    transition: border-color 0.3s ease; /* Smooth transition for border color */
+}
+
 /* Button positions */
 .positionA { top: 35%; left: -60px; transform: translateY(-50%); }
 .positionB { top: 65%; left: -60px; transform: translateY(-50%); }

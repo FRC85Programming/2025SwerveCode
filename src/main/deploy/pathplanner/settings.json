@@ -3,7 +3,8 @@
   "robotLength": 0.7366,
   "holonomicMode": true,
   "pathFolders": [
-    "LeftJKL"
+    "LeftJKL",
+    "RightEDC"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,
