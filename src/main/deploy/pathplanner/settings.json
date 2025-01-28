@@ -3,10 +3,7 @@
   "robotLength": 0.7366,
   "holonomicMode": true,
   "pathFolders": [
-    "4CoralHigh",
-    "HighAutos",
-    "LowAutos",
-    "2CoralBack"
+    "LeftJKL"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,
@@ -14,13 +11,13 @@
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
-  "robotMass": 40.0,
+  "robotMass": 85.0,
   "robotMOI": 6.883,
   "robotTrackwidth": 0.546,
   "driveWheelRadius": 0.048,
-  "driveGearing": 5.143,
+  "driveGearing": 8.14,
   "maxDriveSpeed": 5.45,
-  "driveMotorType": "krakenX60",
+  "driveMotorType": "vortex",
   "driveCurrentLimit": 60.0,
   "wheelCOF": 1.2,
   "flModuleX": 0.273,
