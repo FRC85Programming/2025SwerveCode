@@ -73,9 +73,9 @@ body {
 .positionF { bottom: -15px; right: 5%; transform: translateX(50%); }
 .positionG { top: 65%; right: -60px; transform: translateY(-50%); }
 .positionH { top: 35%; right: -60px; transform: translateY(-50%); }
-.positionI { top: -60px; right: 30%; transform: translateX(50%); }
-.positionJ { top: -15px; right: 5%; transform: translateX(50%); }
-.positionK { top: -15px; left: 5%; transform: translateX(-50%); }
-.positionL { top: -60px; left: 30%; transform: translateX(-50%); }
+.positionI { top: -15px; right: 5%; transform: translateX(50%); }
+.positionJ { top: -60px; right: 30%; transform: translateX(50%); }
+.positionK { top: -60px; left: 30%; transform: translateX(-50%); }
+.positionL { top: -15px; left: 5%; transform: translateX(-50%); }
 .positionSA { top: 70px; left: 50%; transform: translateX(-50%); }
 .positionSB { top: 310px; left: 50%; transform: translateX(-50%); }
