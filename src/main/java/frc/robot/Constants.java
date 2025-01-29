@@ -21,7 +21,7 @@ import swervelib.math.Matter;
 public final class Constants
 {
 
-  public static final double ROBOT_MASS = 85 * 0.453592; // 32lbs * kg per pound
+  public static final double ROBOT_MASS = 40 * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
   public static final double MAX_SPEED  = Units.feetToMeters(19.5);
@@ -73,8 +73,8 @@ public final class Constants
 
 
     // Source positions
-    public static final Pose2d sourcePosition1 = new Pose2d(1, 6.9, new Rotation2d(Math.toRadians(305)));
-    public static final Pose2d sourcePosition2 = new Pose2d(1.4, 1, new Rotation2d(Math.toRadians(135)));
+    public static final Pose2d sourcePosition1 = new Pose2d(.9, 6.8, new Rotation2d(Math.toRadians(-50)));
+    public static final Pose2d sourcePosition2 = new Pose2d(1, 1.1, new Rotation2d(Math.toRadians(50)));
 
 
   }

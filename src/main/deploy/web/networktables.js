@@ -7,7 +7,7 @@ function updateNetworkTables(valueToPost, group) {
         clickedButton.classList.add("selected");
     }
 
-    const variable = group === "reef" ? "reefPositionValue" : "sourcePositionValue";
+    const variable = group === "reef" ? "reefPositionValue" : source ? "sourcePositionValue" : "autoValue";
 
     fetch("/toggle", {
         method: "POST",

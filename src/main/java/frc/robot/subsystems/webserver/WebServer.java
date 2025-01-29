@@ -21,6 +21,9 @@ public class WebServer {
     private final StringPublisher sourcePositionPublisher;
     private final StringSubscriber sourcePositionSubscriber;
     private static BooleanPublisher alliancePublisher;
+    private final StringPublisher autoPublisher;
+    private final StringSubscriber autoSubscriber;
+
     
     
         public WebServer() {
@@ -28,10 +31,13 @@ public class WebServer {
             var reefTable = NetworkTableInstance.getDefault().getTable("reefTable");
             var sourceTable = NetworkTableInstance.getDefault().getTable("sourceTable");
             var allianceTable = NetworkTableInstance.getDefault().getTable("allianceTable");
+            var autoTable = NetworkTableInstance.getDefault().getTable("allianceTable");
             reefPositionPublisher = reefTable.getStringTopic("positionValue").publish();
             reefPositionSubscriber = reefTable.getStringTopic("positionValue").subscribe(new String(), PubSubOption.sendAll(true));
             sourcePositionPublisher = sourceTable.getStringTopic("sourcePositionValue").publish();
             sourcePositionSubscriber = sourceTable.getStringTopic("sourcePositionValue").subscribe(new String(), PubSubOption.sendAll(true));
+            autoPublisher = sourceTable.getStringTopic("selectedAuto").publish();
+            autoSubscriber = sourceTable.getStringTopic("selectedAuto").subscribe(new String(), PubSubOption.sendAll(true));
             // This value should return TRUE if the alliance is blue
             alliancePublisher = allianceTable.getBooleanTopic("isBlue").publish();
 
@@ -61,6 +67,8 @@ public class WebServer {
                     reefPositionPublisher.set(value); // Update reef position
                 } else if (variable.equals("sourcePositionValue")) {
                     sourcePositionPublisher.set(value); // Update source position
+                } else if (variable.equals("autoValue")){
+                    autoPublisher.set(value); // Update source position
                 }
         
                 ctx.status(200);
@@ -82,5 +90,9 @@ public class WebServer {
 
     public String getSelectedSourcePosition() {
         return sourcePositionSubscriber.get();
+    }
+
+    public String getSelectedAuto() {
+        return autoSubscriber.get();
     }
 }

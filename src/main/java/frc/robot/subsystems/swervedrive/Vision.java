@@ -159,6 +159,9 @@ public class Vision
         swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                                          pose.timestampSeconds,
                                          camera.curStdDevs);
+        /*swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
+                                         pose.timestampSeconds,
+                                         getFilteredStdDevs(camera));*/
         visionField.setRobotPose(pose.estimatedPose.toPose2d());
 
       }
@@ -202,7 +205,7 @@ public class Vision
    * @param pose Estimated robot pose.
    * @return Could be empty if there isn't a good reading.
    */
-  @Deprecated(since = "2024", forRemoval = true)
+  /*@Deprecated(since = "2024", forRemoval = true)
   private Optional<EstimatedRobotPose> filterPose(Optional<EstimatedRobotPose> pose)
   {
     if (pose.isPresent())
@@ -239,7 +242,7 @@ public class Vision
       return pose;
     }
     return Optional.empty();
-  }
+  }*/
 
 
   /**
@@ -342,6 +345,10 @@ public class Vision
     field2d.getObject("tracked targets").setPoses(poses);
   }
 
+  public Matrix<N3, N1> getFilteredStdDevs(Cameras camera) {
+    return VecBuilder.fill(0.5, 0.5, 1);
+  }
+
   /**
    * Camera Enum to select each camera
    */
@@ -355,6 +362,12 @@ public class Vision
              new Translation3d(Units.inchesToMeters(12.875),
                                Units.inchesToMeters(0),
                                Units.inchesToMeters(6.75)),
+             VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+    BACK_CAM("camera-back",
+             new Rotation3d(0, Units.degreesToRadians(-39), Units.degreesToRadians(180)),
+             new Translation3d(Units.inchesToMeters(-15.50),
+                               Units.inchesToMeters(0),
+                               Units.inchesToMeters(5.5)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
     /**
      *
