@@ -99,7 +99,7 @@ public class Vision
     if (Robot.isSimulation())
     {
       visionSim = new VisionSystemSim("Vision");
-      visionSim.addAprilTags(fieldLayout);
+      //visionSim.addAprilTags(fieldLayout);
 
       for (Cameras c : Cameras.values())
       {

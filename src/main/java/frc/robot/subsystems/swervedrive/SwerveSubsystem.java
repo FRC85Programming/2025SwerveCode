@@ -52,6 +52,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import javax.lang.model.util.ElementScanner14;
+
 import org.json.simple.parser.ParseException;
 import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
@@ -88,6 +90,8 @@ public class SwerveSubsystem extends SubsystemBase
   private Field2d visionField = new Field2d();
 
   private final WebServer webServer = new WebServer();
+
+  String selectedPosition;
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -131,19 +135,10 @@ public class SwerveSubsystem extends SubsystemBase
     swerveDrive.setModuleEncoderAutoSynchronize(false,
                                                 1); // Enable if you want to resynchronize your absolute encoders and motor encoders periodically when they are not moving.
     swerveDrive.pushOffsetsToEncoders(); // Set the absolute encoder to be used over the internal encoder and push the offsets onto it. Throws warning if not possible
-    /*if (visionDriveTest)
-    {
-      setupPhotonVision();
-      // Stop the odometry thread if we are using vision that way we can synchronize updates better.
-      swerveDrive.stopOdometryThread();
-    }*/
-
+    
+    //swerveDrive.stopOdometryThread(); // Part of the visionDriveTest usage to switch on vision mode
     setupPhotonVision();
-
     setupPathPlanner();
-
-    configureSourceChooser();
-
   }
 
   /**
@@ -184,6 +179,7 @@ public class SwerveSubsystem extends SubsystemBase
 
     SmartDashboard.putString("Selected Reef Position", webServer.getSelectedReefPosition());
     SmartDashboard.putString("Selected Source Position", webServer.getSelectedSourcePosition());
+    SmartDashboard.putString("Selected Auto", webServer.getSelectedAuto());
 
     publishDriveMetersPerSecond();
   }
@@ -340,10 +336,10 @@ public class SwerveSubsystem extends SubsystemBase
    * @param pathName PathPlanner path name.
    * @return {@link AutoBuilder#followPath(PathPlannerPath)} path command.
    */
-  public Command getAutonomousCommand(String pathName)
+  public Command getAutonomousCommand()
   {
     // Create a path following command using AutoBuilder. This will also trigger event markers.
-    return new PathPlannerAuto(pathName);
+    return new PathPlannerAuto(webServer.getSelectedAuto());
   }
 
   /**
@@ -827,32 +823,34 @@ public class SwerveSubsystem extends SubsystemBase
 
   // Set up a smart dashboard dropdown to choose a position to drive to
   private Pose2d getSelectedScorePositionPose() {
-    if (webServer.getSelectedReefPosition().equals("positionA")) {
-      return PositionConstants.reefPositionA;
-    } else if (webServer.getSelectedReefPosition().equals("positionB")) {
-      return PositionConstants.reefPositionB;
-    } else if (webServer.getSelectedReefPosition().equals("positionC")) {
-      return PositionConstants.reefPositionC;
-    } else if (webServer.getSelectedReefPosition().equals("positionD")) {
-      return PositionConstants.reefPositionD;
-    } else if (webServer.getSelectedReefPosition().equals("positionE")) {
-      return PositionConstants.reefPositionE;
-    } else if (webServer.getSelectedReefPosition().equals("positionF")) {
-      return PositionConstants.reefPositionF;
-    } else if (webServer.getSelectedReefPosition().equals("positionG")) {
-      return PositionConstants.reefPositionG;
-    } else if (webServer.getSelectedReefPosition().equals("positionH")) {
-      return PositionConstants.reefPositionH;
-    } else if (webServer.getSelectedReefPosition().equals("positionI")) {
-      return PositionConstants.reefPositionI;
-    } else if (webServer.getSelectedReefPosition().equals("positionJ")) {
-      return PositionConstants.reefPositionJ;
-    } else if (webServer.getSelectedReefPosition().equals("positionK")) {
-      return PositionConstants.reefPositionK;
-    } else if (webServer.getSelectedReefPosition().equals("positionL")) {
-      return PositionConstants.reefPositionL;
-    } else {
-      return PositionConstants.reefPositionA;
+    selectedPosition = webServer.getSelectedReefPosition();
+    switch (selectedPosition) {
+      case "positionA":
+        return PositionConstants.reefPositionA;
+      case "positionB":
+        return PositionConstants.reefPositionB;
+      case "positionC":
+        return PositionConstants.reefPositionC;
+      case "positionD":
+        return PositionConstants.reefPositionD;
+      case "positionE":
+        return PositionConstants.reefPositionE;
+      case "positionF":
+        return PositionConstants.reefPositionF;
+      case "positionG":
+        return PositionConstants.reefPositionG;
+      case "positionH":
+        return PositionConstants.reefPositionH;
+      case "positionI":
+        return PositionConstants.reefPositionI;
+      case "positionJ":
+        return PositionConstants.reefPositionJ;
+      case "positionK":
+        return PositionConstants.reefPositionK;
+      case "positionL":
+        return PositionConstants.reefPositionL;
+      default:
+        return PositionConstants.reefPositionA;
     }
   }
 
@@ -871,13 +869,6 @@ public class SwerveSubsystem extends SubsystemBase
     } else {
       return PositionConstants.sourcePosition2;
     }
-  }
-
-  private void configureSourceChooser() {
-    sourceChooser.addOption("Lower Source", PositionConstants.sourcePosition2);
-    sourceChooser.addOption("Upper Source", PositionConstants.sourcePosition1);
-
-    SmartDashboard.putData(sourceChooser);
   }
 
   public Command driveToSource() {

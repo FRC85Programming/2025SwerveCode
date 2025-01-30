@@ -129,7 +129,6 @@ public class RobotContainer
   {
     // Configure the trigger bindings
     configureBindings();
-    configureAutoChooser();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
   }
@@ -177,16 +176,6 @@ public class RobotContainer
 
   }
 
-   public void configureAutoChooser() {
-    autoChooser.addOption("1CoralLow", new PathPlannerAuto("1CoralLow"));
-    autoChooser.addOption("3CoralLow", new PathPlannerAuto("3CoralLow"));
-    autoChooser.addOption("1CoralHigh", new PathPlannerAuto("1CoralHigh"));
-    autoChooser.addOption("3CoralHigh", new PathPlannerAuto("3CoralHigh"));
-    autoChooser.addOption("4CoralHigh", new PathPlannerAuto("4CoralHigh"));
-    autoChooser.addOption("Cycle", new PathPlannerAuto("Cycle"));
-    SmartDashboard.putData(autoChooser);
-  }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -195,7 +184,7 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return autoChooser.getSelected();
+    return drivebase.getAutonomousCommand();
   }
 
   public void setDriveMode()

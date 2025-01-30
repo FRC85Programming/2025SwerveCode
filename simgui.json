@@ -151,6 +151,12 @@
       "allianceTable": {
         "open": true
       },
+      "autoTable": {
+        "open": true
+      },
+      "photonvision": {
+        "open": true
+      },
       "reefTable": {
         "open": true
       },

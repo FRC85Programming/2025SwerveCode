@@ -31,13 +31,13 @@ public class WebServer {
             var reefTable = NetworkTableInstance.getDefault().getTable("reefTable");
             var sourceTable = NetworkTableInstance.getDefault().getTable("sourceTable");
             var allianceTable = NetworkTableInstance.getDefault().getTable("allianceTable");
-            var autoTable = NetworkTableInstance.getDefault().getTable("allianceTable");
+            var autoTable = NetworkTableInstance.getDefault().getTable("autoTable");
             reefPositionPublisher = reefTable.getStringTopic("positionValue").publish();
             reefPositionSubscriber = reefTable.getStringTopic("positionValue").subscribe(new String(), PubSubOption.sendAll(true));
             sourcePositionPublisher = sourceTable.getStringTopic("sourcePositionValue").publish();
             sourcePositionSubscriber = sourceTable.getStringTopic("sourcePositionValue").subscribe(new String(), PubSubOption.sendAll(true));
-            autoPublisher = sourceTable.getStringTopic("selectedAuto").publish();
-            autoSubscriber = sourceTable.getStringTopic("selectedAuto").subscribe(new String(), PubSubOption.sendAll(true));
+            autoPublisher = autoTable.getStringTopic("selectedAuto").publish();
+            autoSubscriber = autoTable.getStringTopic("selectedAuto").subscribe(new String(), PubSubOption.sendAll(true));
             // This value should return TRUE if the alliance is blue
             alliancePublisher = allianceTable.getBooleanTopic("isBlue").publish();
 

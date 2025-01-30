@@ -1,9 +1,10 @@
 {
-  "robotWidth": 0.762,
-  "robotLength": 0.7366,
+  "robotWidth": 0.9144,
+  "robotLength": 0.889,
   "holonomicMode": true,
   "pathFolders": [
     "LeftJKL",
+    "TopABAuto",
     "RightEDC"
   ],
   "autoFolders": [],
