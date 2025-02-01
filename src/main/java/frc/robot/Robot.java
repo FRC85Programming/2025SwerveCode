@@ -132,7 +132,7 @@ public class Robot extends TimedRobot
     {
       CommandScheduler.getInstance().cancelAll();
     }
-    m_robotContainer.getWebServer().setAlliance();
+    //m_robotContainer.getWebServer().setAlliance();
     m_robotContainer.setDriveMode();
   }
 

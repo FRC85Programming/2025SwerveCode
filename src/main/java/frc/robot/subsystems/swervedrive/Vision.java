@@ -551,25 +551,7 @@ public class Vision
      */
     private void updateUnreadResults()
     {
-      double mostRecentTimestamp = resultsList.isEmpty() ? 0.0 : resultsList.get(0).getTimestampSeconds() - timestampOffset;
-      double currentTimestamp    = Microseconds.of(NetworkTablesJNI.now()).in(Seconds);
-      if (currentTimestamp < mostRecentTimestamp) {
-        timestampOffset = mostRecentTimestamp - currentTimestamp;
-      }
-      double debounceTime        = Milliseconds.of(15).in(Seconds);
-      SmartDashboard.putNumber("Current Stamp", currentTimestamp);
-      SmartDashboard.putNumber("Recent Stamp", mostRecentTimestamp);
-
-      for (PhotonPipelineResult result : resultsList)
-      {
-        mostRecentTimestamp = Math.max(mostRecentTimestamp, result.getTimestampSeconds() - timestampOffset);
-        SmartDashboard.putNumber("Most Recent Timestamp", mostRecentTimestamp);
-      }
-      if ((resultsList.isEmpty() || (currentTimestamp - mostRecentTimestamp >= debounceTime)) &&
-          (currentTimestamp - lastReadTimestamp) >= debounceTime)
-      {
         resultsList = Robot.isReal() ? camera.getAllUnreadResults() : cameraSim.getCamera().getAllUnreadResults();
-        lastReadTimestamp = currentTimestamp;
         resultsList.sort((PhotonPipelineResult a, PhotonPipelineResult b) -> {
           return a.getTimestampSeconds() >= b.getTimestampSeconds() ? 1 : -1;
         });
@@ -577,7 +559,24 @@ public class Vision
         {
           updateEstimatedGlobalPose();
         }
+      /*double mostRecentTimestamp = resultsList.isEmpty() ? 0.0 : resultsList.get(0).getTimestampSeconds();
+      double currentTimestamp    = Microseconds.of(NetworkTablesJNI.now()).in(Seconds);
+
+      double debounceTime        = Milliseconds.of(15).in(Seconds);
+      SmartDashboard.putNumber("Current Stamp", currentTimestamp);
+      SmartDashboard.putNumber("Recent Stamp", mostRecentTimestamp);
+      SmartDashboard.putNumber("Time From Last From", camera.getAllUnreadResults().get(0).getTimestampSeconds());
+
+      for (PhotonPipelineResult result : resultsList)
+      {
+        mostRecentTimestamp = Math.max(mostRecentTimestamp, result.getTimestampSeconds());
+        SmartDashboard.putNumber("Most Recent Timestamp", mostRecentTimestamp);
       }
+      if ((resultsList.isEmpty() || (currentTimestamp - mostRecentTimestamp >= debounceTime)) &&
+          (currentTimestamp - lastReadTimestamp) >= debounceTime)
+      {
+        
+      }*/
     }
 
     /**
