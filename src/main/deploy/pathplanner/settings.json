@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.9144,
-  "robotLength": 0.889,
+  "robotWidth": 0.76,
+  "robotLength": 0.74,
   "holonomicMode": true,
   "pathFolders": [
     "LeftJKL",
