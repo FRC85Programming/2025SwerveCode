@@ -11,44 +11,49 @@
       "style": "0",
       "userScale": "2",
       "width": "996",
-      "xpos": "730",
-      "ypos": "823"
+      "xpos": "545",
+      "ypos": "326"
     }
   },
   "Window": {
     "###/FMSInfo": {
       "Collapsed": "0",
-      "Pos": "63,175",
-      "Size": "235,221"
+      "Pos": "761,532",
+      "Size": "254,221"
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
-      "Pos": "205,117",
+      "Pos": "977,180",
       "Size": "740,320"
     },
     "###/SmartDashboard/SendableChooser[0]": {
       "Collapsed": "0",
-      "Pos": "186,171",
+      "Pos": "100,271",
       "Size": "403,66"
     },
     "###/SmartDashboard/SendableChooser[1]": {
       "Collapsed": "0",
-      "Pos": "102,93",
+      "Pos": "187,52",
       "Size": "403,66"
+    },
+    "###Addressable LEDs": {
+      "Collapsed": "0",
+      "Pos": "593,159",
+      "Size": "229,230"
     },
     "###FMS": {
       "Collapsed": "0",
       "Pos": "4,414",
-      "Size": "244,244"
+      "Size": "235,244"
     },
     "###Joysticks": {
       "Collapsed": "0",
-      "Pos": "205,465",
+      "Pos": "847,449",
       "Size": "990,248"
     },
     "###Keyboard 0 Settings": {
       "Collapsed": "0",
-      "Pos": "280,85",
+      "Pos": "112,365",
       "Size": "300,560"
     },
     "###NetworkTables": {
@@ -58,12 +63,12 @@
     },
     "###NetworkTables Info": {
       "Collapsed": "1",
-      "Pos": "205,130",
+      "Pos": "189,176",
       "Size": "750,145"
     },
     "###Other Devices": {
       "Collapsed": "0",
-      "Pos": "205,20",
+      "Pos": "205,58",
       "Size": "250,695"
     },
     "###System Joysticks": {
@@ -73,7 +78,7 @@
     },
     "###Timing": {
       "Collapsed": "0",
-      "Pos": "5,150",
+      "Pos": "58,215",
       "Size": "188,273"
     },
     "Debug##Default": {
