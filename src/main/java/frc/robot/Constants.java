@@ -24,7 +24,7 @@ public final class Constants
   public static final double ROBOT_MASS = 40 * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED  = Units.feetToMeters(18.0);
+  public static final double MAX_SPEED  = Units.feetToMeters(16);
   // Maximum speed of the robot in meters per second, used to limit acceleration.
 
 //  public static final class AutonConstants
@@ -69,6 +69,9 @@ public final class Constants
     public static final Pose2d reefPositionJ = new Pose2d(5.0, 5.26, new Rotation2d(Math.toRadians(-120)));
     public static final Pose2d reefPositionK = new Pose2d(3.97, 5.26, new Rotation2d(Math.toRadians(-60)));
     public static final Pose2d reefPositionL = new Pose2d(3.68, 5.1, new Rotation2d(Math.toRadians(-60)));
+
+    public static final Pose2d pathPlanningTestPose = new Pose2d(1.8, 4, new Rotation2d(Math.toRadians(0)));
+
 
 
 

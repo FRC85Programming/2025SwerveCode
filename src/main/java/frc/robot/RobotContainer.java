@@ -166,7 +166,8 @@ public class RobotContainer
     {
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.b().whileTrue(drivebase.driveToScorePosition());
+      //driverXbox.b().whileTrue(drivebase.driveToScorePosition());
+      driverXbox.b().whileTrue(drivebase.driveToPose(Constants.PositionConstants.pathPlanningTestPose));
       driverXbox.y().whileTrue(drivebase.driveToSource());
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
