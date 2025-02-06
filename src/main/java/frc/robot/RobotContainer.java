@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PositionConstants;
+import frc.robot.commands.swervedrive.auto.DriveToClosePose;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
@@ -166,9 +167,8 @@ public class RobotContainer
     {
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      //driverXbox.b().whileTrue(drivebase.driveToScorePosition());
-      driverXbox.b().whileTrue(drivebase.driveToPose(Constants.PositionConstants.pathPlanningTestPose));
-      driverXbox.y().whileTrue(drivebase.driveToSource());
+      driverXbox.b().whileTrue(drivebase.driveToScorePosition());
+      //driverXbox.pov(0).whileTrue(new DriveToClosePose(Constants.PositionConstants.pathPlanningTestPose, drivebase));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());

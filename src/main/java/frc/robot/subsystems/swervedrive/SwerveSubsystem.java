@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.PositionConstants;
+import frc.robot.commands.swervedrive.auto.DriveToClosePose;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import frc.robot.subsystems.webserver.WebServer;
 
@@ -55,6 +56,7 @@ import java.util.function.Supplier;
 import javax.lang.model.util.ElementScanner14;
 
 import org.json.simple.parser.ParseException;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -852,7 +854,13 @@ public class SwerveSubsystem extends SubsystemBase
     return new InstantCommand(() -> {
         Pose2d selectedPose = getSelectedScorePositionPose();
         if (selectedPose != null) {
+          SmartDashboard.putNumber("Distance to target", PhotonUtils.getDistanceToPose(getPose(), selectedPose));
+          if (PhotonUtils.getDistanceToPose(getPose(), selectedPose) <= 0.5) {
+            Command driveCommand = new DriveToClosePose(selectedPose, this);
+            driveCommand.schedule();
+          } else {
             driveToPose(selectedPose).schedule(); // Schedule the command dynamically
+          }
         }
     });
   }
