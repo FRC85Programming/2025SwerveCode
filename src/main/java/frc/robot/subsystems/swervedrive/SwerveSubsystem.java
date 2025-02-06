@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -222,9 +223,9 @@ public class SwerveSubsystem extends SubsystemBase
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
           new PPHolonomicDriveController(
               // PPHolonomicController is the built in path following controller for holonomic drive trains
-              new PIDConstants(10.0, 0.0, 0.0),
+              new PIDConstants(5.0, 0.0, 0.0),
               // Translation PID constants
-              new PIDConstants(10.0, 0.0, 0.0) 
+              new PIDConstants(1, 0.0, 0.0) 
               // Rotation PID constants
           ),
           config,
@@ -344,16 +345,16 @@ public class SwerveSubsystem extends SubsystemBase
    * @param pose Target {@link Pose2d} to go to.
    * @return PathFinding command
    */
-  public Command driveToPose(Pose2d pose)
+  public Command driveToPose(Supplier<Pose2d> pose)
   {
-// Create the constraints to use while pathfinding
+    // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
         swerveDrive.getMaximumChassisVelocity(), 4.0,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
 
-// Since AutoBuilder is configured, we can use it to build pathfinding commands
-    return AutoBuilder.pathfindToPose(
-        pose,
+    // Since AutoBuilder is configured, we can use it to build pathfinding commands
+    return AutoBuilder.pathfindToPose (
+        pose.get(),
         constraints,
         edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
                                      );
@@ -818,68 +819,49 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   // Set up a smart dashboard dropdown to choose a position to drive to
-  private Pose2d getSelectedScorePositionPose() {
+  public Supplier<Pose2d> getSelectedScorePositionPose() {
     selectedPosition = webServer.getSelectedReefPosition();
     switch (selectedPosition) {
       case "positionA":
-        return PositionConstants.reefPositionA;
+        return () -> PositionConstants.reefPositionA;
       case "positionB":
-        return PositionConstants.reefPositionB;
+        return () -> PositionConstants.reefPositionB;
       case "positionC":
-        return PositionConstants.reefPositionC;
+        return () -> PositionConstants.reefPositionC;
       case "positionD":
-        return PositionConstants.reefPositionD;
+        return () -> PositionConstants.reefPositionD;
       case "positionE":
-        return PositionConstants.reefPositionE;
+        return () -> PositionConstants.pathPlanningTestPose;
       case "positionF":
-        return PositionConstants.reefPositionF;
+        return () -> PositionConstants.reefPositionF;
       case "positionG":
-        return PositionConstants.reefPositionG;
+        return () -> PositionConstants.reefPositionG;
       case "positionH":
-        return PositionConstants.reefPositionH;
+        return () -> PositionConstants.reefPositionH;
       case "positionI":
-        return PositionConstants.reefPositionI;
+        return () -> PositionConstants.reefPositionI;
       case "positionJ":
-        return PositionConstants.reefPositionJ;
+        return () -> PositionConstants.reefPositionJ;
       case "positionK":
-        return PositionConstants.reefPositionK;
+        return () -> PositionConstants.reefPositionK;
       case "positionL":
-        return PositionConstants.reefPositionL;
+        return () -> PositionConstants.reefPositionL;
       default:
-        return PositionConstants.reefPositionA;
+        return () -> PositionConstants.pathPlanningTestPose;
     }
   }
 
-  public Command driveToScorePosition() {
-    return new InstantCommand(() -> {
-        Pose2d selectedPose = getSelectedScorePositionPose();
-        if (selectedPose != null) {
-          SmartDashboard.putNumber("Distance to target", PhotonUtils.getDistanceToPose(getPose(), selectedPose));
-          if (PhotonUtils.getDistanceToPose(getPose(), selectedPose) <= 0.5) {
-            Command driveCommand = new DriveToClosePose(selectedPose, this);
-            driveCommand.schedule();
-          } else {
-            driveToPose(selectedPose).schedule(); // Schedule the command dynamically
-          }
-        }
-    });
+
+  public BooleanSupplier isWithinRange() {
+    return () -> PhotonUtils.getDistanceToPose(getPose(), getSelectedScorePositionPose().get()) <= 0.5;
   }
 
-  private Pose2d getSelectedIntakePositionPose() {
+  public Supplier<Pose2d> getSelectedIntakePositionPose() {
     if (webServer.getSelectedSourcePosition().equals("positionSA")) {
-      return PositionConstants.sourcePosition1;
+      return () -> PositionConstants.sourcePosition1;
     } else {
-      return PositionConstants.sourcePosition2;
+      return () -> PositionConstants.sourcePosition2;
     }
-  }
-
-  public Command driveToSource() {
-    return new InstantCommand(() -> {
-        Pose2d selectedPose = getSelectedIntakePositionPose();
-        if (selectedPose != null) {
-            driveToPose(selectedPose).schedule(); // Schedule the command dynamically
-        }
-    });
   }
 
   public WebServer getWebServer() {

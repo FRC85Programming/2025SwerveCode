@@ -1,5 +1,7 @@
 package frc.robot.commands.swervedrive.auto;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,52 +24,45 @@ public class DriveToClosePose extends Command
   private final PIDController   xController;
   private final PIDController   yController;
   private final PIDController   angleController;
-  Pose2d targetPose;
+  Supplier<Pose2d> targetPose;
   double xSpeed;
   double ySpeed;
   double rotationSpeed;
   ChassisSpeeds driveSpeed = new ChassisSpeeds(0, 0, 0);
+  int counter = 0;
 
 
 
-  public DriveToClosePose(Pose2d targetPose, SwerveSubsystem swerveSubsystem)
+  public DriveToClosePose(Supplier<Pose2d> targetPose, SwerveSubsystem swerveSubsystem)
   {
     this.swerveSubsystem = swerveSubsystem;
     this.targetPose = targetPose;
     xController = new PIDController(5, 0, 0);
     yController = new PIDController(5, 0, 0);
     angleController = new PIDController(0.1, 0, 0);
+    xController.setTolerance(0.1);
+    yController.setTolerance(0.1);
+    angleController.setTolerance(0.1);
 
     addRequirements(this.swerveSubsystem);
   }
 
-  /**
-   * The initial subroutine of a command.  Called once when the command is initially scheduled.
-   */
-  @Override
-  public void initialize()
-  {
-
-  }
-
-  /**
-   * The main body of a command.  Called repeatedly while the command is scheduled. (That is, it is called repeatedly
-   * until {@link #isFinished()}) returns true.)
-   */
   @Override
   public void execute()
   {
-    xSpeed = xController.calculate(swerveSubsystem.getPose().getX(), targetPose.getX());
-    ySpeed = yController.calculate(swerveSubsystem.getPose().getY(), targetPose.getY());
-    rotationSpeed = angleController.calculate(swerveSubsystem.getPose().getRotation().getDegrees(), targetPose.getRotation().getDegrees());
+    xSpeed = xController.calculate(swerveSubsystem.getPose().getX(), targetPose.get().getX());
+    ySpeed = yController.calculate(swerveSubsystem.getPose().getY(), targetPose.get().getY());
+    rotationSpeed = angleController.calculate(swerveSubsystem.getPose().getRotation().getDegrees(), targetPose.get().getRotation().getDegrees());
     driveSpeed = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
     swerveSubsystem.drive(driveSpeed);
+    SmartDashboard.putNumber("Run Count", counter);
+    counter++;
   }
 
   @Override
   public boolean isFinished()
   {
-    return false;
+    return xController.atSetpoint() && yController.atSetpoint() && angleController.atSetpoint();
   }
 
   @Override
