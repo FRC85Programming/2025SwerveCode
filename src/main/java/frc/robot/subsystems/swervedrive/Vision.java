@@ -153,7 +153,7 @@ public class Vision
     for (Cameras camera : Cameras.values())
     {
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
-      if (poseEst.isPresent())
+      if (poseEst != null && poseEst.isPresent())
       {
         var pose = poseEst.get();
         swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
@@ -372,7 +372,7 @@ public class Vision
     BACKLEFT_CAM("camera-backleft",
              new Rotation3d(0, Units.degreesToRadians(-30), Units.degreesToRadians(137)),
              new Translation3d(Units.inchesToMeters(-12.25),
-                               Units.inchesToMeters(11.25),
+                               Units.inchesToMeters(14.5),
                                Units.inchesToMeters(11.25)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
     /**

@@ -178,6 +178,8 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putString("Selected Source Position", webServer.getSelectedSourcePosition());
     SmartDashboard.putString("Selected Auto", webServer.getSelectedAuto());
 
+    displayMotorRPMs();
+
     publishDriveMetersPerSecond();
   }
 
@@ -223,9 +225,9 @@ public class SwerveSubsystem extends SubsystemBase
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
           new PPHolonomicDriveController(
               // PPHolonomicController is the built in path following controller for holonomic drive trains
-              new PIDConstants(2.3, 0.0, 0.0),
+              new PIDConstants(0.7, 0.0, 0.0),
               // Translation PID constants
-              new PIDConstants(3, 0.0, 0.0) 
+              new PIDConstants(0.7, 0.0, 0.0) 
               // Rotation PID constants
           ),
           config,
@@ -760,6 +762,10 @@ public class SwerveSubsystem extends SubsystemBase
   public ChassisSpeeds getRobotVelocity()
   {
     return swerveDrive.getRobotVelocity();
+  }
+
+  public void displayMotorRPMs() {
+    SmartDashboard.putNumber("FL RPM", swerveDrive.getModules()[0].getDriveMotor().getVelocity());
   }
 
   /**

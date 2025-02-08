@@ -37,8 +37,8 @@ public class HoldPose extends Command
   {
     this.swerveSubsystem = swerveSubsystem;
     this.targetPose = targetPose;
-    xController = new PIDController(5, 0, 0);
-    yController = new PIDController(5, 0, 0);
+    xController = new PIDController(2, 0, 0);
+    yController = new PIDController(2, 0, 0);
     angleController = new PIDController(0.1, 0, 0);
   }
 
