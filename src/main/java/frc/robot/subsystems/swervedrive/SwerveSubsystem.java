@@ -41,7 +41,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.PositionConstants;
-import frc.robot.commands.swervedrive.auto.DriveToClosePose;
+import frc.robot.commands.swervedrive.auto.HoldPose;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import frc.robot.subsystems.webserver.WebServer;
 
@@ -831,7 +831,7 @@ public class SwerveSubsystem extends SubsystemBase
       case "positionD":
         return () -> PositionConstants.reefPositionD;
       case "positionE":
-        return () -> PositionConstants.pathPlanningTestPose;
+        return () -> PositionConstants.reefPositionE;
       case "positionF":
         return () -> PositionConstants.reefPositionF;
       case "positionG":
@@ -851,10 +851,6 @@ public class SwerveSubsystem extends SubsystemBase
     }
   }
 
-
-  public BooleanSupplier isWithinRange() {
-    return () -> PhotonUtils.getDistanceToPose(getPose(), getSelectedScorePositionPose().get()) <= 0.5;
-  }
 
   public Supplier<Pose2d> getSelectedIntakePositionPose() {
     if (webServer.getSelectedSourcePosition().equals("positionSA")) {

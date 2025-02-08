@@ -11,8 +11,8 @@
       "style": "0",
       "userScale": "2",
       "width": "996",
-      "xpos": "838",
-      "ypos": "773"
+      "xpos": "558",
+      "ypos": "268"
     }
   },
   "Window": {
@@ -39,7 +39,7 @@
     "###FMS": {
       "Collapsed": "0",
       "Pos": "5,420",
-      "Size": "235,244"
+      "Size": "388,176"
     },
     "###Joysticks": {
       "Collapsed": "0",

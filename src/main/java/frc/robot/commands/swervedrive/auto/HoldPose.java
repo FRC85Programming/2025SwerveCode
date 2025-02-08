@@ -17,36 +17,50 @@ import frc.robot.subsystems.swervedrive.Vision;
  * Auto Balance command using a simple PID controller. Created by Team 3512
  * <a href="https://github.com/frc3512/Robot-2023/blob/main/src/main/java/frc3512/robot/commands/AutoBalance.java">...</a>
  */
-public class DriveToFarPose extends Command
+public class HoldPose extends Command
 {
 
   private final SwerveSubsystem swerveSubsystem;
+  private final PIDController   xController;
+  private final PIDController   yController;
+  private final PIDController   angleController;
   Supplier<Pose2d> targetPose;
+  double xSpeed;
+  double ySpeed;
+  double rotationSpeed;
+  ChassisSpeeds driveSpeed = new ChassisSpeeds(0, 0, 0);
+  int counter = 0;
 
-  public DriveToFarPose(Supplier<Pose2d> targetPose, SwerveSubsystem swerveSubsystem)
+
+
+  public HoldPose(Supplier<Pose2d> targetPose, SwerveSubsystem swerveSubsystem)
   {
     this.swerveSubsystem = swerveSubsystem;
     this.targetPose = targetPose;
-
-    addRequirements(this.swerveSubsystem);
+    xController = new PIDController(5, 0, 0);
+    yController = new PIDController(5, 0, 0);
+    angleController = new PIDController(0.1, 0, 0);
   }
 
   @Override
   public void execute()
   {
-    swerveSubsystem.driveToPose(targetPose);
+    xSpeed = xController.calculate(swerveSubsystem.getPose().getX(), targetPose.get().getX());
+    ySpeed = yController.calculate(swerveSubsystem.getPose().getY(), targetPose.get().getY());
+    rotationSpeed = angleController.calculate(swerveSubsystem.getPose().getRotation().getDegrees(), targetPose.get().getRotation().getDegrees());
+    driveSpeed = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
+    swerveSubsystem.drive(driveSpeed);
   }
 
   @Override
   public boolean isFinished()
   {
-    return swerveSubsystem.isWithinRange().getAsBoolean();
+    return false;
   }
 
   @Override
   public void end(boolean interrupted)
   {
-    Command driveToFarPose = new DriveToClosePose(targetPose, swerveSubsystem);
-    driveToFarPose.schedule();
+    swerveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
   }
 }
