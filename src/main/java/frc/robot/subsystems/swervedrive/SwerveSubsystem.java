@@ -4,7 +4,19 @@
 
 package frc.robot.subsystems.swervedrive;
 
+import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Meter;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
+import org.json.simple.parser.ParseException;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -17,6 +29,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -36,29 +49,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.PositionConstants;
-import frc.robot.commands.swervedrive.auto.HoldPose;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import frc.robot.subsystems.webserver.WebServer;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
-import javax.lang.model.util.ElementScanner14;
-
-import org.json.simple.parser.ParseException;
-import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -765,7 +761,10 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   public void displayMotorRPMs() {
-    SmartDashboard.putNumber("FL RPM", swerveDrive.getModules()[0].getDriveMotor().getVelocity());
+    SmartDashboard.putNumber("Max ft per sec", Units.metersToFeet(swerveDrive.getMaximumChassisVelocity()));
+    SmartDashboard.putNumber("Max velocity", swerveDrive.getModules()[0].getMaxVelocity().in(FeetPerSecond));
+    SmartDashboard.putNumber("FL output", swerveDrive.getModules()[0].getDriveMotor().getAppliedOutput());
+    SmartDashboard.putNumber("FL ft per sec", Units.metersToFeet(swerveDrive.getModules()[0].getDriveMotor().getVelocity()));
   }
 
   /**
