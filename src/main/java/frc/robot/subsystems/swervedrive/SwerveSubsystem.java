@@ -52,7 +52,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Constants.PositionConstants;
+import frc.robot.commands.swervedrive.auto.autos.GenerateAuto;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import frc.robot.subsystems.webserver.WebServer;
 import swervelib.SwerveController;
@@ -63,6 +65,7 @@ import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
+import frc.robot.commands.swervedrive.auto.autos.GenerateAuto;
 
 public class SwerveSubsystem extends SubsystemBase
 {
@@ -169,10 +172,6 @@ public class SwerveSubsystem extends SubsystemBase
 
     //swerveDrive.updateOdometry();
     vision.updatePoseEstimation(swerveDrive);
-
-    SmartDashboard.putString("Selected Reef Position", webServer.getSelectedReefPosition());
-    SmartDashboard.putString("Selected Source Position", webServer.getSelectedSourcePosition());
-    SmartDashboard.putString("Selected Auto", webServer.getSelectedAuto());
 
     displayMotorRPMs();
 
@@ -333,8 +332,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public Command getAutonomousCommand()
   {
-    // Create a path following command using AutoBuilder. This will also trigger event markers.
-    return new PathPlannerAuto(webServer.getSelectedAuto());
+    return new GenerateAuto(this);
   }
 
   /**
@@ -824,9 +822,8 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   // Set up a smart dashboard dropdown to choose a position to drive to
-  public Supplier<Pose2d> getSelectedScorePositionPose() {
-    selectedPosition = webServer.getSelectedReefPosition();
-    switch (selectedPosition) {
+  public Supplier<Pose2d> getSelectedScorePositionPose(String positionString) {
+    switch (positionString) {
       case "positionA":
         return () -> PositionConstants.reefPositionA;
       case "positionB":
@@ -856,9 +853,8 @@ public class SwerveSubsystem extends SubsystemBase
     }
   }
 
-
-  public Supplier<Pose2d> getSelectedIntakePositionPose() {
-    if (webServer.getSelectedSourcePosition().equals("positionSA")) {
+  public Supplier<Pose2d> getSelectedIntakePositionPose(String position) {
+    if (position == "positionSA") {
       return () -> PositionConstants.sourcePosition1;
     } else {
       return () -> PositionConstants.sourcePosition2;

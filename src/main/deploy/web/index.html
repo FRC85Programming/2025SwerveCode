@@ -1,44 +1,46 @@
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" href="style.css">
 <head>
     <title>Reef Position Selector</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="networktables.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container reefcontainer">
-        <img class="reef" src="images/reefs/reef-red.jpg" alt="Reef Image">
-        <img class="button positionA" src="images/coral/coral-a.jpg" onclick="updateNetworkTables('positionA', 'reef')" alt="Coral A">
-        <img class="button positionB" src="images/coral/coral-b.jpg" onclick="updateNetworkTables('positionB', 'reef')" alt="Coral B">
-        <img class="button positionC" src="images/coral/coral-c.jpg" onclick="updateNetworkTables('positionC', 'reef')" alt="Coral C">
-        <img class="button positionD" src="images/coral/coral-d.jpg" onclick="updateNetworkTables('positionD', 'reef')" alt="Coral D">
-        <img class="button positionE" src="images/coral/coral-e.jpg" onclick="updateNetworkTables('positionE', 'reef')" alt="Coral E">
-        <img class="button positionF" src="images/coral/coral-f.jpg" onclick="updateNetworkTables('positionF', 'reef')" alt="Coral F">
-        <img class="button positionG" src="images/coral/coral-g.jpg" onclick="updateNetworkTables('positionG', 'reef')" alt="Coral G">
-        <img class="button positionH" src="images/coral/coral-h.jpg" onclick="updateNetworkTables('positionH', 'reef')" alt="Coral H">
-        <img class="button positionI" src="images/coral/coral-i.jpg" onclick="updateNetworkTables('positionI', 'reef')" alt="Coral I">
-        <img class="button positionJ" src="images/coral/coral-j.jpg" onclick="updateNetworkTables('positionJ', 'reef')" alt="Coral J">
-        <img class="button positionK" src="images/coral/coral-k.jpg" onclick="updateNetworkTables('positionK', 'reef')" alt="Coral K">
-        <img class="button positionL" src="images/coral/coral-l.jpg" onclick="updateNetworkTables('positionL', 'reef')" alt="Coral L">
+        <img class="reef" id="reef" src="images/reefs/reef-red.jpg" alt="Reef Image">
+        
+        <img class="button positionA" data-value="positionA" src="images/coral/coral-a.jpg" onclick="sendReefPosition('positionA')" alt="Coral A">
+        <img class="button positionB" data-value="positionB" src="images/coral/coral-b.jpg" onclick="sendReefPosition('positionB')" alt="Coral B">
+        <img class="button positionC" data-value="positionC" src="images/coral/coral-c.jpg" onclick="sendReefPosition('positionC')" alt="Coral C">
+        <img class="button positionD" data-value="positionD" src="images/coral/coral-d.jpg" onclick="sendReefPosition('positionD')" alt="Coral D">
+        <img class="button positionE" data-value="positionE" src="images/coral/coral-e.jpg" onclick="sendReefPosition('positionE')" alt="Coral E">
+        <img class="button positionF" data-value="positionF" src="images/coral/coral-f.jpg" onclick="sendReefPosition('positionF')" alt="Coral F">
+        <img class="button positionG" data-value="positionG" src="images/coral/coral-g.jpg" onclick="sendReefPosition('positionG')" alt="Coral G">
+        <img class="button positionH" data-value="positionH" src="images/coral/coral-h.jpg" onclick="sendReefPosition('positionH')" alt="Coral H">
+        <img class="button positionI" data-value="positionI" src="images/coral/coral-i.jpg" onclick="sendReefPosition('positionI')" alt="Coral I">
+        <img class="button positionJ" data-value="positionJ" src="images/coral/coral-j.jpg" onclick="sendReefPosition('positionJ')" alt="Coral J">
+        <img class="button positionK" data-value="positionK" src="images/coral/coral-k.jpg" onclick="sendReefPosition('positionK')" alt="Coral K">
+        <img class="button positionL" data-value="positionL" src="images/coral/coral-l.jpg" onclick="sendReefPosition('positionL')" alt="Coral L">
     </div>
     
     <div class="container sourcecontainer">
         <img class="source" src="images/source/source.jpg" alt="Source Image">
-        <img class="button positionSA" src="images/coral/coral-blank.jpg" onclick="updateNetworkTables('positionSA', 'source')" alt="Source A">
-        <img class="button positionSB" src="images/coral/coral-blank.jpg" onclick="updateNetworkTables('positionSB', 'source')" alt="Source B">
+        <img class="button positionSA" data-value="positionSA" src="images/coral/coral-blank.jpg" onclick="sendSourcePosition('positionSA')" alt="Source A">
+        <img class="button positionSB" data-value="positionSB" src="images/coral/coral-blank.jpg" onclick="sendSourcePosition('positionSB')" alt="Source B">
     </div>
-    <div class="container dropdown">
-        <select name="autos" id="autoselector">
-            <option value="LeftJKLAuto">LeftJKLAuto </option>
-            <option value="LeftJKAuto">LeftJKAuto</option>
-            <option value="RightEDCAuto">RightEDCAuto</option>
-            <option value="RightEDAuto">RightEDAuto</option>
-            <option value="FarLeftABAuto">FarLeftABAuto</option>
-        </select>
+
+    <div class="container autocontainer">
+        <button class="autobutton" data-value="positionA" onclick="selectAutoPosition('positionA')">Position A</button>
+        <button class="autobutton" data-value="positionB" onclick="selectAutoPosition('positionB')">Position B</button>
+        <button class="autobutton" data-value="positionC" onclick="selectAutoPosition('positionC')">Position C</button>
+        <button class="autobutton" data-value="positionD" onclick="selectAutoPosition('positionD')">Position D</button>
+        <button class="autobutton" data-value="positionE" onclick="selectAutoPosition('positionE')">Position E</button>
+        <button class="updateselectionbutton" onclick="updateAutoSelection()">Update Selections</button>
     </div>
 
     <img class="logo" src="images/logos/logo-bob.jpg" alt="Logo">
+
+    <script src="networktables.js"></script>
 </body>
 </html>

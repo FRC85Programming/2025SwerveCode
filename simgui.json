@@ -152,7 +152,10 @@
         "open": true
       },
       "autoTable": {
-        "open": true
+        "open": true,
+        "string[]##v_/autoTable/autoPositions": {
+          "open": true
+        }
       },
       "photonvision": {
         "open": true

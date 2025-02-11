@@ -1,4 +1,4 @@
-package frc.robot.commands.swervedrive.auto;
+package frc.robot.commands.swervedrive.auto.actions;
 
 import java.util.function.Supplier;
 
@@ -40,6 +40,11 @@ public class HoldPose extends Command
     xController = new PIDController(2, 0, 0);
     yController = new PIDController(2, 0, 0);
     angleController = new PIDController(0.1, 0, 0);
+
+    xController.setTolerance(1);
+    yController.setTolerance(1);
+    angleController.setTolerance(10);
+
   }
 
   @Override
@@ -55,7 +60,7 @@ public class HoldPose extends Command
   @Override
   public boolean isFinished()
   {
-    return false;
+    return xController.atSetpoint() && yController.atSetpoint() && angleController.atSetpoint();
   }
 
   @Override

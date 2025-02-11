@@ -23,9 +23,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PositionConstants;
-import frc.robot.commands.swervedrive.auto.DriveToIntakePosition;
-import frc.robot.commands.swervedrive.auto.DriveToScorePosition;
-import frc.robot.commands.swervedrive.auto.HoldPose;
+import frc.robot.commands.swervedrive.auto.actions.DriveAndHoldPose;
+import frc.robot.commands.swervedrive.auto.actions.HoldPose;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
@@ -155,7 +154,7 @@ public class RobotContainer
 
     if (Robot.isSimulation())
     {
-      driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(7.5, 4, new Rotation2d(3.14)))));
     }
     if (DriverStation.isTest())
     {
@@ -172,8 +171,8 @@ public class RobotContainer
     {
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.b().whileTrue(new DriveToScorePosition(drivebase));
-      driverXbox.y().whileTrue(new DriveToIntakePosition(drivebase));
+      driverXbox.b().whileTrue(new DriveAndHoldPose(drivebase, drivebase.getSelectedScorePositionPose(drivebase.getWebServer().getSelectedScorePosition())));
+      driverXbox.y().whileTrue(new DriveAndHoldPose(drivebase, drivebase.getSelectedScorePositionPose(drivebase.getWebServer().getSelectedIntakePosition())));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
