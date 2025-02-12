@@ -57,8 +57,8 @@ public final class Constants
     // Positions are labled clockwise from position 1
 
     // Reef positions
-    public static final Pose2d reefPositionA = new Pose2d(3.150, 4.19, new Rotation2d(Math.toRadians(0)));
-    public static final Pose2d reefPositionB = new Pose2d(3.15, 3.87, new Rotation2d(Math.toRadians(0)));
+    public static final Pose2d reefPositionA = new Pose2d(2.9, 4.19, new Rotation2d(Math.toRadians(0)));
+    public static final Pose2d reefPositionB = new Pose2d(2.9, 3.87, new Rotation2d(Math.toRadians(0)));
     public static final Pose2d reefPositionC = new Pose2d(3.675, 2.950, new Rotation2d(Math.toRadians(60)));
     public static final Pose2d reefPositionD = new Pose2d(3.960, 2.790, new Rotation2d(Math.toRadians(60)));
     public static final Pose2d reefPositionE = new Pose2d(5.00, 2.790, new Rotation2d(Math.toRadians(120)));

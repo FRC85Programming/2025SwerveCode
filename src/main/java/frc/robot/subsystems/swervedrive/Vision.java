@@ -358,15 +358,15 @@ public class Vision
      * Front Camera
      */
     FRONT_CAM("camera-front",
-             new Rotation3d(0, Units.degreesToRadians(-15), 0),
-             new Translation3d(Units.inchesToMeters(14.5),
-                               Units.inchesToMeters(0),
-                               Units.inchesToMeters(6.75)),
+             new Rotation3d(0, Units.degreesToRadians(-16), 0),
+             new Translation3d(Units.inchesToMeters(2.75),
+                               Units.inchesToMeters(-1),
+                               Units.inchesToMeters(7.75)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     BACKRIGHT_CAM("camera-backright",
              new Rotation3d(0, Units.degreesToRadians(-30), Units.degreesToRadians(225)),
-             new Translation3d(Units.inchesToMeters(-11.5),
-                               Units.inchesToMeters(-13.5),
+             new Translation3d(Units.inchesToMeters(-11.75),
+                               Units.inchesToMeters(-12.5),
                                Units.inchesToMeters(11.25)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     BACKLEFT_CAM("camera-backleft",
@@ -461,7 +461,7 @@ public class Vision
       robotToCamTransform = new Transform3d(robotToCamTranslation, robotToCamRotation);
 
       poseEstimator = new PhotonPoseEstimator(Vision.fieldLayout,
-                                              PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+                                              PoseStrategy.LOWEST_AMBIGUITY,
                                               robotToCamTransform);
       poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
