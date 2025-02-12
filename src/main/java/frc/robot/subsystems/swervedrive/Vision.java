@@ -156,13 +156,16 @@ public class Vision
       if (poseEst != null && poseEst.isPresent())
       {
         var pose = poseEst.get();
-        swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
-                                         pose.timestampSeconds,
-                                         camera.curStdDevs);
+        if (filterPose(poseEst).get().estimatedPose.toPose2d() != null) {
+          swerveDrive.addVisionMeasurement(filterPose(poseEst).get().estimatedPose.toPose2d(),
+                                          pose.timestampSeconds,
+                                          camera.curStdDevs);
+          visionField.setRobotPose(filterPose(poseEst).get().estimatedPose.toPose2d());
+
+        }
         /*swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                                          pose.timestampSeconds,
                                          getFilteredStdDevs(camera));*/
-        visionField.setRobotPose(pose.estimatedPose.toPose2d());
 
       }
     }
@@ -205,7 +208,7 @@ public class Vision
    * @param pose Estimated robot pose.
    * @return Could be empty if there isn't a good reading.
    */
-  /*@Deprecated(since = "2024", forRemoval = true)
+  @Deprecated(since = "2024", forRemoval = true)
   private Optional<EstimatedRobotPose> filterPose(Optional<EstimatedRobotPose> pose)
   {
     if (pose.isPresent())
@@ -242,7 +245,7 @@ public class Vision
       return pose;
     }
     return Optional.empty();
-  }*/
+  }
 
 
   /**
@@ -461,7 +464,7 @@ public class Vision
       robotToCamTransform = new Transform3d(robotToCamTranslation, robotToCamRotation);
 
       poseEstimator = new PhotonPoseEstimator(Vision.fieldLayout,
-                                              PoseStrategy.LOWEST_AMBIGUITY,
+                                              PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                                               robotToCamTransform);
       poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
