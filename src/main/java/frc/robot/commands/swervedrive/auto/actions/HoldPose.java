@@ -24,7 +24,7 @@ public class HoldPose extends Command
   private final PIDController   xController;
   private final PIDController   yController;
   private final PIDController   angleController;
-  Supplier<Pose2d> targetPose;
+  Pose2d targetPose;
   double xSpeed;
   double ySpeed;
   double rotationSpeed;
@@ -36,7 +36,7 @@ public class HoldPose extends Command
   public HoldPose(Supplier<Pose2d> targetPose, SwerveSubsystem swerveSubsystem)
   {
     this.swerveSubsystem = swerveSubsystem;
-    this.targetPose = targetPose;
+    this.targetPose = targetPose.get();
     xController = new PIDController(2, 0, 0);
     yController = new PIDController(2, 0, 0);
     angleController = new PIDController(0.1, 0, 0);
@@ -50,9 +50,9 @@ public class HoldPose extends Command
   @Override
   public void execute()
   {
-    xSpeed = xController.calculate(swerveSubsystem.getPose().getX(), targetPose.get().getX());
-    ySpeed = yController.calculate(swerveSubsystem.getPose().getY(), targetPose.get().getY());
-    rotationSpeed = angleController.calculate(swerveSubsystem.getPose().getRotation().getDegrees(), targetPose.get().getRotation().getDegrees());
+    xSpeed = xController.calculate(swerveSubsystem.getPose().getX(), targetPose.getX());
+    ySpeed = yController.calculate(swerveSubsystem.getPose().getY(), targetPose.getY());
+    rotationSpeed = angleController.calculate(swerveSubsystem.getPose().getRotation().getDegrees(), targetPose.getRotation().getDegrees());
     driveSpeed = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
     swerveSubsystem.drive(driveSpeed);
   }

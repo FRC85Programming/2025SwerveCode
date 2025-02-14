@@ -7,6 +7,12 @@ body {
     width: 350px;  
 }
 
+.autoReef {
+    display: block;
+    height: 200px;
+    width: 200px;    
+}
+
 .source {
     display: block;
     width: 150px;  
@@ -31,6 +37,14 @@ body {
     top: -10px;
     left: 800px;
     transform: rotate(-90deg);
+}
+
+.autocontainer {
+    transform: rotate(-90deg);
+    width: 200px;
+    height: 200px;
+    top: 80px;
+    left: -370px;
 }
 
 .sourcecontainer {
@@ -102,3 +116,19 @@ body {
 .positionL { top: -15px; left: 5%; transform: translateX(-50%); }
 .positionSA { top: 70px; left: 50%; transform: translateX(-50%); }
 .positionSB { top: 310px; left: 50%; transform: translateX(-50%); }
+
+.autoPositionA { top: 35%; left: -60px; transform: translateY(-50%); width: 30px; height: 30px;}
+.autoPositionB { top: 65%; left: -60px; transform: translateY(-50%); width: 30px; height: 30px;}
+.autoPositionC { bottom: -15px; left: 5%; transform: translateX(-50%); width: 30px; height: 30px;}
+.autoPositionD { bottom: -60px; left: 30%; transform: translateX(-50%); width: 30px; height: 30px;}
+.autoPositionE { bottom: -60px; right: 30%; transform: translateX(50%); width: 30px; height: 30px;}
+.autoPositionF { bottom: -15px; right: 5%; transform: translateX(50%); width: 30px; height: 30px; }
+.autoPositionG { top: 65%; right: -60px; transform: translateY(-50%); width: 30px; height: 30px;}
+.autoPositionH { top: 35%; right: -60px; transform: translateY(-50%); width: 30px; height: 30px;}
+.autoPositionI { top: -15px; right: 5%; transform: translateX(50%); width: 30px; height: 30px;}
+.autoPositionJ { top: -60px; right: 30%; transform: translateX(50%); width: 30px; height: 30px;}
+.autoPositionK { top: -60px; left: 30%; transform: translateX(-50%); width: 30px; height: 30px;}
+.autoPositionL { top: -15px; left: 5%; transform: translateX(-50%); width: 30px; height: 30px;}
+.autoPositionSA { top: 70px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px;}
+.autoPositionSB { top: 310px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px;}
+.updateselectionbutton{top: 100%; left: -100px; position: absolute; transform: rotate(90deg);}

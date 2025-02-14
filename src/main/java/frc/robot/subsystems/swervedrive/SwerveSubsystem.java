@@ -16,6 +16,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -94,6 +95,14 @@ public class SwerveSubsystem extends SubsystemBase
   private final WebServer webServer = new WebServer();
 
   String selectedPosition;
+
+  double pathPlannerXp = 0;
+  double pathPlannerXi = 0;
+  double pathPlannerXd = 0;
+
+  double pathPlannerRotationp = 0;
+  double pathPlannerRotationi = 0;
+  double pathPlannerRotationd = 0;
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -197,6 +206,15 @@ public class SwerveSubsystem extends SubsystemBase
 
       final boolean enableFeedforward = true;
       // Configure AutoBuilder last
+      if (Robot.isSimulation()) {
+        pathPlannerXp = 5;
+
+        pathPlannerRotationp = 5;
+      } else {
+        pathPlannerXp = 0.7;
+
+        pathPlannerRotationp = 0.7;
+      }
       AutoBuilder.configure(
           this::getPose,
           // Robot pose supplier
@@ -220,9 +238,9 @@ public class SwerveSubsystem extends SubsystemBase
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
           new PPHolonomicDriveController(
               // PPHolonomicController is the built in path following controller for holonomic drive trains
-              new PIDConstants(0.7, 0.0, 0.0),
+              new PIDConstants(pathPlannerXp, pathPlannerXi, pathPlannerXd),
               // Translation PID constants
-              new PIDConstants(0.7, 0.0, 0.0) 
+              new PIDConstants(pathPlannerRotationp, pathPlannerRotationi, pathPlannerRotationd) 
               // Rotation PID constants
           ),
           config,
@@ -281,24 +299,6 @@ public class SwerveSubsystem extends SubsystemBase
     return new Rotation2d(relativeTrl.getX(), relativeTrl.getY()).plus(swerveDrive.getOdometryHeading());
   }
 
-  /**
-   * Aim the robot at the speaker.
-   *
-   * @param tolerance Tolerance in degrees.
-   * @return Command to turn the robot to the speaker.
-   */
-  public Command aimAtSpeaker(double tolerance)
-  {
-    SwerveController controller = swerveDrive.getSwerveController();
-    return run(
-        () -> {
-          ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0,
-                                                   controller.headingCalculate(getHeading().getRadians(),
-                                                                               getSpeakerYaw().getRadians()),
-                                                                       getHeading());
-          drive(speeds);
-        }).until(() -> Math.abs(getSpeakerYaw().minus(getHeading()).getDegrees()) < tolerance);
-  }
 
   /**
    * Aim the robot at the target returned by PhotonVision.
@@ -360,6 +360,16 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putNumber("X Speed MPS", SwerveDriveTelemetry.measuredChassisSpeedsObj.vxMetersPerSecond);
     SmartDashboard.putNumber("Y Speed MPS", SwerveDriveTelemetry.measuredChassisSpeedsObj.vyMetersPerSecond);
     SmartDashboard.putNumber("Max Speed MPS", SwerveDriveTelemetry.maxSpeed);
+  }
+
+  public Pose2d getClosestSource() {
+    double distanceToLeftSource = PhotonUtils.getDistanceToPose(getPose(), Constants.PositionConstants.sourcePositionLeft);
+    double distanceToRightSource = PhotonUtils.getDistanceToPose(getPose(), Constants.PositionConstants.sourcePositionRight);
+    if (distanceToLeftSource > distanceToRightSource) {
+      return Constants.PositionConstants.sourcePositionRight;
+    } else {
+      return Constants.PositionConstants.sourcePositionLeft;
+    }
   }
 
   /**
@@ -822,42 +832,42 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   // Set up a smart dashboard dropdown to choose a position to drive to
-  public Supplier<Pose2d> getSelectedScorePositionPose(String positionString) {
+  public Pose2d getSelectedScorePositionPose(String positionString) {
     switch (positionString) {
       case "positionA":
-        return () -> PositionConstants.reefPositionA;
+        return PositionConstants.reefPositionA;
       case "positionB":
-        return () -> PositionConstants.reefPositionB;
+        return PositionConstants.reefPositionB;
       case "positionC":
-        return () -> PositionConstants.reefPositionC;
+        return PositionConstants.reefPositionC;
       case "positionD":
-        return () -> PositionConstants.reefPositionD;
+        return PositionConstants.reefPositionD;
       case "positionE":
-        return () -> PositionConstants.reefPositionE;
+        return PositionConstants.reefPositionE;
       case "positionF":
-        return () -> PositionConstants.reefPositionF;
+        return PositionConstants.reefPositionF;
       case "positionG":
-        return () -> PositionConstants.reefPositionG;
+        return PositionConstants.reefPositionG;
       case "positionH":
-        return () -> PositionConstants.reefPositionH;
+        return PositionConstants.reefPositionH;
       case "positionI":
-        return () -> PositionConstants.reefPositionI;
+        return PositionConstants.reefPositionI;
       case "positionJ":
-        return () -> PositionConstants.reefPositionJ;
+        return PositionConstants.reefPositionJ;
       case "positionK":
-        return () -> PositionConstants.reefPositionK;
+        return PositionConstants.reefPositionK;
       case "positionL":
-        return () -> PositionConstants.reefPositionL;
+        return PositionConstants.reefPositionL;
       default:
-        return () -> PositionConstants.pathPlanningTestPose;
+        return PositionConstants.pathPlanningTestPose;
     }
   }
 
-  public Supplier<Pose2d> getSelectedIntakePositionPose(String position) {
+  public Pose2d getSelectedIntakePositionPose(String position) {
     if (position == "positionSA") {
-      return () -> PositionConstants.sourcePosition1;
+      return PositionConstants.sourcePositionLeft;
     } else {
-      return () -> PositionConstants.sourcePosition2;
+      return PositionConstants.sourcePositionRight;
     }
   }
 

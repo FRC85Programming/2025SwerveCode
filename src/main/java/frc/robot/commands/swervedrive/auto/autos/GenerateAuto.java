@@ -21,6 +21,7 @@ public class GenerateAuto extends Command {
     WebServer webServer;
     SequentialCommandGroup autoRoutine = new SequentialCommandGroup();
     boolean scheduled = false;
+    Pose2d selectedReefPose;
 
     public GenerateAuto(SwerveSubsystem swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
@@ -30,10 +31,10 @@ public class GenerateAuto extends Command {
     
     @Override
     public void initialize() {
-        scheduled = false;
-
         for (int i = 0; i < autoScorePositions.length; i++) {
-            autoRoutine.addCommands(new DriveAndHoldPose(swerveSubsystem, swerveSubsystem.getSelectedScorePositionPose(autoScorePositions[i])), new DriveAndHoldPose(swerveSubsystem, () -> Constants.PositionConstants.sourcePosition1));
+            selectedReefPose = swerveSubsystem.getSelectedScorePositionPose(autoScorePositions[i]);
+            autoRoutine.addCommands(new DriveAndHoldPose(swerveSubsystem, () -> selectedReefPose), 
+                new DriveAndHoldPose(swerveSubsystem, () -> swerveSubsystem.getSelectedIntakePositionPose(webServer.getSelectedIntakePosition())));
         }
         swerveSubsystem.resetOdometry(new Pose2d(7.5, 4, new Rotation2d(3.14)));
         autoRoutine.schedule();

@@ -76,8 +76,8 @@ public final class Constants
 
 
     // Source positions
-    public static final Pose2d sourcePosition1 = new Pose2d(.9, 6.8, new Rotation2d(Math.toRadians(-50)));
-    public static final Pose2d sourcePosition2 = new Pose2d(1, 1.1, new Rotation2d(Math.toRadians(50)));
+    public static final Pose2d sourcePositionLeft = new Pose2d(.9, 6.8, new Rotation2d(Math.toRadians(-50)));
+    public static final Pose2d sourcePositionRight = new Pose2d(1, 1.1, new Rotation2d(Math.toRadians(50)));
 
 
   }
