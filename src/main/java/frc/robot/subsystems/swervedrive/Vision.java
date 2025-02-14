@@ -156,13 +156,16 @@ public class Vision
       if (poseEst != null && poseEst.isPresent())
       {
         var pose = poseEst.get();
-        swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
-                                         pose.timestampSeconds,
-                                         camera.curStdDevs);
+        if (filterPose(poseEst).get().estimatedPose.toPose2d() != null) {
+          swerveDrive.addVisionMeasurement(filterPose(poseEst).get().estimatedPose.toPose2d(),
+                                          pose.timestampSeconds,
+                                          camera.curStdDevs);
+          visionField.setRobotPose(filterPose(poseEst).get().estimatedPose.toPose2d());
+
+        }
         /*swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                                          pose.timestampSeconds,
                                          getFilteredStdDevs(camera));*/
-        visionField.setRobotPose(pose.estimatedPose.toPose2d());
 
       }
     }
@@ -205,7 +208,7 @@ public class Vision
    * @param pose Estimated robot pose.
    * @return Could be empty if there isn't a good reading.
    */
-  /*@Deprecated(since = "2024", forRemoval = true)
+  @Deprecated(since = "2024", forRemoval = true)
   private Optional<EstimatedRobotPose> filterPose(Optional<EstimatedRobotPose> pose)
   {
     if (pose.isPresent())
@@ -242,7 +245,7 @@ public class Vision
       return pose;
     }
     return Optional.empty();
-  }*/
+  }
 
 
   /**
@@ -358,15 +361,15 @@ public class Vision
      * Front Camera
      */
     FRONT_CAM("camera-front",
-             new Rotation3d(0, Units.degreesToRadians(-15), 0),
-             new Translation3d(Units.inchesToMeters(14.5),
-                               Units.inchesToMeters(0),
-                               Units.inchesToMeters(6.75)),
+             new Rotation3d(0, Units.degreesToRadians(-16), 0),
+             new Translation3d(Units.inchesToMeters(2.75),
+                               Units.inchesToMeters(-1),
+                               Units.inchesToMeters(7.75)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     BACKRIGHT_CAM("camera-backright",
              new Rotation3d(0, Units.degreesToRadians(-30), Units.degreesToRadians(225)),
-             new Translation3d(Units.inchesToMeters(-11.5),
-                               Units.inchesToMeters(-13.5),
+             new Translation3d(Units.inchesToMeters(-11.75),
+                               Units.inchesToMeters(-12.5),
                                Units.inchesToMeters(11.25)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     BACKLEFT_CAM("camera-backleft",
