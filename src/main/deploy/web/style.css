@@ -43,8 +43,8 @@ body {
     transform: rotate(-90deg);
     width: 200px;
     height: 200px;
-    top: 80px;
-    left: -370px;
+    top: 50px;
+    left: -390px;
 }
 
 .sourcecontainer {
@@ -131,4 +131,4 @@ body {
 .autoPositionL { top: -15px; left: 5%; transform: translateX(-50%); width: 30px; height: 30px;}
 .autoPositionSA { top: 70px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px;}
 .autoPositionSB { top: 310px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px;}
-.updateselectionbutton{top: 100%; left: -100px; position: absolute; transform: rotate(90deg);}
+.updateselectionbutton{top: 100%; left: -150px; position: absolute; transform: rotate(90deg);}

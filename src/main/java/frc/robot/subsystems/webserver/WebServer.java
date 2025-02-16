@@ -75,6 +75,30 @@ public class WebServer {
                 ctx.status(400).result("Invalid input");
             }
         });
+        app.post("/setPosition", ctx -> {
+            var mapper = new ObjectMapper();
+            Map<String, Object> body = mapper.readValue(ctx.body(), Map.class);
+        
+            if (body.containsKey("variable") && body.get("variable") instanceof String &&
+                body.containsKey("value") && body.get("value") instanceof String) {  // Expecting a List (array) here
+                String variable = (String) body.get("variable");
+                String value = (String) body.get("value"); // Get the list of selected auto positions
+        
+                if (variable.equals("reefPositionValue")) {
+                     // Convert List to Array
+                    reefPositionPublisher.set(value); // Update auto positions in NetworkTables
+                }
+
+                if (variable.equals("sourcePositionValue")) {
+                    // Convert List to Array
+                   sourcePositionPublisher.set(value); // Update auto positions in NetworkTables
+               }
+        
+                ctx.status(200);
+            } else {
+                ctx.status(400).result("Invalid input");
+            }
+        });
         app.start(5800);
     }
 

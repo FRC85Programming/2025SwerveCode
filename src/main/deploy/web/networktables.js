@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function sendReefPosition(position) {
         updateButtonSelection("reef", position);
 
-        fetch("/toggle", {
+        fetch("/setPosition", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ variable: "reefPositionValue", value: position })
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function sendSourcePosition(position) {
         updateButtonSelection("source", position);
 
-        fetch("/toggle", {
+        fetch("/setPosition", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ variable: "sourcePositionValue", value: position })

@@ -211,9 +211,10 @@ public class SwerveSubsystem extends SubsystemBase
 
         pathPlannerRotationp = 5;
       } else {
-        pathPlannerXp = 0.7;
+        pathPlannerXp = 7;
+        pathPlannerXd =  0.0;
 
-        pathPlannerRotationp = 0.7;
+        pathPlannerRotationp = 6;
       }
       AutoBuilder.configure(
           this::getPose,
@@ -345,7 +346,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
-        swerveDrive.getMaximumChassisVelocity(), 4.0,
+        swerveDrive.getMaximumChassisVelocity()/2, 3.0,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
 
     // Since AutoBuilder is configured, we can use it to build pathfinding commands

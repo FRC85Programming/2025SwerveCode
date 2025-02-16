@@ -1,10 +1,12 @@
 package frc.robot.commands.swervedrive.auto.autos;
 
+import java.awt.Robot;
 import java.util.List;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -36,7 +38,6 @@ public class GenerateAuto extends Command {
             autoRoutine.addCommands(new DriveAndHoldPose(swerveSubsystem, () -> selectedReefPose), 
                 new DriveAndHoldPose(swerveSubsystem, () -> swerveSubsystem.getSelectedIntakePositionPose(webServer.getSelectedIntakePosition())));
         }
-        swerveSubsystem.resetOdometry(new Pose2d(7.5, 4, new Rotation2d(3.14)));
         autoRoutine.schedule();
     }
 }
