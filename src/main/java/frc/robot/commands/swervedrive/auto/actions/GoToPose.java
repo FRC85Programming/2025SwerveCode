@@ -2,15 +2,12 @@ package frc.robot.commands.swervedrive.auto.actions;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import org.photonvision.PhotonUtils;
+
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import frc.robot.subsystems.swervedrive.Vision;
 
 
 /**
@@ -25,9 +22,10 @@ public class GoToPose extends Command
   Command driveToPoseCommand;
   int initCount = 0;
   int exCount = 0;
+  Boolean endEarly = false;
 
 
-  public GoToPose(Supplier<Pose2d> targetPose, SwerveSubsystem swerveSubsystem)
+  public GoToPose(SwerveSubsystem swerveSubsystem, Supplier<Pose2d> targetPose)
   {
     this.swerveSubsystem = swerveSubsystem;
     this.targetPose = targetPose;
@@ -38,10 +36,13 @@ public class GoToPose extends Command
   public void initialize()
   {
     driveToPoseCommand = swerveSubsystem.driveToPose(targetPose);
+    if (PhotonUtils.getDistanceToPose(swerveSubsystem.getPose(), targetPose.get()) < 1) {
+      endEarly = true;
+    } else {
+      endEarly = false;
+    }
+      
     driveToPoseCommand.initialize();
-    SmartDashboard.putNumber("Init Count", initCount);
-    initCount++;
-
   }
 
   @Override
@@ -53,11 +54,12 @@ public class GoToPose extends Command
 
   @Override
   public boolean isFinished() {
-    return driveToPoseCommand.isFinished();
+    return driveToPoseCommand.isFinished() || endEarly;
   }
 
   @Override
   public void end(boolean interrupted) {
     driveToPoseCommand.end(interrupted);
+    endEarly = false;
   }
 }

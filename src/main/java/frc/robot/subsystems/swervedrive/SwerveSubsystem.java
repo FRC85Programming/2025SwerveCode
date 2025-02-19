@@ -20,7 +20,6 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -45,7 +44,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -66,7 +64,6 @@ import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
-import frc.robot.commands.swervedrive.auto.autos.GenerateAuto;
 
 public class SwerveSubsystem extends SubsystemBase
 {
@@ -79,18 +76,13 @@ public class SwerveSubsystem extends SubsystemBase
    * AprilTag field layout.
    */
   private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
-  /**
-   * Enable vision odometry updates while driving.
-   */
-  private final boolean             visionDriveTest     = false;
+
   /**
    * PhotonVision class to keep an accurate odometry.
    */
   private       Vision              vision;
 
   SendableChooser<Pose2d> sourceChooser = new SendableChooser<>();
-
-  private Field2d visionField = new Field2d();
 
   private final WebServer webServer = new WebServer();
 
@@ -211,10 +203,12 @@ public class SwerveSubsystem extends SubsystemBase
 
         pathPlannerRotationp = 5;
       } else {
-        pathPlannerXp = 7;
+        pathPlannerXp = 5;
         pathPlannerXd =  0.0;
+        pathPlannerXi = 0.0;
 
-        pathPlannerRotationp = 6;
+        pathPlannerRotationp = 4.0;
+        pathPlannerRotationi = 0.0;
       }
       AutoBuilder.configure(
           this::getPose,
@@ -346,7 +340,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
-        swerveDrive.getMaximumChassisVelocity()/2, 3.0,
+        swerveDrive.getMaximumChassisVelocity(), 3.0,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
 
     // Since AutoBuilder is configured, we can use it to build pathfinding commands

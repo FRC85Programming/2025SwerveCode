@@ -2,64 +2,78 @@ package frc.robot.commands.swervedrive.auto.actions;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import frc.robot.subsystems.swervedrive.Vision;
 
+public class HoldPose extends Command {
 
-/**
- * Auto Balance command using a simple PID controller. Created by Team 3512
- * <a href="https://github.com/frc3512/Robot-2023/blob/main/src/main/java/frc3512/robot/commands/AutoBalance.java">...</a>
- */
-public class HoldPose extends Command
-{
+    private final SwerveSubsystem swerve;
+    private Supplier<Pose2d> poseFinal;
+    private Pose2d currentPose;
 
-  private final SwerveSubsystem swerveSubsystem;
-  Supplier<Pose2d> targetPose;
-  HolonomicDriveController controller;
-  ChassisSpeeds adjustedSpeeds;
+    private final PIDController xTranslationPID, yTranslationPID;
+    private final PIDController rotationPID;
 
-  public HoldPose(Supplier<Pose2d> targetPose, SwerveSubsystem swerveSubsystem)
-  {
-    this.swerveSubsystem = swerveSubsystem;
-    this.targetPose = targetPose;
+    public HoldPose(SwerveSubsystem swerve, Supplier<Pose2d> finalPose) {
+        this.swerve = swerve;
+        this.poseFinal = finalPose;
+        this.xTranslationPID = new PIDController(5.0, 
+                                                0.0, 
+                                                0.0);
+        this.yTranslationPID = new PIDController(5.0, 
+                                                0.0, 
+                                                0.0);
+        this.rotationPID = new PIDController(3.0, 
+                                             0.0, 
+                                             0.0);
+        
+        xTranslationPID.setTolerance(0.01);
+        yTranslationPID.setTolerance(0.01);
+        rotationPID.setTolerance(0.1);
+        
+        addRequirements(swerve);
+    }
 
-    controller = new HolonomicDriveController(
-      new PIDController(1, 0, 0), new PIDController(1, 0, 0),
-      new ProfiledPIDController(1, 0, 0,
-      new TrapezoidProfile.Constraints(6.28, 3.14)));
-    controller.setTolerance(new Pose2d(0.05, 0.05, Rotation2d.fromDegrees(10)));
-  }
+    @Override
+    public void initialize() {
+        currentPose = swerve.getPose();
 
-  @Override
-  public void execute()
-  {
-    adjustedSpeeds = controller.calculate(
-      swerveSubsystem.getPose(), targetPose.get(), Constants.MAX_SPEED/2, swerveSubsystem.getHeading());
-    swerveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(adjustedSpeeds, swerveSubsystem.getPose().getRotation()));
-  }
+        xTranslationPID.reset();
+        yTranslationPID.reset();
+        rotationPID.reset();
 
-  @Override
-  public boolean isFinished()
-  {
-    return controller.atReference();
-  }
+        xTranslationPID.setSetpoint(poseFinal.get().getX());
+        yTranslationPID.setSetpoint(poseFinal.get().getY());
+        rotationPID.setSetpoint(poseFinal.get().getRotation().getRadians());
+    }
 
-  @Override
-  public void end(boolean interrupted)
-  {
-    swerveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
-  }
+    @Override
+    public void execute() {
+        currentPose = swerve.getPose();
+        
+        double xSpeed = xTranslationPID.calculate(currentPose.getX());
+        double ySpeed = yTranslationPID.calculate(currentPose.getY());
+        double thetaSpeed = rotationPID.calculate(currentPose.getRotation().getRadians());
+        
+        ChassisSpeeds wheelSpeeds = new ChassisSpeeds(xSpeed, ySpeed, thetaSpeed);
+
+        swerve.driveFieldOriented(wheelSpeeds);
+    }
+
+    @Override
+    public boolean isFinished() {
+        boolean xTranslationDone = xTranslationPID.atSetpoint();
+        boolean yTranslationDone = yTranslationPID.atSetpoint();
+        boolean rotationDone = rotationPID.atSetpoint();
+        
+        return xTranslationDone && yTranslationDone && rotationDone;
+    }
+    
+    @Override
+    public void end(boolean interrupted) {
+        swerve.drive(new ChassisSpeeds(0, 0, 0));
+    }
 }

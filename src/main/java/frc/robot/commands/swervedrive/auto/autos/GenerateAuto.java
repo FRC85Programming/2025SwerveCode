@@ -1,18 +1,10 @@
 package frc.robot.commands.swervedrive.auto.autos;
 
-import java.awt.Robot;
 import java.util.List;
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants;
 import frc.robot.commands.swervedrive.auto.actions.DriveAndHoldPose;
-import frc.robot.commands.swervedrive.auto.actions.HoldPose;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
 

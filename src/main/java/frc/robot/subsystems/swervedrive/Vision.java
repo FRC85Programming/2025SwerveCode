@@ -1,9 +1,5 @@
 package frc.robot.subsystems.swervedrive;
 
-import static edu.wpi.first.units.Units.Microseconds;
-import static edu.wpi.first.units.Units.Milliseconds;
-import static edu.wpi.first.units.Units.Seconds;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -18,7 +14,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -57,9 +52,7 @@ public class Vision
   /**
    * Ambiguity defined as a value between (0,1). Used in {@link Vision#filterPose}.
    */
-  private final       double              maximumAmbiguity                = 0.25;
-
-  private Field2d cameraField = new Field2d();
+  //private final       double              maximumAmbiguity                = 0.25;
 
   private Field2d visionField = new Field2d();
 
@@ -71,7 +64,7 @@ public class Vision
   /**
    * Count of times that the odom thinks we're more than 10meters away from the april tag.
    */
-  private             double              longDistangePoseEstimationCount = 0;
+  //private             double              longDistangePoseEstimationCount = 0;
   /**
    * Current pose from the pose estimator using wheel odometry.
    */
@@ -201,7 +194,7 @@ public class Vision
    * @param pose Estimated robot pose.
    * @return Could be empty if there isn't a good reading.
    */
-  @Deprecated(since = "2024", forRemoval = true)
+  /*@Deprecated(since = "2024", forRemoval = true)
   private Optional<EstimatedRobotPose> filterPose(Optional<EstimatedRobotPose> pose)
   {
     if (pose.isPresent())
@@ -238,7 +231,7 @@ public class Vision
       return pose;
     }
     return Optional.empty();
-  }
+  }*/
 
 
   /**
@@ -354,19 +347,19 @@ public class Vision
      * Front Camera
      */
     FRONT_CAM("camera-front",
-             new Rotation3d(0, Units.degreesToRadians(-17), 0),
+             new Rotation3d(0, Units.degreesToRadians(-15), 0),
              new Translation3d(Units.inchesToMeters(2.75),
                                Units.inchesToMeters(-.5),
                                Units.inchesToMeters(7.75)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     BACKRIGHT_CAM("camera-backright",
-             new Rotation3d(0, Units.degreesToRadians(-30), Units.degreesToRadians(225)),
+             new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(225)),
              new Translation3d(Units.inchesToMeters(-11.75),
                                Units.inchesToMeters(-12.5),
                                Units.inchesToMeters(11.25)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     BACKLEFT_CAM("camera-backleft",
-             new Rotation3d(0, Units.degreesToRadians(-30), Units.degreesToRadians(137)),
+             new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(137)),
              new Translation3d(Units.inchesToMeters(-12.25),
                                Units.inchesToMeters(14.5),
                                Units.inchesToMeters(11.25)),
@@ -434,7 +427,7 @@ public class Vision
     /**
      * Last read from the camera timestamp to prevent lag due to slow data fetches.
      */
-    private       double                       lastReadTimestamp = Microseconds.of(NetworkTablesJNI.now()).in(Seconds);
+    //private       double                       lastReadTimestamp = Microseconds.of(NetworkTablesJNI.now()).in(Seconds);
 
     /**
      * Construct a Photon Camera class with help. Standard deviations are fake values, experiment and determine

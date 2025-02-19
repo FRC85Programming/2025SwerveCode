@@ -3,7 +3,6 @@ package frc.robot.subsystems.webserver;
 import java.nio.file.Paths;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.List;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -27,6 +26,7 @@ public class WebServer {
     private final StringArrayPublisher autoPublisher;
     private final StringArraySubscriber autoSubscriber;
 
+    @SuppressWarnings("unchecked")
     public WebServer() {
         // Initialize NetworkTables
         var reefTable = NetworkTableInstance.getDefault().getTable("reefTable");
