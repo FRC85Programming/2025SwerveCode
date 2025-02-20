@@ -77,7 +77,7 @@ public class WebServer {
             }
         });
     
-        app.start(5800);
+        //app.start(5800);
     }
 
     public void setAlliance() {

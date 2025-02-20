@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -16,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * described in the TimedRobot documentation. If you change the name of this class or the package after creating this
  * project, you must also update the build.gradle file in the project.
  */
-public class Robot extends TimedRobot
+public class Robot extends LoggedRobot
 {
 
   private static Robot   instance;
@@ -54,6 +58,8 @@ public class Robot extends TimedRobot
     {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
+    Logger.addDataReceiver(new NT4Publisher());
+    Logger.start();
   }
 
   /**

@@ -60,12 +60,20 @@
   },
   "NTProvider": {
     "types": {
+      "/AdvantageKit/RealOutputs/Alerts": "Alerts",
+      "/AdvantageKit/RealOutputs/Encoders": "Alerts",
+      "/AdvantageKit/RealOutputs/IMU": "Alerts",
+      "/AdvantageKit/RealOutputs/JSON": "Alerts",
+      "/AdvantageKit/RealOutputs/Motors": "Alerts",
+      "/AdvantageKit/RealOutputs/Swerve Drive": "Alerts",
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/SwerveSubsystem": "Subsystem",
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
       "/LiveWindow/Ungrouped/Pigeon 2 [13]": "Gyro",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/SmartDashboard/Alerts": "Alerts",
+      "/SmartDashboard/Arm Field": "Field2d",
+      "/SmartDashboard/Arm Sim": "Mechanism2d",
       "/SmartDashboard/Encoders": "Alerts",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/IMU": "Alerts",
@@ -143,18 +151,18 @@
     },
     "transitory": {
       "SmartDashboard": {
+        "Arm Field": {
+          "open": true
+        },
+        "Arm Sim": {
+          "ArmPivot": {
+            "open": true
+          },
+          "open": true
+        },
         "Field": {
           "open": true
         },
-        "open": true
-      },
-      "allianceTable": {
-        "open": true
-      },
-      "autoTable": {
-        "open": true
-      },
-      "photonvision": {
         "open": true
       },
       "reefTable": {

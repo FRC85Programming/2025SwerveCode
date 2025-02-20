@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -27,6 +28,7 @@ import frc.robot.commands.swervedrive.auto.DriveToIntakePosition;
 import frc.robot.commands.swervedrive.auto.DriveToScorePosition;
 import frc.robot.commands.swervedrive.auto.HoldPose;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
 
@@ -49,6 +51,7 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
+  private final IntakeSubsystem intake = new IntakeSubsystem();
 
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
@@ -155,13 +158,13 @@ public class RobotContainer
 
     if (Robot.isSimulation())
     {
-      driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(0, 0, new Rotation2d()))));
     }
     if (DriverStation.isTest())
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
 
-      driverXbox.b().whileTrue(drivebase.sysIdDriveMotorCommand());
+      driverXbox.b().whileTrue(new InstantCommand(() -> intake.setArmAngle(Math.toRadians(45)), intake));
       driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
@@ -172,8 +175,8 @@ public class RobotContainer
     {
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.b().whileTrue(new DriveToScorePosition(drivebase));
-      driverXbox.y().whileTrue(new DriveToIntakePosition(drivebase));
+      driverXbox.b().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-95)), intake));
+      //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
