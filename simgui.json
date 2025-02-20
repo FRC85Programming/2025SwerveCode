@@ -150,6 +150,9 @@
       "open": false
     },
     "transitory": {
+      "AdvantageKit": {
+        "open": true
+      },
       "SmartDashboard": {
         "Arm Field": {
           "open": true
@@ -162,8 +165,7 @@
         },
         "Field": {
           "open": true
-        },
-        "open": true
+        }
       },
       "reefTable": {
         "open": true

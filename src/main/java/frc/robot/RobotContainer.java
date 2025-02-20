@@ -27,6 +27,7 @@ import frc.robot.Constants.PositionConstants;
 import frc.robot.commands.swervedrive.auto.DriveToIntakePosition;
 import frc.robot.commands.swervedrive.auto.DriveToScorePosition;
 import frc.robot.commands.swervedrive.auto.HoldPose;
+import frc.robot.commands.swervedrive.auto.Intake;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -164,7 +165,7 @@ public class RobotContainer
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
 
-      driverXbox.b().whileTrue(new InstantCommand(() -> intake.setArmAngle(Math.toRadians(45)), intake));
+      //driverXbox.b().whileTrue(new InstantCommand(() -> intake.setArmAngle(Math.toRadians(45)), intake));
       driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
@@ -175,7 +176,7 @@ public class RobotContainer
     {
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.b().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-95)), intake));
+      driverXbox.b().whileTrue(new Intake(intake));
       //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());

@@ -20,14 +20,6 @@ import swervelib.math.Matter;
  */
 public final class Constants
 {
-
-  //Intake Subsytem
-  public static final int INTAKE_HOME_LIMIT_ID = 0;
-  public static final int ARM_MOTOR_ID = -1;
-  public static final int ROLLER_MOTOR_ID = -1;
-
-
-
   public static final double ROBOT_MASS = 40 * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
@@ -40,6 +32,27 @@ public final class Constants
 //    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
 //    public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
 //  }
+  public static final class IntakeConstants 
+  {
+    // Pysical arm properties
+    public static final double ARM_LENGTH_METERS = 0.75;
+    public static final double ARM_MASS_KG = 1.3;
+    public static final double GEAR_RATIO = 100.0;
+
+    // Angle constraints (sim)
+    public static final double MIN_ANGLE_RAD = Math.toRadians(-180);
+    public static final double MAX_ANGLE_RAD = Math.toRadians(180);
+
+    // Motor IDs
+    public static final int INTAKE_HOME_LIMIT_ID = -1;
+    public static final int INTAKE_ARM_MOTOR_ID = -1;
+    public static final int INTAKE_ROLLER_MOTOR_ID = -1;
+
+    // Origin of pivot point
+    public static final double INTAKE_ROOT_X = 0;
+    public static final double INTAKE_ROOT_Y = 0.32;
+    public static final double INTAKE_ROOT_Z = 0.292;
+  }
 
   public static final class DrivebaseConstants
   {
