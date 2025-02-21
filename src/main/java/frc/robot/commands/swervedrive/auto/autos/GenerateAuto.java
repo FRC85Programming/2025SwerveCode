@@ -20,15 +20,17 @@ public class GenerateAuto extends Command {
     public GenerateAuto(SwerveSubsystem swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
         webServer = swerveSubsystem.getWebServer();
-        autoScorePositions = webServer.getSelectedAuto();
     }  
     
     @Override
     public void initialize() {
+        autoScorePositions = webServer.getSelectedAuto();
         for (int i = 0; i < autoScorePositions.length; i++) {
-            selectedReefPose = swerveSubsystem.getSelectedScorePositionPose(autoScorePositions[i]);
-            autoRoutine.addCommands(new DriveAndHoldPose(swerveSubsystem, () -> selectedReefPose), 
-                new DriveAndHoldPose(swerveSubsystem, () -> swerveSubsystem.getSelectedIntakePositionPose(webServer.getSelectedIntakePosition())));
+            Pose2d scorePose = swerveSubsystem.getSelectedScorePositionPose(autoScorePositions[i]);
+            autoRoutine.addCommands(
+                new DriveAndHoldPose(swerveSubsystem, () -> scorePose), 
+                new DriveAndHoldPose(swerveSubsystem, () -> swerveSubsystem.getSelectedIntakePositionPose(webServer.getSelectedIntakePosition()))
+            );
         }
         autoRoutine.schedule();
     }

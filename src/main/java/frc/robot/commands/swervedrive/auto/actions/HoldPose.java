@@ -20,19 +20,19 @@ public class HoldPose extends Command {
     public HoldPose(SwerveSubsystem swerve, Supplier<Pose2d> finalPose) {
         this.swerve = swerve;
         this.poseFinal = finalPose;
-        this.xTranslationPID = new PIDController(5.0, 
+        this.xTranslationPID = new PIDController(4.0, 
                                                 0.0, 
                                                 0.0);
-        this.yTranslationPID = new PIDController(5.0, 
+        this.yTranslationPID = new PIDController(4.0, 
                                                 0.0, 
                                                 0.0);
         this.rotationPID = new PIDController(3.0, 
                                              0.0, 
                                              0.0);
         
-        xTranslationPID.setTolerance(0.01);
-        yTranslationPID.setTolerance(0.01);
-        rotationPID.setTolerance(0.1);
+        xTranslationPID.setTolerance(0.05);
+        yTranslationPID.setTolerance(0.05);
+        rotationPID.setTolerance(0.5);
         
         addRequirements(swerve);
     }
