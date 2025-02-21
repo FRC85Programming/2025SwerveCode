@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -29,11 +30,14 @@ import frc.robot.commands.swervedrive.auto.DriveToScorePosition;
 import frc.robot.commands.swervedrive.auto.HoldPose;
 import frc.robot.commands.swervedrive.auto.Intake;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
 
 import java.io.File;
+
+import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -53,6 +57,7 @@ public class RobotContainer
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
   private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
 
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
@@ -175,7 +180,8 @@ public class RobotContainer
     } else
     {
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
+      driverXbox.x().onTrue(new InstantCommand(() -> elevator.setSetpoint(0.7)));
+      driverXbox.x().onFalse(new InstantCommand(() -> elevator.setSetpoint(0.0)));
       driverXbox.b().whileTrue(new Intake(intake));
       //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
       driverXbox.start().whileTrue(Commands.none());
@@ -209,5 +215,9 @@ public class RobotContainer
 
   public WebServer getWebServer() {
     return drivebase.getWebServer();
+  }
+
+  public void updateSubsystems() {
+    Logger.recordOutput("Subsystems", new Pose3d[]{intake.getIntakeSimPose(), new Pose3d(), elevator.getElevatorSimPose()});
   }
 }

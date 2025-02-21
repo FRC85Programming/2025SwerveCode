@@ -14,15 +14,16 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 
-public class  IntakeSim {
+public class IntakeSimulation extends SubsystemBase {
 
     private final SingleJointedArmSim armSim;
 
-    public IntakeSim() {
+    public IntakeSimulation() {
         // Create the arm simulation object
         armSim =
             new SingleJointedArmSim(
@@ -50,11 +51,15 @@ public class  IntakeSim {
 
         // Log poses 
         SmartDashboard.putNumber("Arm Angle", armSim.getAngleRads());
-        Logger.recordOutput("Arm", new Pose3d(Constants.IntakeConstants.INTAKE_ROOT_X, Constants.IntakeConstants.INTAKE_ROOT_Y, Constants.IntakeConstants.INTAKE_ROOT_Z, new Rotation3d(getSimAngle(), 0, 0.0)));
     }
 
     /** Get current simulated arm angle */
     public double getSimAngle() {
         return armSim.getAngleRads();
+    }
+
+    public Pose3d getIntakeSimPose() {
+        return new Pose3d(0, Constants.IntakeConstants.INTAKE_ROOT_Y, Constants.IntakeConstants.INTAKE_ROOT_Z, new Rotation3d(getSimAngle(), 0, 0.0));
+
     }
 }

@@ -49,9 +49,20 @@ public final class Constants
     public static final int INTAKE_ROLLER_MOTOR_ID = -1;
 
     // Origin of pivot point
-    public static final double INTAKE_ROOT_X = 0;
     public static final double INTAKE_ROOT_Y = 0.32;
     public static final double INTAKE_ROOT_Z = 0.292;
+  }
+
+  public static final class ElevatorConstants {
+    public static final double ELEVATOR_ROOT_X = 0.178;
+    public static final double ELEVATOR_ROOT_Y = -0.153;
+
+    public static final double GEAR_RATIO = 25.0;
+    public static final double DRUM_RADIUS = Units.inchesToMeters(2.0);
+    public static final double CARRIAGE_MASS = 4.0; // kg
+
+    public static final double MIN_HEIGHT = 0;
+    public static final double MAX_HEIGHT = 0.8;
   }
 
   public static final class DrivebaseConstants

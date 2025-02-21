@@ -4,11 +4,13 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.intake.IntakeSimulation;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -24,11 +26,11 @@ public class IntakeSubsystem extends SubsystemBase {
     private SparkMax _armMotor = new SparkMax(2, MotorType.kBrushless);
     private SparkMax _rollerMotor = new SparkMax(0, MotorType.kBrushless);
 
-    private final PIDController angleController = new PIDController(0.2, 0, 0.1);
+    private final PIDController angleController = new PIDController(2, 0, 0.1);
 
     // Sim for intake arm
-    private final IntakeSim intakeSim = new IntakeSim();
-
+    private final IntakeSimulation intakeSim = new IntakeSimulation();
+    
     private double targetAngleRadians = 0;
 
     public IntakeSubsystem() {
@@ -44,6 +46,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {
         driveToTargetAngle();
     }
+    
 
     @Override
     public void simulationPeriodic() {
@@ -94,5 +97,9 @@ public class IntakeSubsystem extends SubsystemBase {
      */
     public void runRollers(double speed) {
         _rollerMotor.set(speed);
+    }
+
+    public Pose3d getIntakeSimPose() {
+        return intakeSim.getIntakeSimPose();
     }
 }
