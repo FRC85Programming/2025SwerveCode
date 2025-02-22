@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -14,15 +15,24 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.swervedrive.auto.actions.DriveAndHoldPose;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.swervedrive.auto.actions.DriveAndHoldPose;
+import frc.robot.commands.swervedrive.auto.GoToPosition;
+import frc.robot.commands.swervedrive.auto.Intake;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
+import frc.robot.util.Positions;
 
 import java.io.File;
+
+import org.littletonrobotics.junction.Logger;
 
 import swervelib.SwerveInputStream;
 
@@ -39,6 +49,10 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
+  private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
+  private final EndEffectorSubsystem endeffector = new EndEffectorSubsystem();
+
 
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
@@ -145,13 +159,13 @@ public class RobotContainer
 
     if (Robot.isSimulation())
     {
-      driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(7.5, 4, new Rotation2d(3.14)))));
+      driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(0, 0, new Rotation2d()))));
     }
     if (DriverStation.isTest())
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
 
-      driverXbox.b().whileTrue(drivebase.sysIdDriveMotorCommand());
+      //driverXbox.b().whileTrue(new InstantCommand(() -> intake.setArmAngle(Math.toRadians(45)), intake));
       driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
@@ -160,11 +174,11 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      //driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.a().whileTrue(drivebase.sysIdDriveMotorCommand());
-      //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.b().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getSelectedScorePositionPose(drivebase.getWebServer().getSelectedScorePosition())));
-      driverXbox.y().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getSelectedIntakePositionPose(drivebase.getWebServer().getSelectedIntakePosition())));
+      driverXbox.a().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L1));
+      driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2));
+      driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3));
+      driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4));
+      //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
@@ -196,5 +210,11 @@ public class RobotContainer
 
   public WebServer getWebServer() {
     return drivebase.getWebServer();
+  }
+
+  public void updateSubsystems() {
+    Logger.recordOutput("Subsystems", new Pose3d[]{intake.getIntakeSimPose(), new Pose3d(), elevator.getElevatorSimPose(), 
+      new Pose3d(endeffector.getPivotSimPose().getX(), endeffector.getPivotSimPose().getY(), 
+      endeffector.getPivotSimPose().getZ() + elevator.getElevatorPosition(), endeffector.getPivotSimPose().getRotation())});
   }
 }

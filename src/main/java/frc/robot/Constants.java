@@ -20,7 +20,6 @@ import swervelib.math.Matter;
  */
 public final class Constants
 {
-
   public static final double ROBOT_MASS = 40 * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
@@ -33,6 +32,88 @@ public final class Constants
 //    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
 //    public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
 //  }
+  public static final class IntakeConstants 
+  {
+    // Pysical arm properties
+    public static final double ARM_LENGTH_METERS = 0.75;
+    public static final double ARM_MASS_KG = 1.3;
+    public static final double GEAR_RATIO = 9.0;
+
+    // Angle constraints (sim)
+    public static final double MIN_ANGLE_RAD = Math.toRadians(-180);
+    public static final double MAX_ANGLE_RAD = Math.toRadians(180);
+
+    // Motor IDs
+    public static final int INTAKE_HOME_LIMIT_ID = -1;
+    public static final int INTAKE_ARM_MOTOR_ID = -1;
+    public static final int INTAKE_ROLLER_MOTOR_ID = -1;
+
+    // Origin of pivot point
+    public static final double INTAKE_ROOT_Y = 0.32;
+    public static final double INTAKE_ROOT_Z = 0.292;
+
+    // Positions
+    public static final double L1_INTAKE_POSITION = -Math.PI/6;
+    public static final double L2_INTAKE_POSITION = 0.0;
+    public static final double L3_INTAKE_POSITION = 0.0;
+    public static final double L4_INTAKE_POSITION = 0.0;
+    public static final double HOME_INTAKE_POSITION = 0.0;
+    public static final double INTAKE_FLOOR_INTAKE_POSITION = -(3*Math.PI)/4;
+    public static final double INTAKE_STATION_INTAKE_POSITION = 0.0;
+  }
+
+  public static final class ElevatorConstants {
+    // Root positions (sim)
+    public static final double ELEVATOR_ROOT_X = 0.178;
+    public static final double ELEVATOR_ROOT_Y = -0.153;
+
+    // Physical properties
+    public static final double GEAR_RATIO = 5.0;
+    public static final double DRUM_RADIUS = Units.inchesToMeters(1.0);
+    public static final double CARRIAGE_MASS = 0.01; // kg
+
+    // Height constraints
+    public static final double MIN_HEIGHT = 0;
+    public static final double MAX_HEIGHT = 0.8;
+
+    // Positions
+    public static final double L1_ELEVATOR_POSITION = 0.0;
+    public static final double L2_ELEVATOR_POSITION = 0.2;
+    public static final double L3_ELEVATOR_POSITION = 0.4;
+    public static final double L4_ELEVATOR_POSITION = 0.7;
+    public static final double HOME_ELEVATOR_POSITION = 0.0;
+    public static final double INTAKE_FLOOR_ELEVATOR_POSITION = 0.0;
+    public static final double INTAKE_STATION_ELEVATOR_POSITION = 0.0;
+  }
+
+  public static final class EndEffectorConstants 
+  {
+    // Pysical pivot properties
+    public static final double ARM_LENGTH_METERS = 0.35;
+    public static final double ARM_MASS_KG = 1.3;
+    public static final double GEAR_RATIO = 9.0;
+
+    // Angle constraints (sim)
+    public static final double MIN_ANGLE_RAD = Math.toRadians(-180);
+    public static final double MAX_ANGLE_RAD = Math.toRadians(180);
+
+    // Motor IDs
+    public static final int PIVOT_MOTOR_ID = -1;
+    public static final int ROLLER_MOTOR_ID = -1;
+
+    // Origin of pivot point
+    public static final double PIVOT_ROOT_X = 0.303;
+    public static final double PIVOT_ROOT_Y = -0.153;
+    public static final double PIVOT_ROOT_Z = 0.98;
+
+    public static final double L1_PIVOT_POSITION = 0.0;
+    public static final double L2_PIVOT_POSITION = (4*Math.PI)/3;
+    public static final double L3_PIVOT_POSITION = (4*Math.PI)/3;
+    public static final double L4_PIVOT_POSITION = (5*Math.PI)/4;
+    public static final double HOME_PIVOT_POSITION = 0.0;
+    public static final double INTAKE_FLOOR_PIVOT_POSITION = 0.0;
+    public static final double INTAKE_STATION_PIVOT_POSITION = 0.0;
+  }
 
   public static final class DrivebaseConstants
   {
