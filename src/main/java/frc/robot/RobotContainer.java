@@ -9,28 +9,20 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.PositionConstants;
-import frc.robot.commands.swervedrive.auto.DriveToIntakePosition;
-import frc.robot.commands.swervedrive.auto.DriveToScorePosition;
-import frc.robot.commands.swervedrive.auto.HoldPose;
 import frc.robot.commands.swervedrive.auto.Intake;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
@@ -38,8 +30,6 @@ import frc.robot.subsystems.webserver.WebServer;
 import java.io.File;
 
 import org.littletonrobotics.junction.Logger;
-
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import swervelib.SwerveInputStream;
 
@@ -58,6 +48,8 @@ public class RobotContainer
                                                                                 "swerve/neo"));
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
+  private final EndEffectorSubsystem endeffector = new EndEffectorSubsystem();
+
 
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
@@ -179,9 +171,10 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.x().onTrue(new InstantCommand(() -> elevator.setSetpoint(0.7)));
-      driverXbox.x().onFalse(new InstantCommand(() -> elevator.setSetpoint(0.0)));
+      driverXbox.a().onTrue(new InstantCommand(() -> elevator.setSetpoint(0.7)));
+      driverXbox.a().onFalse(new InstantCommand(() -> elevator.setSetpoint(0.0)));
+      driverXbox.x().onTrue(new InstantCommand(() -> endeffector.setTargetAngle((3*Math.PI)/2)));
+      driverXbox.x().onFalse(new InstantCommand(() -> endeffector.setTargetAngle(0.0)));
       driverXbox.b().whileTrue(new Intake(intake));
       //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
       driverXbox.start().whileTrue(Commands.none());
@@ -218,6 +211,8 @@ public class RobotContainer
   }
 
   public void updateSubsystems() {
-    Logger.recordOutput("Subsystems", new Pose3d[]{intake.getIntakeSimPose(), new Pose3d(), elevator.getElevatorSimPose()});
+    Logger.recordOutput("Subsystems", new Pose3d[]{intake.getIntakeSimPose(), new Pose3d(), elevator.getElevatorSimPose(), 
+      new Pose3d(endeffector.getPivotSimPose().getX(), endeffector.getPivotSimPose().getY(), 
+      endeffector.getPivotSimPose().getZ() + elevator.getElevatorPosition(), endeffector.getPivotSimPose().getRotation())});
   }
 }

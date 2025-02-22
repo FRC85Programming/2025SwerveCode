@@ -27,7 +27,7 @@ public class IntakeSimulation extends SubsystemBase {
         // Create the arm simulation object
         armSim =
             new SingleJointedArmSim(
-                DCMotor.getNEO(1),
+                DCMotor.getNeoVortex(1),
                 Constants.IntakeConstants.GEAR_RATIO,
                 Constants.IntakeConstants.ARM_MASS_KG,
                 Constants.IntakeConstants.ARM_LENGTH_METERS,

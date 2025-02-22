@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,16 +17,16 @@ import frc.robot.Robot;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    private SparkFlex _elevatorMotorLeft = new SparkFlex(16, MotorType.kBrushless);
-    private SparkFlex _elevatorMotorRight = new SparkFlex(15, MotorType.kBrushless);
+    private SparkFlex elevatorMotorLeft = new SparkFlex(16, MotorType.kBrushless);
+    private SparkFlex elevatorMotorRight = new SparkFlex(15, MotorType.kBrushless);
 
-    private Encoder _elevatorAbsoluteEncoder;
+    private DutyCycleEncoder elevatorAbsoluteEncoder = new DutyCycleEncoder(30);
 
     private PIDController elevatorController = new PIDController(5.0, 0, 0.1);
 
     private ElevatorSimulation elevatorSim = new ElevatorSimulation();
 
-    double setPoint = 0.75;
+    double setPoint = 0.0;
 
     public ElevatorSubsystem() {
 
@@ -67,15 +68,15 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public double getElevatorPosition() {
         if (!Robot.isSimulation()) {
-            return _elevatorAbsoluteEncoder.get();
+            return elevatorAbsoluteEncoder.get();
         } else {
             return elevatorSim.getElevatorSimPosition();
         }
     }
 
     public void setElevatorSpeed(double speed) {
-      _elevatorMotorLeft.set(speed);
-      _elevatorMotorRight.set(-speed);
+      elevatorMotorLeft.set(speed);
+      elevatorMotorRight.set(-speed);
     }
 
     public Pose3d getElevatorSimPose() {

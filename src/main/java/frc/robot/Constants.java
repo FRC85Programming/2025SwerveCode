@@ -37,7 +37,7 @@ public final class Constants
     // Pysical arm properties
     public static final double ARM_LENGTH_METERS = 0.75;
     public static final double ARM_MASS_KG = 1.3;
-    public static final double GEAR_RATIO = 100.0;
+    public static final double GEAR_RATIO = 7.0;
 
     // Angle constraints (sim)
     public static final double MIN_ANGLE_RAD = Math.toRadians(-180);
@@ -54,15 +54,39 @@ public final class Constants
   }
 
   public static final class ElevatorConstants {
+    // Root positions (sim)
     public static final double ELEVATOR_ROOT_X = 0.178;
     public static final double ELEVATOR_ROOT_Y = -0.153;
 
+    // Physical properties
     public static final double GEAR_RATIO = 25.0;
     public static final double DRUM_RADIUS = Units.inchesToMeters(2.0);
     public static final double CARRIAGE_MASS = 4.0; // kg
 
+    // Height constraints
     public static final double MIN_HEIGHT = 0;
     public static final double MAX_HEIGHT = 0.8;
+  }
+
+  public static final class EndEffectorConstants 
+  {
+    // Pysical pivot properties
+    public static final double ARM_LENGTH_METERS = 0.35;
+    public static final double ARM_MASS_KG = 1.3;
+    public static final double GEAR_RATIO = 4.0;
+
+    // Angle constraints (sim)
+    public static final double MIN_ANGLE_RAD = Math.toRadians(-180);
+    public static final double MAX_ANGLE_RAD = Math.toRadians(180);
+
+    // Motor IDs
+    public static final int PIVOT_MOTOR_ID = -1;
+    public static final int ROLLER_MOTOR_ID = -1;
+
+    // Origin of pivot point
+    public static final double PIVOT_ROOT_X = 0.303;
+    public static final double PIVOT_ROOT_Y = -0.153;
+    public static final double PIVOT_ROOT_Z = 0.98;
   }
 
   public static final class DrivebaseConstants

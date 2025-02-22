@@ -1,42 +1,35 @@
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.endeffector;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.intake.IntakeSimulation;
-import frc.robot.Constants;
 import frc.robot.Robot;
 
-public class IntakeSubsystem extends SubsystemBase {
-
-    // TODO: Find a ratio to calculate the real arm angle from the gear ratio and ticks per location
-    // TODO: Find the direction of the intake wheels
+public class EndEffectorSubsystem extends SubsystemBase {
     
-    // Limit on INSIDE of pivot (zero with this?)
-    private DigitalInput homeLimit = new DigitalInput(1/*Constants.IntakeConstants.INTAKE_HOME_LIMIT_ID*/);
-
     // Sparkmax declaration
-    private SparkMax armMotor = new SparkMax(2, MotorType.kBrushless);
-    private SparkMax rollerMotor = new SparkMax(0, MotorType.kBrushless);
+    private SparkMax pivotMotor = new SparkMax(24, MotorType.kBrushless);
+    private SparkMax rollerMotor = new SparkMax(25, MotorType.kBrushless);
 
-    private final PIDController angleController = new PIDController(0.6, 0, 0.1);
+    private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(29);
+
+    private final PIDController angleController = new PIDController(0.4, 0, 0.0);
 
     // Sim for intake arm
-    private final IntakeSimulation intakeSim = new IntakeSimulation();
+    private final EndEffectorSimulation endeffectorSim = new EndEffectorSimulation();
     
-    private double targetAngleRadians = 0;
+    private double targetAngleRadians = 0.0;
 
-    public IntakeSubsystem() {
+    public EndEffectorSubsystem() {
         // Zero the arm
-        armMotor.set(0);
-        setTargetAngle(0);
+        pivotMotor.set(0);
+        setTargetAngle((3*Math.PI)/2);
 
         // Tell PID to wrap between -180 and 180 degrees
         angleController.enableContinuousInput(-Math.PI, Math.PI);
@@ -52,12 +45,12 @@ public class IntakeSubsystem extends SubsystemBase {
     public void simulationPeriodic() {
         // Advances the sim by 0.02 seconds
         if (RobotBase.isSimulation()) {
-            intakeSim.updateSim();
+            endeffectorSim.updateSim();
         }
     }
 
     public void driveToTargetAngle() {
-        double currentAngle = getArmAngle();
+        double currentAngle = getPivotAngle();
 
         // PID calculates required motor speed (-1 to 1)
         double output = angleController.calculate(currentAngle, targetAngleRadians);
@@ -65,14 +58,13 @@ public class IntakeSubsystem extends SubsystemBase {
         // Clamp output if necessary
         output = Math.max(-1, Math.min(1, output));
 
-        SmartDashboard.putNumber("Used Angle", currentAngle);
-        SmartDashboard.putNumber("Output Speed", output);
-        SmartDashboard.putNumber("Normalized Speed", output);
-
-        armMotor.set(output);
+        SmartDashboard.putNumber("Current Angle", currentAngle);
+        SmartDashboard.putNumber("Current Output", currentAngle);
+        
+        pivotMotor.set(output);
 
         if (RobotBase.isSimulation()) {
-            intakeSim.setInputVoltage(output * 12.0);
+            endeffectorSim.setInputVoltage(output * 12.0);
         }
     }
 
@@ -82,12 +74,12 @@ public class IntakeSubsystem extends SubsystemBase {
     
     /**Get the value of the intake arm angle - or the sim angle if the sim is active
      */
-    public double getArmAngle() {
+    public double getPivotAngle() {
         // Return real angle if not in the sim, otherwise return the sim arm angle
         if (!Robot.isSimulation()) {
-            return armMotor.getEncoder().getPosition();
+            return pivotAbsoluteEncoder.get();
         } else {
-            return intakeSim.getSimAngle();
+            return endeffectorSim.getSimAngle();
         }
     }
 
@@ -99,7 +91,7 @@ public class IntakeSubsystem extends SubsystemBase {
         rollerMotor.set(speed);
     }
 
-    public Pose3d getIntakeSimPose() {
-        return intakeSim.getIntakeSimPose();
+    public Pose3d getPivotSimPose() {
+        return endeffectorSim.getPivotSimPose();
     }
 }
