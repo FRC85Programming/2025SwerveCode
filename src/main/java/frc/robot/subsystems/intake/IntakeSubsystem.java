@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.IntakeSimulation;
+import frc.robot.util.Positions;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -26,17 +27,17 @@ public class IntakeSubsystem extends SubsystemBase {
     private SparkMax armMotor = new SparkMax(2, MotorType.kBrushless);
     private SparkMax rollerMotor = new SparkMax(0, MotorType.kBrushless);
 
-    private final PIDController angleController = new PIDController(0.6, 0, 0.1);
+    private final PIDController angleController = new PIDController(2, 0, 0.5);
 
     // Sim for intake arm
     private final IntakeSimulation intakeSim = new IntakeSimulation();
     
-    private double targetAngleRadians = 0;
+    private double setPoint = 0;
 
     public IntakeSubsystem() {
         // Zero the arm
         armMotor.set(0);
-        setTargetAngle(0);
+        setSetpoint(0);
 
         // Tell PID to wrap between -180 and 180 degrees
         angleController.enableContinuousInput(-Math.PI, Math.PI);
@@ -44,7 +45,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        driveToTargetAngle();
+        runToPosition();
     }
     
 
@@ -56,11 +57,11 @@ public class IntakeSubsystem extends SubsystemBase {
         }
     }
 
-    public void driveToTargetAngle() {
+    public void runToPosition() {
         double currentAngle = getArmAngle();
 
         // PID calculates required motor speed (-1 to 1)
-        double output = angleController.calculate(currentAngle, targetAngleRadians);
+        double output = angleController.calculate(currentAngle, setPoint);
 
         // Clamp output if necessary
         output = Math.max(-1, Math.min(1, output));
@@ -76,8 +77,8 @@ public class IntakeSubsystem extends SubsystemBase {
         }
     }
 
-    public void setTargetAngle(double targetAngle) {
-        targetAngleRadians = targetAngle;
+    public void setSetpoint(double setPoint) {
+        this.setPoint = setPoint;
     }
     
     /**Get the value of the intake arm angle - or the sim angle if the sim is active
@@ -101,5 +102,26 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Pose3d getIntakeSimPose() {
         return intakeSim.getIntakeSimPose();
+    }
+
+    public double getSetpoint(Positions position) {
+        switch (position) {
+            case L1:
+                return Constants.IntakeConstants.L1_INTAKE_POSITION;
+            case L2:
+                return Constants.IntakeConstants.L2_INTAKE_POSITION;
+            case L3:
+                return Constants.IntakeConstants.L3_INTAKE_POSITION;
+            case L4:
+                return Constants.IntakeConstants.L4_INTAKE_POSITION;
+            case HOME:
+                return Constants.IntakeConstants.HOME_INTAKE_POSITION;
+            case INTAKE_FLOOR:
+                return Constants.IntakeConstants.INTAKE_FLOOR_INTAKE_POSITION;
+            case INTAKE_STATION:
+                return Constants.IntakeConstants.INTAKE_STATION_INTAKE_POSITION;
+            default:
+                return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
+        }
     }
 }

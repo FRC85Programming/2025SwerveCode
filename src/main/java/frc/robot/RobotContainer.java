@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.swervedrive.auto.GoToPosition;
 import frc.robot.commands.swervedrive.auto.Intake;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
@@ -26,6 +27,7 @@ import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
+import frc.robot.util.Positions;
 
 import java.io.File;
 
@@ -171,11 +173,10 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().onTrue(new InstantCommand(() -> elevator.setSetpoint(0.7)));
-      driverXbox.a().onFalse(new InstantCommand(() -> elevator.setSetpoint(0.0)));
-      driverXbox.x().onTrue(new InstantCommand(() -> endeffector.setTargetAngle((3*Math.PI)/2)));
-      driverXbox.x().onFalse(new InstantCommand(() -> endeffector.setTargetAngle(0.0)));
-      driverXbox.b().whileTrue(new Intake(intake));
+      driverXbox.a().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L1));
+      driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2));
+      driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3));
+      driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4));
       //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());

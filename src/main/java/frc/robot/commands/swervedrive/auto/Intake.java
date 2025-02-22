@@ -31,7 +31,7 @@ public class Intake extends Command
   @Override
   public void execute()
   {
-    intakeSubsystem.setTargetAngle(-(3*Math.PI)/4);
+    intakeSubsystem.setSetpoint(-(3*Math.PI)/4);
     intakeSubsystem.runRollers(-0.75);
   }
 
@@ -44,7 +44,7 @@ public class Intake extends Command
   @Override
   public void end(boolean interrupted)
   {
-    intakeSubsystem.setTargetAngle(0.01);
+    intakeSubsystem.setSetpoint(0.01);
     intakeSubsystem.runRollers(0);
   }
 }

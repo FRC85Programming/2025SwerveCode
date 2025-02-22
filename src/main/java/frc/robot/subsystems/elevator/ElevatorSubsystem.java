@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.util.Positions;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -81,5 +83,26 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public Pose3d getElevatorSimPose() {
         return elevatorSim.getElevatorSimPose();
+    }
+
+    public double getSetpoint(Positions position) {
+        switch (position) {
+            case L1:
+                return Constants.ElevatorConstants.L1_ELEVATOR_POSITION;
+            case L2:
+                return Constants.ElevatorConstants.L2_ELEVATOR_POSITION;
+            case L3:
+                return Constants.ElevatorConstants.L3_ELEVATOR_POSITION;
+            case L4:
+                return Constants.ElevatorConstants.L4_ELEVATOR_POSITION;
+            case HOME:
+                return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
+            case INTAKE_FLOOR:
+                return Constants.ElevatorConstants.INTAKE_FLOOR_ELEVATOR_POSITION;
+            case INTAKE_STATION:
+                return Constants.ElevatorConstants.INTAKE_STATION_ELEVATOR_POSITION;
+            default:
+                return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
+        }
     }
 }

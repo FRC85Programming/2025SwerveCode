@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.util.Positions;
 
 public class EndEffectorSubsystem extends SubsystemBase {
     
@@ -19,20 +21,20 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(29);
 
-    private final PIDController angleController = new PIDController(0.4, 0, 0.0);
+    private final PIDController angleController = new PIDController(3, 0, 0.6);
 
     // Sim for intake arm
     private final EndEffectorSimulation endeffectorSim = new EndEffectorSimulation();
     
-    private double targetAngleRadians = 0.0;
+    private double setPoint = 0.0;
 
     public EndEffectorSubsystem() {
         // Zero the arm
         pivotMotor.set(0);
-        setTargetAngle((3*Math.PI)/2);
+        setSetpoint(0);
 
-        // Tell PID to wrap between -180 and 180 degrees
-        angleController.enableContinuousInput(-Math.PI, Math.PI);
+        // Tell PID to wrap between 0 and 360 degrees
+        angleController.enableContinuousInput(Math.toRadians(-180), Math.toRadians(180));
     }
 
     @Override
@@ -53,14 +55,14 @@ public class EndEffectorSubsystem extends SubsystemBase {
         double currentAngle = getPivotAngle();
 
         // PID calculates required motor speed (-1 to 1)
-        double output = angleController.calculate(currentAngle, targetAngleRadians);
+        double output = angleController.calculate(currentAngle, setPoint);
 
         // Clamp output if necessary
         output = Math.max(-1, Math.min(1, output));
 
         SmartDashboard.putNumber("Current Angle", currentAngle);
-        SmartDashboard.putNumber("Current Output", currentAngle);
-        
+        SmartDashboard.putNumber("Current Output", output);
+
         pivotMotor.set(output);
 
         if (RobotBase.isSimulation()) {
@@ -68,8 +70,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
         }
     }
 
-    public void setTargetAngle(double targetAngle) {
-        targetAngleRadians = targetAngle;
+    public void setSetpoint(double setPoint) {
+        this.setPoint = setPoint;
     }
     
     /**Get the value of the intake arm angle - or the sim angle if the sim is active
@@ -93,5 +95,26 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     public Pose3d getPivotSimPose() {
         return endeffectorSim.getPivotSimPose();
+    }
+
+    public double getSetpoint(Positions position) {
+        switch (position) {
+            case L1:
+                return Constants.EndEffectorConstants.L1_PIVOT_POSITION;
+            case L2:
+                return Constants.EndEffectorConstants.L2_PIVOT_POSITION;
+            case L3:
+                return Constants.EndEffectorConstants.L3_PIVOT_POSITION;
+            case L4:
+                return Constants.EndEffectorConstants.L4_PIVOT_POSITION;
+            case HOME:
+                return Constants.EndEffectorConstants.HOME_PIVOT_POSITION;
+            case INTAKE_FLOOR:
+                return Constants.EndEffectorConstants.INTAKE_FLOOR_PIVOT_POSITION;
+            case INTAKE_STATION:
+                return Constants.EndEffectorConstants.INTAKE_STATION_PIVOT_POSITION;
+            default:
+                return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
+        }
     }
 }
