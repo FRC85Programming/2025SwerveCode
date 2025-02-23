@@ -5,6 +5,7 @@
 package frc.robot.subsystems.swervedrive;
 
 import static edu.wpi.first.units.Units.FeetPerSecond;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meter;
 
 import java.io.File;
@@ -15,7 +16,14 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnField;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
 import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 
@@ -32,6 +40,8 @@ import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -39,6 +49,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -75,7 +86,7 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * AprilTag field layout.
    */
-  private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
+  private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
   /**
    * PhotonVision class to keep an accurate odometry.
@@ -96,26 +107,30 @@ public class SwerveSubsystem extends SubsystemBase
   double pathPlannerRotationi = 0;
   double pathPlannerRotationd = 0;
 
-  /**
-   * Initialize {@link SwerveDrive} with the directory provided.
-   *
-   * @param directory Directory of swerve drive config files.
-   */
-  public SwerveSubsystem(File directory)
-  {
-    // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
-    //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
-    //  The encoder resolution per motor revolution is 1 per motor revolution.
-    double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(12.8);
-    // Motor conversion factor is (PI * WHEEL DIAMETER IN METERS) / (GEAR RATIO * ENCODER RESOLUTION).
-    //  In this case the wheel diameter is 4 inches, which must be converted to meters to get meters/second.
-    //  The gear ratio is 6.75 motor revolutions per wheel rotation.
-    //  The encoder resolution per motor revolution is 1 per motor revolution.
-    double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75);
-    System.out.println("\"conversionFactors\": {");
-    System.out.println("\t\"angle\": {\"factor\": " + angleConversionFactor + " },");
-    System.out.println("\t\"drive\": {\"factor\": " + driveConversionFactor + " }");
-    System.out.println("}");
+  private final PIDController xController = new PIDController(10.0, 0, 0);
+  private final PIDController yController = new PIDController(10.0, 0, 0);
+  private final PIDController thetaController = new PIDController(2.0, 0, 0);
+  
+    /**
+     * Initialize {@link SwerveDrive} with the directory provided.
+     *
+     * @param directory Directory of swerve drive config files.
+     */
+    public SwerveSubsystem(File directory)
+    {
+      // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
+      //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
+      //  The encoder resolution per motor revolution is 1 per motor revolution.
+      double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(12.8);
+      // Motor conversion factor is (PI * WHEEL DIAMETER IN METERS) / (GEAR RATIO * ENCODER RESOLUTION).
+      //  In this case the wheel diameter is 4 inches, which must be converted to meters to get meters/second.
+      //  The gear ratio is 6.75 motor revolutions per wheel rotation.
+      //  The encoder resolution per motor revolution is 1 per motor revolution.
+      double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75);
+      System.out.println("\"conversionFactors\": {");
+      System.out.println("\t\"angle\": {\"factor\": " + angleConversionFactor + " },");
+      System.out.println("\t\"drive\": {\"factor\": " + driveConversionFactor + " }");
+      System.out.println("}");
 
     
     try
@@ -142,6 +157,14 @@ public class SwerveSubsystem extends SubsystemBase
     //swerveDrive.stopOdometryThread(); // Part of the visionDriveTest usage to switch on vision mode
     setupPhotonVision();
     setupPathPlanner();
+
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
+        // We must specify a heading since the coral is a tube
+        new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
+    
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(2,2)));
+    
+    
   }
 
   /**
@@ -177,6 +200,9 @@ public class SwerveSubsystem extends SubsystemBase
     displayMotorRPMs();
 
     publishDriveMetersPerSecond();
+
+    Logger.recordOutput("FieldSimulation/Coral", 
+        SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
   }
 
   @Override
@@ -293,7 +319,6 @@ public class SwerveSubsystem extends SubsystemBase
     Translation2d relativeTrl         = speakerAprilTagPose.toPose2d().relativeTo(getPose()).getTranslation();
     return new Rotation2d(relativeTrl.getX(), relativeTrl.getY()).plus(swerveDrive.getOdometryHeading());
   }
-
 
   /**
    * Aim the robot at the target returned by PhotonVision.
@@ -421,6 +446,28 @@ public class SwerveSubsystem extends SubsystemBase
     }
     return Commands.none();
 
+  }
+
+  public void driveStraightToPose(Pose2d targetPose) {
+    Pose2d currentPose = getPose();
+
+    // Calculate position errors
+    double xError = targetPose.getX() - currentPose.getX();
+    double yError = targetPose.getY() - currentPose.getY();
+    
+    double turnSpeed = thetaController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
+
+    // Normalize to go straight toward the target
+    double distance = Math.hypot(xError, yError);
+    double headingToTarget = Math.atan2(yError, xError);
+
+    double forwardSpeed = distance * Math.cos(headingToTarget - currentPose.getRotation().getRadians());
+    double strafeSpeed = distance * Math.sin(headingToTarget - currentPose.getRotation().getRadians());
+
+    forwardSpeed = Math.signum(forwardSpeed) * Math.max(Math.abs(forwardSpeed), 0.3);
+    strafeSpeed = Math.signum(strafeSpeed) * Math.max(Math.abs(strafeSpeed), 0.3);
+
+    drive(new ChassisSpeeds(forwardSpeed, strafeSpeed, turnSpeed));
   }
 
 

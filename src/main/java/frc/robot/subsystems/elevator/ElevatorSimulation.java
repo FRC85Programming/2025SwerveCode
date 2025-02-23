@@ -27,8 +27,8 @@ public class ElevatorSimulation extends SubsystemBase {
           Constants.ElevatorConstants.MAX_HEIGHT,
           false,
           0,
-          0.0,
-          0.0);
+          0.0, 
+          0.000001);
     }
 
      public void updateSim() {
@@ -48,6 +48,6 @@ public class ElevatorSimulation extends SubsystemBase {
     }
 
     public Pose3d getElevatorSimPose() {
-        return new Pose3d(Constants.ElevatorConstants.ELEVATOR_ROOT_X, Constants.ElevatorConstants.ELEVATOR_ROOT_Y, elevatorSim.getPositionMeters()-0.65, new Rotation3d());
+        return new Pose3d(Constants.ElevatorConstants.ELEVATOR_ROOT_X, Constants.ElevatorConstants.ELEVATOR_ROOT_Y, Constants.ElevatorConstants.ELEVATOR_ROOT_Z + elevatorSim.getPositionMeters(), new Rotation3d());
     }
 }

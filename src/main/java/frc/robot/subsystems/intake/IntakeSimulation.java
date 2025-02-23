@@ -59,7 +59,7 @@ public class IntakeSimulation extends SubsystemBase {
     }
 
     public Pose3d getIntakeSimPose() {
-        return new Pose3d(0, Constants.IntakeConstants.INTAKE_ROOT_Y, Constants.IntakeConstants.INTAKE_ROOT_Z, new Rotation3d(getSimAngle(), 0, 0.0));
+        return new Pose3d(Constants.IntakeConstants.INTAKE_ROOT_X, 0, Constants.IntakeConstants.INTAKE_ROOT_Z, new Rotation3d(0, getSimAngle(), 0.0));
 
     }
 }

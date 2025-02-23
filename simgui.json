@@ -60,6 +60,12 @@
   },
   "NTProvider": {
     "types": {
+      "/AdvantageKit/RealOutputs/Alerts": "Alerts",
+      "/AdvantageKit/RealOutputs/Encoders": "Alerts",
+      "/AdvantageKit/RealOutputs/IMU": "Alerts",
+      "/AdvantageKit/RealOutputs/JSON": "Alerts",
+      "/AdvantageKit/RealOutputs/Motors": "Alerts",
+      "/AdvantageKit/RealOutputs/Swerve Drive": "Alerts",
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/SwerveSubsystem": "Subsystem",
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
@@ -72,6 +78,7 @@
       "/SmartDashboard/JSON": "Alerts",
       "/SmartDashboard/Motors": "Alerts",
       "/SmartDashboard/Pigeon 2 (v6) [13]": "Gyro",
+      "/SmartDashboard/Pigeon 2 (v6) [44]": "Gyro",
       "/SmartDashboard/Pigeon 2 (v6) [51]": "Gyro",
       "/SmartDashboard/Pigeon 2 [13]": "Gyro",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
@@ -142,11 +149,19 @@
       "open": false
     },
     "transitory": {
-      "SmartDashboard": {
-        "Field": {
+      "AdvantageKit": {
+        "RealOutputs": {
+          "LoggedRobot": {
+            "open": true
+          },
           "open": true
         },
         "open": true
+      },
+      "SmartDashboard": {
+        "Field": {
+          "open": true
+        }
       },
       "allianceTable": {
         "open": true
@@ -156,15 +171,6 @@
         "string[]##v_/autoTable/autoPositions": {
           "open": true
         }
-      },
-      "photonvision": {
-        "open": true
-      },
-      "reefTable": {
-        "open": true
-      },
-      "sourceTable": {
-        "open": true
       }
     }
   },

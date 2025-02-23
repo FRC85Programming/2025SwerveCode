@@ -16,10 +16,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.swervedrive.auto.actions.DriveAndHoldPose;
+import frc.robot.commands.swervedrive.auto.actions.DriveStraightToPose;
+import frc.robot.commands.swervedrive.auto.actions.DriveToPoseWithReefAvoidance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.PositionConstants;
 import frc.robot.commands.swervedrive.auto.GoToPosition;
 import frc.robot.commands.swervedrive.auto.Intake;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
@@ -79,7 +82,7 @@ public class RobotContainer
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                 () -> driverXbox.getLeftY() * -1,
                                                                 () -> driverXbox.getLeftX() * -1)
-                                                            .withControllerRotationAxis(() -> -driverXbox.getRightX())
+                                                            .withControllerRotationAxis(() -> driverXbox.getRightX())
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
@@ -111,7 +114,7 @@ public class RobotContainer
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                    () -> -driverXbox.getLeftY(),
                                                                    () -> -driverXbox.getLeftX())
-                                                               .withControllerRotationAxis(() -> driverXbox.getRawAxis(2))
+                                                               .withControllerRotationAxis(() -> -driverXbox.getRawAxis(2))
                                                                .deadband(OperatorConstants.DEADBAND)
                                                                .scaleTranslation(0.8)
                                                                .allianceRelativeControl(true);
@@ -121,7 +124,7 @@ public class RobotContainer
                                                                                                     driverXbox.getRawAxis(
                                                                                                         2) * Math.PI) * (Math.PI * 2),
                                                                                                 () -> Math.cos(
-                                                                                                    driverXbox.getRawAxis(
+                                                                                                  driverXbox.getRawAxis(
                                                                                                         2) * Math.PI) *
                                                                                                       (Math.PI * 2))
                                                                      .headingWhile(true);
@@ -174,7 +177,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L1));
+      driverXbox.a().whileTrue(new DriveToPoseWithReefAvoidance(drivebase, Constants.PositionConstants.reefPositionF));
       driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2));
       driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3));
       driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4));
@@ -216,5 +219,8 @@ public class RobotContainer
     Logger.recordOutput("Subsystems", new Pose3d[]{intake.getIntakeSimPose(), new Pose3d(), elevator.getElevatorSimPose(), 
       new Pose3d(endeffector.getPivotSimPose().getX(), endeffector.getPivotSimPose().getY(), 
       endeffector.getPivotSimPose().getZ() + elevator.getElevatorPosition(), endeffector.getPivotSimPose().getRotation())});
+    /*Logger.recordOutput("Subsystems", new Pose3d[]{new Pose3d(), new Pose3d(), new Pose3d(), 
+      new Pose3d()});*/
+        
   }
 }

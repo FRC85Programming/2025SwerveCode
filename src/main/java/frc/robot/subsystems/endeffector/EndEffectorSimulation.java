@@ -47,7 +47,7 @@ public class EndEffectorSimulation extends SubsystemBase {
     }
 
     public Pose3d getPivotSimPose() {
-        return new Pose3d(Constants.EndEffectorConstants.PIVOT_ROOT_X, Constants.EndEffectorConstants.PIVOT_ROOT_Y, Constants.EndEffectorConstants.PIVOT_ROOT_Z, new Rotation3d(getSimAngle(), 0, 0.0));
+        return new Pose3d(Constants.EndEffectorConstants.PIVOT_ROOT_X, Constants.EndEffectorConstants.PIVOT_ROOT_Y, Constants.EndEffectorConstants.PIVOT_ROOT_Z, new Rotation3d(0.0, getSimAngle(), 0.0));
 
     }
 }

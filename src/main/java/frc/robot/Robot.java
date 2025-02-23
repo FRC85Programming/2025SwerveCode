@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -181,5 +182,6 @@ public class Robot extends LoggedRobot
   public void simulationPeriodic()
   {
     m_robotContainer.updateSubsystems();
+    SimulatedArena.getInstance().simulationPeriodic();
   }
 }

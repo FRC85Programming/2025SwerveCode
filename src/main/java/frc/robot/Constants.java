@@ -49,23 +49,24 @@ public final class Constants
     public static final int INTAKE_ROLLER_MOTOR_ID = -1;
 
     // Origin of pivot point
-    public static final double INTAKE_ROOT_Y = 0.32;
+    public static final double INTAKE_ROOT_X = 0.32;
     public static final double INTAKE_ROOT_Z = 0.292;
 
     // Positions
-    public static final double L1_INTAKE_POSITION = -Math.PI/6;
+    public static final double L1_INTAKE_POSITION = Math.PI/6;
     public static final double L2_INTAKE_POSITION = 0.0;
     public static final double L3_INTAKE_POSITION = 0.0;
     public static final double L4_INTAKE_POSITION = 0.0;
     public static final double HOME_INTAKE_POSITION = 0.0;
-    public static final double INTAKE_FLOOR_INTAKE_POSITION = -(3*Math.PI)/4;
+    public static final double INTAKE_FLOOR_INTAKE_POSITION = (3*Math.PI)/4;
     public static final double INTAKE_STATION_INTAKE_POSITION = 0.0;
   }
 
   public static final class ElevatorConstants {
     // Root positions (sim)
-    public static final double ELEVATOR_ROOT_X = 0.178;
-    public static final double ELEVATOR_ROOT_Y = -0.153;
+    public static final double ELEVATOR_ROOT_X = -0.153;
+    public static final double ELEVATOR_ROOT_Y = -0.178;
+    public static final double ELEVATOR_ROOT_Z = 0.09;
 
     // Physical properties
     public static final double GEAR_RATIO = 5.0;
@@ -102,17 +103,17 @@ public final class Constants
     public static final int ROLLER_MOTOR_ID = -1;
 
     // Origin of pivot point
-    public static final double PIVOT_ROOT_X = 0.303;
-    public static final double PIVOT_ROOT_Y = -0.153;
+    public static final double PIVOT_ROOT_X = -0.153;
+    public static final double PIVOT_ROOT_Y = -0.303;
     public static final double PIVOT_ROOT_Z = 0.98;
 
-    public static final double L1_PIVOT_POSITION = 0.0;
-    public static final double L2_PIVOT_POSITION = (4*Math.PI)/3;
-    public static final double L3_PIVOT_POSITION = (4*Math.PI)/3;
-    public static final double L4_PIVOT_POSITION = (5*Math.PI)/4;
-    public static final double HOME_PIVOT_POSITION = 0.0;
-    public static final double INTAKE_FLOOR_PIVOT_POSITION = 0.0;
-    public static final double INTAKE_STATION_PIVOT_POSITION = 0.0;
+    public static final double L1_PIVOT_POSITION = 0;
+    public static final double L2_PIVOT_POSITION = -(4*Math.PI)/3;
+    public static final double L3_PIVOT_POSITION = -(4*Math.PI)/3;
+    public static final double L4_PIVOT_POSITION = -(5*Math.PI)/4;
+    public static final double HOME_PIVOT_POSITION = 0;
+    public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
+    public static final double INTAKE_STATION_PIVOT_POSITION = 0;
   }
 
   public static final class DrivebaseConstants
