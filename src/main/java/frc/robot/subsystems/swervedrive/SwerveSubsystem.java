@@ -106,10 +106,6 @@ public class SwerveSubsystem extends SubsystemBase
   double pathPlannerRotationp = 0;
   double pathPlannerRotationi = 0;
   double pathPlannerRotationd = 0;
-
-  private final PIDController xController = new PIDController(10.0, 0, 0);
-  private final PIDController yController = new PIDController(10.0, 0, 0);
-  private final PIDController thetaController = new PIDController(2.0, 0, 0);
   
     /**
      * Initialize {@link SwerveDrive} with the directory provided.
@@ -225,7 +221,7 @@ public class SwerveSubsystem extends SubsystemBase
       final boolean enableFeedforward = true;
       // Configure AutoBuilder last
       if (Robot.isSimulation()) {
-        pathPlannerXp = 5;
+        pathPlannerXp = 6.0;
 
         pathPlannerRotationp = 5;
       } else {
@@ -446,28 +442,6 @@ public class SwerveSubsystem extends SubsystemBase
     }
     return Commands.none();
 
-  }
-
-  public void driveStraightToPose(Pose2d targetPose) {
-    Pose2d currentPose = getPose();
-
-    // Calculate position errors
-    double xError = targetPose.getX() - currentPose.getX();
-    double yError = targetPose.getY() - currentPose.getY();
-    
-    double turnSpeed = thetaController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
-
-    // Normalize to go straight toward the target
-    double distance = Math.hypot(xError, yError);
-    double headingToTarget = Math.atan2(yError, xError);
-
-    double forwardSpeed = distance * Math.cos(headingToTarget - currentPose.getRotation().getRadians());
-    double strafeSpeed = distance * Math.sin(headingToTarget - currentPose.getRotation().getRadians());
-
-    forwardSpeed = Math.signum(forwardSpeed) * Math.max(Math.abs(forwardSpeed), 0.3);
-    strafeSpeed = Math.signum(strafeSpeed) * Math.max(Math.abs(strafeSpeed), 0.3);
-
-    drive(new ChassisSpeeds(forwardSpeed, strafeSpeed, turnSpeed));
   }
 
 

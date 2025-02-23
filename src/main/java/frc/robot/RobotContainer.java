@@ -16,8 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.swervedrive.auto.actions.DriveAndHoldPose;
-import frc.robot.commands.swervedrive.auto.actions.DriveStraightToPose;
-import frc.robot.commands.swervedrive.auto.actions.DriveToPoseWithReefAvoidance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -177,7 +175,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().whileTrue(new DriveToPoseWithReefAvoidance(drivebase, Constants.PositionConstants.reefPositionF));
+      driverXbox.a().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getSelectedScorePositionPose(drivebase.getWebServer().getSelectedScorePosition())));
       driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2));
       driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3));
       driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4));
