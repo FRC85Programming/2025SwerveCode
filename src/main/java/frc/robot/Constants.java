@@ -85,6 +85,12 @@ public final class Constants
     public static final double HOME_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_FLOOR_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_STATION_ELEVATOR_POSITION = 0.0;
+
+    public static final int ELEVATOR_LOW_LIMIT = 0;
+    public static final int ELEVATOR_HIGH_LIMIT = 1;
+
+    public static final int ELEVATOR_ENCODER_1 = 3;
+    public static final int ELEVATOR_ENCODER_2 = 4;
   }
 
   public static final class EndEffectorConstants 
@@ -114,6 +120,9 @@ public final class Constants
     public static final double HOME_PIVOT_POSITION = 0;
     public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
     public static final double INTAKE_STATION_PIVOT_POSITION = 0;
+
+    public static final int CORAL_LIMIT_SWITCH = 2;
+    public static final int PIVOT_ENCODER = 5;
   }
 
   public static final class DrivebaseConstants

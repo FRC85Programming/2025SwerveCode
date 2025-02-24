@@ -16,10 +16,10 @@ import frc.robot.util.Positions;
 public class EndEffectorSubsystem extends SubsystemBase {
     
     // Sparkmax declaration
-    private SparkMax pivotMotor = new SparkMax(24, MotorType.kBrushless);
-    private SparkMax rollerMotor = new SparkMax(25, MotorType.kBrushless);
+    private SparkMax pivotMotor = new SparkMax(55, MotorType.kBrushless);
+    private SparkMax rollerMotor = new SparkMax(56, MotorType.kBrushless);
 
-    private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(29);
+    private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(Constants.EndEffectorConstants.PIVOT_ENCODER);
 
     private final PIDController angleController = new PIDController(3, 0, 0.6);
 
@@ -27,11 +27,12 @@ public class EndEffectorSubsystem extends SubsystemBase {
     private final EndEffectorSimulation endeffectorSim = new EndEffectorSimulation();
     
     private double setPoint = 0.0;
+    private double angleConversionFactor = (2*Math.PI)/9;
 
     public EndEffectorSubsystem() {
         // Zero the arm
         pivotMotor.set(0);
-        setSetpoint(0);
+        //setSetpoint(0);
 
         // Tell PID to wrap between 0 and 360 degrees
         angleController.enableContinuousInput(Math.toRadians(-180), Math.toRadians(180));
@@ -39,7 +40,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        driveToTargetAngle();
+        //driveToTargetAngle();
     }
     
 
@@ -83,6 +84,10 @@ public class EndEffectorSubsystem extends SubsystemBase {
         } else {
             return endeffectorSim.getSimAngle();
         }
+    }
+    
+    public double pivotAngleRadians() {
+        return pivotAbsoluteEncoder.get() * angleConversionFactor;
     }
 
     /** Set the speed of the intake rollers 
