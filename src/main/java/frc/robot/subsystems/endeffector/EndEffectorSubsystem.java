@@ -3,6 +3,7 @@ package frc.robot.subsystems.endeffector;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -21,26 +22,27 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(Constants.EndEffectorConstants.PIVOT_ENCODER);
 
-    private final PIDController angleController = new PIDController(3, 0, 0.6);
+    private final PIDController angleController = new PIDController(0.25, 0, 0.1);
 
     // Sim for intake arm
     private final EndEffectorSimulation endeffectorSim = new EndEffectorSimulation();
     
-    private double setPoint = 0.0;
+    private double setPoint = 0.3;
     private double angleConversionFactor = (2*Math.PI)/9;
 
     public EndEffectorSubsystem() {
         // Zero the arm
         pivotMotor.set(0);
-        //setSetpoint(0);
+        setSetpoint(0.3);
 
         // Tell PID to wrap between 0 and 360 degrees
-        angleController.enableContinuousInput(Math.toRadians(-180), Math.toRadians(180));
+        //angleController.enableContinuousInput(Math.toRadians(0), Math.toRadians(1));
     }
 
     @Override
     public void periodic() {
         //driveToTargetAngle();
+        SmartDashboard.putNumber("Pivot Rotation", pivotAbsoluteEncoder.get());
     }
     
 
@@ -64,17 +66,26 @@ public class EndEffectorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Current Angle", currentAngle);
         SmartDashboard.putNumber("Current Output", output);
 
-        pivotMotor.set(output);
+        setPivotSpeed(-output);
 
         if (RobotBase.isSimulation()) {
             endeffectorSim.setInputVoltage(output * 12.0);
         }
     }
 
+    public void setPivotSpeed(double speed) {
+        speed = MathUtil.clamp(speed, -0.2, 0.2);
+        if (pivotAbsoluteEncoder.get() > 0.97 || pivotAbsoluteEncoder.get() < 0.279) {
+            pivotMotor.set(0);
+        } else {
+            pivotMotor.set(speed);
+        }
+    }
+
     public void setSetpoint(double setPoint) {
         this.setPoint = setPoint;
     }
-    
+
     /**Get the value of the intake arm angle - or the sim angle if the sim is active
      */
     public double getPivotAngle() {

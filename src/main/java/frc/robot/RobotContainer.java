@@ -186,8 +186,8 @@ public class RobotContainer
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
-      opXbox.pov(180).whileTrue(new InstantCommand(() -> elevator.setElevatorSpeed(0.1), elevator));
-      opXbox.pov(180).whileFalse(new InstantCommand(() -> elevator.setElevatorSpeed(0.0), elevator));
+      opXbox.pov(90).whileTrue(new InstantCommand(() -> intake.runRollers(0.2), intake));
+      opXbox.pov(90).whileFalse(new InstantCommand(() -> intake.runRollers(0.0), intake));
     }
 
   }

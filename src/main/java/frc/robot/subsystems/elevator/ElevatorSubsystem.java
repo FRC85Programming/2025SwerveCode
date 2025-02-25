@@ -39,7 +39,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     boolean hasHomed = false;
 
     public ElevatorSubsystem() {
-        setSetpoint(0.53);
+        setSetpoint(0.0);
     }
     
     @Override
