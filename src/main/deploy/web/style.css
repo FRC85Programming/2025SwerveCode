@@ -33,7 +33,11 @@ body {
 /* Images */
 .reef {
     display: block;
-    width: 350px;
+    position: absolute;
+    height: 325px;
+    width: 325px;
+    left: 750px;
+    transform: rotate(-90deg);
 }
 
 .autoReef {
@@ -61,9 +65,7 @@ body {
 
 /* Reef & Source Containers */
 .reefcontainer {
-    top: -10px;
-    left: 800px;
-    transform: rotate(-90deg);
+
 }
 
 
@@ -105,18 +107,29 @@ body {
 
 /* Tab buttons */
 .tab-button {
-    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 2px;
+    border-radius: 8px;
     cursor: pointer;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f0f0f0;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    border: 2px solid #00b3ff; 
+    background-color: #121318;
+    color: #00b3ff;
+    transition: background 0.2s, transform 0.1s;
 }
 
 /* Active tab styling */
 .tab-button.active {
-    background-color: #007BFF;
+    background-color: #00b3ff;
     color: white;
+}
+
+.tab-button:hover {
+    background-color: #4159a6; /* Darker blue */
 }
 
 /* General Containers */
@@ -132,26 +145,24 @@ body {
 }
 
 /* Button Positions */
-.positionA { top: 35%; left: -60px; transform: translateY(-50%); }
-.positionB { top: 65%; left: -60px; transform: translateY(-50%); }
-.positionC { bottom: -15px; left: 5%; transform: translateX(-50%); }
-.positionD { bottom: -60px; left: 30%; transform: translateX(-50%); }
-.positionE { bottom: -60px; right: 30%; transform: translateX(50%); }
-.positionF { bottom: -15px; right: 5%; transform: translateX(50%); }
-.positionG { top: 65%; right: -60px; transform: translateY(-50%); }
-.positionH { top: 35%; right: -60px; transform: translateY(-50%); }
-.positionI { top: -15px; right: 5%; transform: translateX(50%); }
-.positionJ { top: -60px; right: 30%; transform: translateX(50%); }
-.positionK { top: -60px; left: 30%; transform: translateX(-50%); }
-.positionL { top: -15px; left: 5%; transform: translateX(-50%); }
-.positionSA { top: 70px; left: 50%; transform: translateX(-50%); }
-.positionSB { top: 310px; left: 50%; transform: translateX(-50%); }
+.positionA {top: 320px; left: 840px;}
+.positionB {top: 320px; left: 932px;}
+.positionC {top: 270px; left: 1025px;}
+.positionD {top: 200px; left: 1065px;}
+.positionE {top: 80px; left: 1065px;}
+.positionF {top: 10px; left: 1025px;}
+.positionG {top: -40px; left: 932px;}
+.positionH {top: -40px; left: 840px;}
+.positionI {top: 10px; left: 745px;}
+.positionJ {top: 80px; left: 705px;}
+.positionL {top: 200px; left: 705px;}
+.positionK {top: 270px; left: 745px;}
+
 
 /* Auto Position Buttons */
 .autoPositionA, .autoPositionB, .autoPositionC, .autoPositionD, 
 .autoPositionE, .autoPositionF, .autoPositionG, .autoPositionH, 
-.autoPositionI, .autoPositionJ, .autoPositionK, .autoPositionL, 
-.autoPositionSA, .autoPositionSB {
+.autoPositionI, .autoPositionJ, .autoPositionK, .autoPositionL {
     width: 50px;
     height: 50px;
     position: absolute;
@@ -159,25 +170,31 @@ body {
 
 .autoPositionA {top: 320px; left: 840px;}
 .autoPositionB {top: 320px; left: 932px;}
-.autoPositionC {top: 270px; left: 1020px;}
-.autoPositionD {top: 200px; left: 1060px;}
-.autoPositionE {top: 80px; left: 1060px;}
-.autoPositionF { bottom: -15px; right: 5%; transform: translateX(50%); translate: rotate(90);}
-.autoPositionG { top: 65%; right: -60px; transform: translateY(-50%); translate: rotate(90);}
-.autoPositionH { top: 35%; right: -60px; transform: translateY(-50%); translate: rotate(90);}
-.autoPositionI { top: -15px; right: 5%; transform: translateX(50%); translate: rotate(90);}
-.autoPositionJ { top: -60px; right: 30%; transform: translateX(50%); translate: rotate(90);}
-.autoPositionK { top: -60px; left: 30%; transform: translateX(-50%); translate: rotate(90);}
-.autoPositionL { top: -15px; left: 5%; transform: translateX(-50%); translate: rotate(90);}
-.autoPositionSA { top: 70px; left: 50%; transform: translateX(-50%); translate: rotate(90);}
-.autoPositionSB { top: 310px; left: 50%; transform: translateX(-50%); translate: rotate(90);}
-
-/* Update Selection Button */
+.autoPositionC {top: 270px; left: 1025px;}
+.autoPositionD {top: 200px; left: 1065px;}
+.autoPositionE {top: 80px; left: 1065px;}
+.autoPositionF {top: 10px; left: 1025px;}
+.autoPositionG {top: -40px; left: 932px;}
+.autoPositionH {top: -40px; left: 840px;}
+.autoPositionI {top: 10px; left: 745px;}
+.autoPositionJ {top: 80px; left: 705px;}
+.autoPositionL {top: 200px; left: 705px;}
+.autoPositionK {top: 270px; left: 745px;}
 .updateselectionbutton {
-    top: 100%;
-    left: -150px;
-    position: absolute;
-    transform: rotate(90deg);
+    position: absolute; 
+    top: 375px; 
+    left: 680px;
+    width: 120px;
+    height: 60px;
+    border: 2px solid #9c27b0;
+    border-radius: 15px;
+    background-color: #121318;
+    color: #ee90e3;
+    font-weight: bold;
+    cursor: pointer;
+}
+.updateselectionbutton:hover {
+    background-color: #af5abe; /* Darker blue */
 }
 
 /* Color Codes */
