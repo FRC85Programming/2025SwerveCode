@@ -1,6 +1,9 @@
 package frc.robot.subsystems.endeffector;
 
+import org.eclipse.jetty.util.MathUtils;
+
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
@@ -12,28 +15,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.util.MotorUtil;
 import frc.robot.util.Positions;
 
 public class EndEffectorSubsystem extends SubsystemBase {
     
     // Sparkmax declaration
-    private SparkMax pivotMotor = new SparkMax(55, MotorType.kBrushless);
+    private SparkFlex pivotMotor = new SparkFlex(55, MotorType.kBrushless);
     private SparkMax rollerMotor = new SparkMax(56, MotorType.kBrushless);
 
     private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(Constants.EndEffectorConstants.PIVOT_ENCODER);
 
-    private final PIDController angleController = new PIDController(0.25, 0, 0.1);
+    private final PIDController angleController = new PIDController(0.7, 0, 0.0);
 
     // Sim for intake arm
     private final EndEffectorSimulation endeffectorSim = new EndEffectorSimulation();
     
-    private double setPoint = 0.3;
+    private double setPoint = 0.0;
     private double angleConversionFactor = (2*Math.PI)/9;
 
     public EndEffectorSubsystem() {
         // Zero the arm
         pivotMotor.set(0);
-        setSetpoint(0.3);
+        setSetpoint(0);
 
         // Tell PID to wrap between 0 and 360 degrees
         //angleController.enableContinuousInput(Math.toRadians(0), Math.toRadians(1));
@@ -41,7 +45,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //driveToTargetAngle();
+        driveToSetPoint();
+        SmartDashboard.putNumber("Suspected Arm Radians", getPivotAngleAsRadians());
         SmartDashboard.putNumber("Pivot Rotation", pivotAbsoluteEncoder.get());
     }
     
@@ -54,23 +59,34 @@ public class EndEffectorSubsystem extends SubsystemBase {
         }
     }
 
-    public void driveToTargetAngle() {
-        double currentAngle = getPivotAngle();
+    public void driveToSetPoint() {
+        double currentAngle = getPivotAngleAsRadians();
+        
+        // PID output (range: -1 to 1), needs to be scaled to voltage
+        double pidOutput = angleController.calculate(currentAngle, setPoint);
+        double pidVoltage = pidOutput * Constants.MAX_VOLTAGE; // Scale to motor voltage
 
-        // PID calculates required motor speed (-1 to 1)
-        double output = angleController.calculate(currentAngle, setPoint);
+        // Gravity feedforward
+        double angleRadians = Math.toRadians(setPoint);
+        double torqueRequired = MotorUtil.calculateTorque(Constants.EndEffectorConstants.ARM_MASS_KG, Constants.EndEffectorConstants.CENTER_OF_MASS, angleRadians);
+        double feedforwardVoltage = (setPoint > currentAngle) ? 
+            MotorUtil.torqueToVoltage(torqueRequired / 9, 0) : 
+            -MotorUtil.torqueToVoltage(torqueRequired / 9, 0);
+        // Total voltage applied to the motor
+        double finalVoltage = pidVoltage /*+ feedforwardVoltage*/;
 
-        // Clamp output if necessary
-        output = Math.max(-1, Math.min(1, output));
+        // Clamp to prevent exceeding 12V
+        finalVoltage = Math.max(-Constants.MAX_VOLTAGE, Math.min(Constants.MAX_VOLTAGE, finalVoltage));
 
-        SmartDashboard.putNumber("Current Angle", currentAngle);
-        SmartDashboard.putNumber("Current Output", output);
+        // Apply voltage to motor
+        SmartDashboard.putNumber("Volts Unclamped", finalVoltage);
 
-        setPivotSpeed(-output);
+        finalVoltage = MathUtil.clamp(finalVoltage, -2, 2);
+        pivotMotor.setVoltage(finalVoltage);
 
-        if (RobotBase.isSimulation()) {
-            endeffectorSim.setInputVoltage(output * 12.0);
-        }
+        SmartDashboard.putNumber("Volts Clamped", finalVoltage);
+        SmartDashboard.putNumber("Gravity Comp", torqueRequired);
+        SmartDashboard.putNumber("Gravity Comp Volts", feedforwardVoltage);
     }
 
     public void setPivotSpeed(double speed) {
@@ -96,6 +112,10 @@ public class EndEffectorSubsystem extends SubsystemBase {
             return endeffectorSim.getSimAngle();
         }
     }
+
+    public double getPivotAngleAsRadians() {
+        return (0.956 - pivotAbsoluteEncoder.get()) * 2*Math.PI;
+    } 
     
     public double pivotAngleRadians() {
         return pivotAbsoluteEncoder.get() * angleConversionFactor;
