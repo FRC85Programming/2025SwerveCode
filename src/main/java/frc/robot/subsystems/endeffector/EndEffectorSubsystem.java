@@ -26,18 +26,21 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(Constants.EndEffectorConstants.PIVOT_ENCODER);
 
-    private final PIDController angleController = new PIDController(0.6, 0, 0.0);
+    private final PIDController angleController = new PIDController(0.05, 0, 0.0);
 
     // Sim for intake arm
     private final EndEffectorSimulation endeffectorSim = new EndEffectorSimulation();
     
     private double setPoint = 0.0;
     private double angleConversionFactor = (2*Math.PI)/9;
+    boolean safe;
 
     public EndEffectorSubsystem() {
         // Zero the arm
         pivotMotor.set(0);
         setSetpoint(0);
+
+        SmartDashboard.putNumber("Pivot P", 0.08);
 
         // Tell PID to wrap between 0 and 360 degrees
         //angleController.enableContinuousInput(Math.toRadians(0), Math.toRadians(1));
@@ -45,7 +48,10 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        driveToSetPoint();
+        if (safe) {
+            driveToSetPoint();
+        }
+        angleController.setP(SmartDashboard.getNumber("Pivot P", 0.08));
         SmartDashboard.putNumber("Suspected Arm Radians", getPivotAngleAsRadians());
         SmartDashboard.putNumber("Pivot Rotation", pivotAbsoluteEncoder.get());
     }
@@ -81,7 +87,6 @@ public class EndEffectorSubsystem extends SubsystemBase {
         // Apply voltage to motor
         SmartDashboard.putNumber("Volts Unclamped", finalVoltage);
 
-        finalVoltage = MathUtil.clamp(finalVoltage, -2, 2);
         pivotMotor.setVoltage(finalVoltage);
 
         SmartDashboard.putNumber("Volts Clamped", finalVoltage);
@@ -95,6 +100,15 @@ public class EndEffectorSubsystem extends SubsystemBase {
             pivotMotor.set(0);
         } else {
             pivotMotor.set(speed);
+        }
+    }
+
+    public void setPivotVoltage(double voltage) {
+        if (pivotAbsoluteEncoder.get() > 0.97 || pivotAbsoluteEncoder.get() < 0.279) {
+            pivotMotor.setVoltage(voltage);
+        } else {
+            pivotMotor.setVoltage(0);
+            safe = false;
         }
     }
 

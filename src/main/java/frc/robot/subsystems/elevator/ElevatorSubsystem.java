@@ -40,6 +40,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public ElevatorSubsystem() {
         setSetpoint(0.0);
+        elevatorController.setTolerance(0.001);
     }
     
     @Override
@@ -94,6 +95,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         } else {
             return elevatorSim.getElevatorSimPosition();
         }
+    }
+
+    public boolean isInTolerance() {
+        return elevatorController.atSetpoint();
     }
 
     public void checkEncoderReset() {
