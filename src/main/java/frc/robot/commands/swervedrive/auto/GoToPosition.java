@@ -33,7 +33,7 @@ public class GoToPosition extends Command
   @Override
   public void execute()
   {
-    //elevator.setSetpoint(elevator.getSetpoint(position));
+    elevator.setSetpoint(elevator.getSetpoint(position));
     //intake.setSetpoint(intake.getSetpoint(position));
     endeffector.setSetpoint(endeffector.getSetpoint(position));
   }
@@ -47,7 +47,7 @@ public class GoToPosition extends Command
   @Override
   public void end(boolean interrupted)
   {
-    //elevator.setSetpoint(elevator.getSetpoint(Positions.HOME));
+    elevator.setSetpoint(elevator.getSetpoint(Positions.HOME));
     //intake.setSetpoint(intake.getSetpoint(Positions.HOME));
     endeffector.setSetpoint(endeffector.getSetpoint(Positions.HOME));
   }

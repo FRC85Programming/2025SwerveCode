@@ -26,7 +26,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(Constants.EndEffectorConstants.PIVOT_ENCODER);
 
-    private final PIDController angleController = new PIDController(0.7, 0, 0.0);
+    private final PIDController angleController = new PIDController(0.6, 0, 0.0);
 
     // Sim for intake arm
     private final EndEffectorSimulation endeffectorSim = new EndEffectorSimulation();
@@ -90,7 +90,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     public void setPivotSpeed(double speed) {
-        speed = MathUtil.clamp(speed, -0.2, 0.2);
+        speed = MathUtil.clamp(speed, -0.5, 0.5);
         if (pivotAbsoluteEncoder.get() > 0.97 || pivotAbsoluteEncoder.get() < 0.279) {
             pivotMotor.set(0);
         } else {

@@ -46,6 +46,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
         if (hasHomed) {
             runToPosition(setPoint);
+        } else {
+            setElevatorSpeed(0.05);
         }
         checkEncoderReset();
         if (highLimit.get() || lowLimit.get()) {
@@ -109,7 +111,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setElevatorSpeed(double speed) {
-        speed = MathUtil.clamp(speed, -0.2, 0.2);
+        speed = MathUtil.clamp(speed, -0.4, 0.4);
         elevatorMotorLeft.set(speed);
         elevatorMotorRight.set(-speed);
 
