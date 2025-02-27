@@ -40,7 +40,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public ElevatorSubsystem() {
         setSetpoint(0.0);
-        elevatorController.setTolerance(0.001);
+        SmartDashboard.putNumber("Elevator Tolerance", 0.01);
     }
     
     @Override
@@ -55,7 +55,9 @@ public class ElevatorSubsystem extends SubsystemBase {
             setElevatorSpeed(0);
         }
         SmartDashboard.putNumber("Elevator Encoder", elevatorEncoder.get());
-        SmartDashboard.putNumber("Current Height", elevatorEncoder.get()*0.813/11786);
+        SmartDashboard.putNumber("Current Height", getElevatorPosition());
+        SmartDashboard.putNumber("Height minus offset", Math.abs(getElevatorPosition() - setPoint));
+        SmartDashboard.putBoolean("Is in range", isInTolerance());
 
     }
 
@@ -72,8 +74,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void runToPosition(double setPoint) {
-        double currentHeight = getElevatorPosition();
-        SmartDashboard.putNumber("Current Height", currentHeight);
 
         // PID calculates required motor speed (-1 to 1)
         double output = elevatorController.calculate(elevatorEncoder.get(), getHeightInClicks(setPoint));
@@ -91,14 +91,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public double getElevatorPosition() {
         if (!Robot.isSimulation()) {
-            return elevatorEncoder.get();
+            return elevatorEncoder.get()*0.813/11786;
         } else {
             return elevatorSim.getElevatorSimPosition();
         }
     }
 
     public boolean isInTolerance() {
-        return elevatorController.atSetpoint();
+        return Math.abs(getElevatorPosition() - setPoint) < 0.2 && setPoint != 0;
     }
 
     public void checkEncoderReset() {
@@ -145,6 +145,8 @@ public class ElevatorSubsystem extends SubsystemBase {
                 return Constants.ElevatorConstants.INTAKE_FLOOR_ELEVATOR_POSITION;
             case INTAKE_STATION:
                 return Constants.ElevatorConstants.INTAKE_STATION_ELEVATOR_POSITION;
+            case L2_ALGAE:
+                return Constants.ElevatorConstants.L2_ALGAE_ELEVATOR_POSITION;
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }

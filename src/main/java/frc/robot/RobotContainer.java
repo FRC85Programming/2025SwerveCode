@@ -181,7 +181,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L1));
+      driverXbox.a().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2_ALGAE));
       driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2));
       driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3));
       driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4));

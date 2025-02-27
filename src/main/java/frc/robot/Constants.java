@@ -80,9 +80,10 @@ public final class Constants
 
     // Positions
     public static final double L1_ELEVATOR_POSITION = 0.0;
-    public static final double L2_ELEVATOR_POSITION = 0.2;
-    public static final double L3_ELEVATOR_POSITION = 0.4;
+    public static final double L2_ELEVATOR_POSITION = 0.0001;
+    public static final double L3_ELEVATOR_POSITION = 0.3;
     public static final double L4_ELEVATOR_POSITION = 0.79;
+    public static final double L2_ALGAE_ELEVATOR_POSITION = .41;
     public static final double HOME_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_FLOOR_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_STATION_ELEVATOR_POSITION = 0.0;
@@ -115,9 +116,10 @@ public final class Constants
     public static final double PIVOT_ROOT_Z = 0.98;
 
     public static final double L1_PIVOT_POSITION = 0;
-    public static final double L2_PIVOT_POSITION = (3*Math.PI)/2;
-    public static final double L3_PIVOT_POSITION = (3*Math.PI)/2;
+    public static final double L2_PIVOT_POSITION = 4.2;
+    public static final double L3_PIVOT_POSITION = 3.9; 
     public static final double L4_PIVOT_POSITION = 3.60;
+    public static final double L2_ALGAE_PIVOT_POSITION = 4.6;
     public static final double HOME_PIVOT_POSITION = 0;
     public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
     public static final double INTAKE_STATION_PIVOT_POSITION = 0;

@@ -26,14 +26,14 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(Constants.EndEffectorConstants.PIVOT_ENCODER);
 
-    private final PIDController angleController = new PIDController(0.05, 0, 0.0);
+    private final PIDController angleController = new PIDController(0.1, 0, 0.0);
 
     // Sim for intake arm
     private final EndEffectorSimulation endeffectorSim = new EndEffectorSimulation();
     
     private double setPoint = 0.0;
     private double angleConversionFactor = (2*Math.PI)/9;
-    boolean safe;
+    boolean safe = true;
 
     public EndEffectorSubsystem() {
         // Zero the arm
@@ -51,7 +51,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
         if (safe) {
             driveToSetPoint();
         }
-        angleController.setP(SmartDashboard.getNumber("Pivot P", 0.08));
+        angleController.setP(0.1);
         SmartDashboard.putNumber("Suspected Arm Radians", getPivotAngleAsRadians());
         SmartDashboard.putNumber("Pivot Rotation", pivotAbsoluteEncoder.get());
     }
@@ -87,7 +87,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
         // Apply voltage to motor
         SmartDashboard.putNumber("Volts Unclamped", finalVoltage);
 
-        pivotMotor.setVoltage(finalVoltage);
+        setPivotVoltage(finalVoltage);
 
         SmartDashboard.putNumber("Volts Clamped", finalVoltage);
         SmartDashboard.putNumber("Gravity Comp", torqueRequired);
@@ -104,7 +104,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     public void setPivotVoltage(double voltage) {
-        if (pivotAbsoluteEncoder.get() > 0.97 || pivotAbsoluteEncoder.get() < 0.279) {
+        if (pivotAbsoluteEncoder.get() < 0.97 || pivotAbsoluteEncoder.get() > 0.279) {
             pivotMotor.setVoltage(voltage);
         } else {
             pivotMotor.setVoltage(0);
@@ -163,6 +163,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
                 return Constants.EndEffectorConstants.INTAKE_FLOOR_PIVOT_POSITION;
             case INTAKE_STATION:
                 return Constants.EndEffectorConstants.INTAKE_STATION_PIVOT_POSITION;
+            case L2_ALGAE:
+                return Constants.EndEffectorConstants.L2_ALGAE_PIVOT_POSITION;
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }
