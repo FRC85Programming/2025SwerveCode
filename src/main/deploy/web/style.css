@@ -144,6 +144,40 @@ body {
     display: block; /* Or inline-block, depending on your desired layout */
 }
 
+.selection-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid #0048a7; /* Blue border */
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 10px; /* Rounded corners for box */
+    background-color: #e6f0ff;;
+    max-width: 250px;
+    box-sizing: border-box;
+}
+
+.selection-box select {
+    padding: 5px;
+    border: 2px solid #0048a7; /* Blue border for dropdowns */
+    border-radius: 8px; /* Rounded dropdown corners */
+    background-color: white; 
+    color: #0048a7; /* Blue text in dropdowns */
+    outline: none;
+    cursor: pointer;
+}
+
+.selection-box select:focus {
+    border-color: #003580; /* Darker blue for focus effect */
+}
+
+.indicator {
+    color: #0048a7; /* Blue text */
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
 /* Button Positions */
 .positionA {top: 320px; left: 840px;}
 .positionB {top: 320px; left: 932px;}
@@ -183,7 +217,7 @@ body {
 .updateselectionbutton {
     position: absolute; 
     top: 375px; 
-    left: 680px;
+    left: 140px;
     width: 120px;
     height: 60px;
     border: 2px solid #9c27b0;
@@ -193,8 +227,24 @@ body {
     font-weight: bold;
     cursor: pointer;
 }
-.updateselectionbutton:hover {
-    background-color: #af5abe; /* Darker blue */
+
+
+.resetautoselectionsbutton {
+    position: absolute; 
+    top: 375px; 
+    left: 0px;
+    width: 120px;
+    height: 60px;
+    border: 2px solid #9c27b0;
+    border-radius: 15px;
+    background-color: #121318;
+    color: #ee90e3;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.updateselectionbutton:hover, .resetautoselectionsbutton:hover {
+    background-color: #af5abe; 
 }
 
 /* Color Codes */

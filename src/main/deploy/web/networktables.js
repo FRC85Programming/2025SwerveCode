@@ -88,39 +88,64 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let selectedAutoPositions = [];
 
-    // Function to handle auto button selection (adding selected positions in order)
+    let autoSelections = [];
+
     function selectAutoPosition(position) {
-        // Add position to the array if it's not already selected
-        if (!selectedAutoPositions.includes(position)) {
-            selectedAutoPositions.push(position);
+        if (autoSelections.length >= 4) {
+            console.log("Maximum of 4 selections allowed.");
+            return;
         }
 
-        // Update the button appearance (optional)
-        updateButtonSelection("auto");
+        const container = document.querySelector('.autocontainer');
+        const selectionBox = document.createElement('div');
+        selectionBox.classList.add('selection-box');
+
+        const indicator = document.createElement('span');
+        indicator.textContent = position.charAt(position.length - 1).toUpperCase();
+        indicator.classList.add('indicator');
+
+        const dropdown1 = document.createElement('select');
+        dropdown1.innerHTML = `<option value="4">L4</option>
+                            <option value="3">L3</option>
+                            <option value="2">L2</option>`;
+
+        const dropdown2 = document.createElement('select');
+        dropdown2.innerHTML = `<option value="1">Left Source</option>
+                            <option value="2">Right Source</option>`;
+
+        selectionBox.appendChild(indicator);
+        selectionBox.appendChild(dropdown1);
+        selectionBox.appendChild(dropdown2);
+
+        container.appendChild(selectionBox);
+
+        autoSelections.push({ position, dropdown1, dropdown2 });
     }
 
-    // Function to handle the update button click (send the entire batch of selected auto positions)
     function updateAutoSelection() {
-        // If there are selected positions, send them to NetworkTables
-        if (selectedAutoPositions.length > 0) {
-            fetch("/toggle", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ variable: "autoValue", value: selectedAutoPositions })
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log("Auto positions sent to NetworkTables:", selectedAutoPositions);
-                    // Clear the selections after sending the batch
-                    selectedAutoPositions = [];
-                } else {
-                    console.error("Failed to update auto positions.");
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        } else {
-            console.log("No positions selected.");
-        }
+        const packagedSelections = autoSelections.map(selection => {
+            const dropdown1Value = selection.dropdown1.value;
+            const dropdown2Value = selection.dropdown2.value;
+            return `${selection.position.charAt(selection.position.length - 1).toUpperCase()}${dropdown1Value}${dropdown2Value}`;
+        });
+
+        fetch("/toggle", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ variable: "autoValue", value: packagedSelections })
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log("Selections sent to NetworkTables:", packagedSelections);
+            } else {
+                console.error("Failed to send selections.");
+            }
+        })
+        .catch(error => console.error("Error:", error));
+
+    }
+
+    function clearAutoSelections() {
+        document.querySelectorAll('.selection-box').forEach(box => box.remove());
+        autoSelections = [];
     }
