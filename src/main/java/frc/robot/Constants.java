@@ -24,6 +24,7 @@ public final class Constants
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
   public static final double MAX_SPEED  = Units.feetToMeters(18.0);
+  public static final double MAX_VOLTAGE = 12;
   // Maximum speed of the robot in meters per second, used to limit acceleration.
 
 //  public static final class AutonConstants
@@ -79,19 +80,26 @@ public final class Constants
 
     // Positions
     public static final double L1_ELEVATOR_POSITION = 0.0;
-    public static final double L2_ELEVATOR_POSITION = 0.2;
-    public static final double L3_ELEVATOR_POSITION = 0.4;
-    public static final double L4_ELEVATOR_POSITION = 0.7;
+    public static final double L2_ELEVATOR_POSITION = 0.0001;
+    public static final double L3_ELEVATOR_POSITION = 0.3;
+    public static final double L4_ELEVATOR_POSITION = 0.79;
+    public static final double L2_ALGAE_ELEVATOR_POSITION = .41;
     public static final double HOME_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_FLOOR_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_STATION_ELEVATOR_POSITION = 0.0;
+
+    public static final int ELEVATOR_LOW_LIMIT = 0;
+    public static final int ELEVATOR_HIGH_LIMIT = 1;
+
+    public static final int ELEVATOR_ENCODER_1 = 3;
+    public static final int ELEVATOR_ENCODER_2 = 4;
   }
 
   public static final class EndEffectorConstants 
   {
     // Pysical pivot properties
     public static final double ARM_LENGTH_METERS = 0.35;
-    public static final double ARM_MASS_KG = 1.3;
+    public static final double ARM_MASS_KG = Units.lbsToKilograms(4.172);
     public static final double GEAR_RATIO = 9.0;
 
     // Angle constraints (sim)
@@ -108,12 +116,18 @@ public final class Constants
     public static final double PIVOT_ROOT_Z = 0.98;
 
     public static final double L1_PIVOT_POSITION = 0;
-    public static final double L2_PIVOT_POSITION = -(4*Math.PI)/3;
-    public static final double L3_PIVOT_POSITION = -(4*Math.PI)/3;
-    public static final double L4_PIVOT_POSITION = -(5*Math.PI)/4;
+    public static final double L2_PIVOT_POSITION = 4.2;
+    public static final double L3_PIVOT_POSITION = 3.9; 
+    public static final double L4_PIVOT_POSITION = 3.60;
+    public static final double L2_ALGAE_PIVOT_POSITION = 4.6;
     public static final double HOME_PIVOT_POSITION = 0;
     public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
     public static final double INTAKE_STATION_PIVOT_POSITION = 0;
+
+    public static final int CORAL_LIMIT_SWITCH = 2;
+    public static final int PIVOT_ENCODER = 5;
+
+    public static final double CENTER_OF_MASS = Units.inchesToMeters(12.9);
   }
 
   public static final class DrivebaseConstants

@@ -1,8 +1,12 @@
 package frc.robot.subsystems.endeffector;
 
+import org.eclipse.jetty.util.MathUtils;
+
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -11,35 +15,45 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.util.MotorUtil;
 import frc.robot.util.Positions;
 
 public class EndEffectorSubsystem extends SubsystemBase {
     
     // Sparkmax declaration
-    private SparkMax pivotMotor = new SparkMax(24, MotorType.kBrushless);
-    private SparkMax rollerMotor = new SparkMax(25, MotorType.kBrushless);
+    private SparkFlex pivotMotor = new SparkFlex(55, MotorType.kBrushless);
+    private SparkMax rollerMotor = new SparkMax(56, MotorType.kBrushless);
 
-    private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(29);
+    private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(Constants.EndEffectorConstants.PIVOT_ENCODER);
 
-    private final PIDController angleController = new PIDController(3, 0, 0.6);
+    private final PIDController angleController = new PIDController(0.1, 0, 0.0);
 
     // Sim for intake arm
     private final EndEffectorSimulation endeffectorSim = new EndEffectorSimulation();
     
     private double setPoint = 0.0;
+    private double angleConversionFactor = (2*Math.PI)/9;
+    boolean safe = true;
 
     public EndEffectorSubsystem() {
         // Zero the arm
         pivotMotor.set(0);
         setSetpoint(0);
 
+        SmartDashboard.putNumber("Pivot P", 0.08);
+
         // Tell PID to wrap between 0 and 360 degrees
-        angleController.enableContinuousInput(Math.toRadians(-180), Math.toRadians(180));
+        //angleController.enableContinuousInput(Math.toRadians(0), Math.toRadians(1));
     }
 
     @Override
     public void periodic() {
-        driveToTargetAngle();
+        if (safe) {
+            driveToSetPoint();
+        }
+        angleController.setP(0.1);
+        SmartDashboard.putNumber("Suspected Arm Radians", getPivotAngleAsRadians());
+        SmartDashboard.putNumber("Pivot Rotation", pivotAbsoluteEncoder.get());
     }
     
 
@@ -51,29 +65,57 @@ public class EndEffectorSubsystem extends SubsystemBase {
         }
     }
 
-    public void driveToTargetAngle() {
-        double currentAngle = getPivotAngle();
+    public void driveToSetPoint() {
+        double currentAngle = getPivotAngleAsRadians();
+        
+        // PID output (range: -1 to 1), needs to be scaled to voltage
+        double pidOutput = angleController.calculate(currentAngle, setPoint);
+        double pidVoltage = pidOutput * Constants.MAX_VOLTAGE; // Scale to motor voltage
 
-        // PID calculates required motor speed (-1 to 1)
-        double output = angleController.calculate(currentAngle, setPoint);
+        // Gravity feedforward
+        double angleRadians = Math.toRadians(setPoint);
+        double torqueRequired = MotorUtil.calculateTorque(Constants.EndEffectorConstants.ARM_MASS_KG, Constants.EndEffectorConstants.CENTER_OF_MASS, angleRadians);
+        double feedforwardVoltage = (setPoint > currentAngle) ? 
+            MotorUtil.torqueToVoltage(torqueRequired / 9, 0) : 
+            -MotorUtil.torqueToVoltage(torqueRequired / 9, 0);
+        // Total voltage applied to the motor
+        double finalVoltage = pidVoltage /*+ feedforwardVoltage*/;
 
-        // Clamp output if necessary
-        output = Math.max(-1, Math.min(1, output));
+        // Clamp to prevent exceeding 12V
+        finalVoltage = Math.max(-Constants.MAX_VOLTAGE, Math.min(Constants.MAX_VOLTAGE, finalVoltage));
 
-        SmartDashboard.putNumber("Current Angle", currentAngle);
-        SmartDashboard.putNumber("Current Output", output);
+        // Apply voltage to motor
+        SmartDashboard.putNumber("Volts Unclamped", finalVoltage);
 
-        pivotMotor.set(output);
+        setPivotVoltage(finalVoltage);
 
-        if (RobotBase.isSimulation()) {
-            endeffectorSim.setInputVoltage(output * 12.0);
+        SmartDashboard.putNumber("Volts Clamped", finalVoltage);
+        SmartDashboard.putNumber("Gravity Comp", torqueRequired);
+        SmartDashboard.putNumber("Gravity Comp Volts", feedforwardVoltage);
+    }
+
+    public void setPivotSpeed(double speed) {
+        speed = MathUtil.clamp(speed, -0.5, 0.5);
+        if (pivotAbsoluteEncoder.get() > 0.97 || pivotAbsoluteEncoder.get() < 0.279) {
+            pivotMotor.set(0);
+        } else {
+            pivotMotor.set(speed);
+        }
+    }
+
+    public void setPivotVoltage(double voltage) {
+        if (pivotAbsoluteEncoder.get() < 0.97 || pivotAbsoluteEncoder.get() > 0.279) {
+            pivotMotor.setVoltage(voltage);
+        } else {
+            pivotMotor.setVoltage(0);
+            safe = false;
         }
     }
 
     public void setSetpoint(double setPoint) {
         this.setPoint = setPoint;
     }
-    
+
     /**Get the value of the intake arm angle - or the sim angle if the sim is active
      */
     public double getPivotAngle() {
@@ -83,6 +125,14 @@ public class EndEffectorSubsystem extends SubsystemBase {
         } else {
             return endeffectorSim.getSimAngle();
         }
+    }
+
+    public double getPivotAngleAsRadians() {
+        return (0.956 - pivotAbsoluteEncoder.get()) * 2*Math.PI;
+    } 
+    
+    public double pivotAngleRadians() {
+        return pivotAbsoluteEncoder.get() * angleConversionFactor;
     }
 
     /** Set the speed of the intake rollers 
@@ -113,6 +163,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
                 return Constants.EndEffectorConstants.INTAKE_FLOOR_PIVOT_POSITION;
             case INTAKE_STATION:
                 return Constants.EndEffectorConstants.INTAKE_STATION_PIVOT_POSITION;
+            case L2_ALGAE:
+                return Constants.EndEffectorConstants.L2_ALGAE_PIVOT_POSITION;
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }

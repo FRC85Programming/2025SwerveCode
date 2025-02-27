@@ -5,9 +5,11 @@ import org.littletonrobotics.junction.Logger;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -19,24 +21,44 @@ import frc.robot.util.Positions;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    private SparkFlex elevatorMotorLeft = new SparkFlex(16, MotorType.kBrushless);
-    private SparkFlex elevatorMotorRight = new SparkFlex(15, MotorType.kBrushless);
+    private SparkFlex elevatorMotorLeft = new SparkFlex(53, MotorType.kBrushless);
+    private SparkFlex elevatorMotorRight = new SparkFlex(54, MotorType.kBrushless);
 
-    private DutyCycleEncoder elevatorAbsoluteEncoder = new DutyCycleEncoder(30);
+    private DigitalInput highLimit = new DigitalInput(Constants.ElevatorConstants.ELEVATOR_HIGH_LIMIT);
+    private DigitalInput lowLimit = new DigitalInput(Constants.ElevatorConstants.ELEVATOR_LOW_LIMIT);
 
-    private PIDController elevatorController = new PIDController(5.0, 0, 0.1);
+    private Encoder elevatorEncoder = new Encoder(Constants.ElevatorConstants.ELEVATOR_ENCODER_1, Constants.ElevatorConstants.ELEVATOR_ENCODER_2);
+
+    private PIDController elevatorController = new PIDController(0.0001, 0, 0.0);
 
     private ElevatorSimulation elevatorSim = new ElevatorSimulation();
 
     double setPoint = 0.0;
+    double elevatorConversionFactor = 0.15;
+
+    boolean hasHomed = false;
 
     public ElevatorSubsystem() {
-
+        setSetpoint(0.0);
+        SmartDashboard.putNumber("Elevator Tolerance", 0.01);
     }
     
     @Override
     public void periodic() {
-        runToPosition(setPoint);
+        if (hasHomed) {
+            runToPosition(setPoint);
+        } else {
+            setElevatorSpeed(0.05);
+        }
+        checkEncoderReset();
+        if (highLimit.get() || lowLimit.get()) {
+            setElevatorSpeed(0);
+        }
+        SmartDashboard.putNumber("Elevator Encoder", elevatorEncoder.get());
+        SmartDashboard.putNumber("Current Height", getElevatorPosition());
+        SmartDashboard.putNumber("Height minus offset", Math.abs(getElevatorPosition() - setPoint));
+        SmartDashboard.putBoolean("Is in range", isInTolerance());
+
     }
 
     @Override
@@ -52,16 +74,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void runToPosition(double setPoint) {
-        double currentHeight = getElevatorPosition();
-        SmartDashboard.putNumber("Current Height", currentHeight);
 
         // PID calculates required motor speed (-1 to 1)
-        double output = elevatorController.calculate(currentHeight, setPoint);
+        double output = elevatorController.calculate(elevatorEncoder.get(), getHeightInClicks(setPoint));
 
         // Clamp output if necessary
         output = Math.max(-1, Math.min(1, output));
 
-        setElevatorSpeed(output);
+        setElevatorSpeed(-output);
+        SmartDashboard.putNumber("Elevator Speed Output", output);
 
         if (RobotBase.isSimulation()) {
             elevatorSim.setInputVoltage(output * 12.0);
@@ -70,15 +91,38 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public double getElevatorPosition() {
         if (!Robot.isSimulation()) {
-            return elevatorAbsoluteEncoder.get();
+            return elevatorEncoder.get()*0.813/11786;
         } else {
             return elevatorSim.getElevatorSimPosition();
         }
     }
 
+    public boolean isInTolerance() {
+        return Math.abs(getElevatorPosition() - setPoint) < 0.2 && setPoint != 0;
+    }
+
+    public void checkEncoderReset() {
+        SmartDashboard.putBoolean("Low Limit", lowLimit.get());
+        SmartDashboard.putBoolean("High Limit", highLimit.get());
+
+        if (lowLimit.get()) {
+            elevatorEncoder.reset();
+            hasHomed = true;
+        }
+    }
+
+    public double getHeightInClicks(double desiredHeight) {
+        return desiredHeight*11786/0.813;
+    }
+
     public void setElevatorSpeed(double speed) {
-      elevatorMotorLeft.set(speed);
-      elevatorMotorRight.set(-speed);
+        speed = MathUtil.clamp(speed, -0.4, 0.4);
+        elevatorMotorLeft.set(speed);
+        elevatorMotorRight.set(-speed);
+
+        if (RobotBase.isSimulation()) {
+            elevatorSim.setInputVoltage(speed * 12.0);
+        }
     }
 
     public Pose3d getElevatorSimPose() {
@@ -101,6 +145,8 @@ public class ElevatorSubsystem extends SubsystemBase {
                 return Constants.ElevatorConstants.INTAKE_FLOOR_ELEVATOR_POSITION;
             case INTAKE_STATION:
                 return Constants.ElevatorConstants.INTAKE_STATION_ELEVATOR_POSITION;
+            case L2_ALGAE:
+                return Constants.ElevatorConstants.L2_ALGAE_ELEVATOR_POSITION;
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }

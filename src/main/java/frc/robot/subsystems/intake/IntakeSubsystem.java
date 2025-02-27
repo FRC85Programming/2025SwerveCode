@@ -21,11 +21,11 @@ public class IntakeSubsystem extends SubsystemBase {
     // TODO: Find the direction of the intake wheels
     
     // Limit on INSIDE of pivot (zero with this?)
-    private DigitalInput homeLimit = new DigitalInput(1/*Constants.IntakeConstants.INTAKE_HOME_LIMIT_ID*/);
+    private DigitalInput homeLimit = new DigitalInput(6/*Constants.IntakeConstants.INTAKE_HOME_LIMIT_ID*/);
 
     // Sparkmax declaration
-    private SparkMax armMotor = new SparkMax(2, MotorType.kBrushless);
-    private SparkMax rollerMotor = new SparkMax(0, MotorType.kBrushless);
+    private SparkMax armMotor = new SparkMax(51, MotorType.kBrushless);
+    private SparkMax rollerMotor = new SparkMax(52, MotorType.kBrushless);
 
     private final PIDController angleController = new PIDController(2, 0, 0.5);
 
@@ -33,11 +33,12 @@ public class IntakeSubsystem extends SubsystemBase {
     private final IntakeSimulation intakeSim = new IntakeSimulation();
     
     private double setPoint = 0;
+    private double pivotAngleConversionFactor = Math.PI/9;
 
     public IntakeSubsystem() {
         // Zero the arm
         armMotor.set(0);
-        setSetpoint(0);
+        //setSetpoint(0);
 
         // Tell PID to wrap between -180 and 180 degrees
         angleController.enableContinuousInput(-Math.PI, Math.PI);
@@ -45,7 +46,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        runToPosition();
+        //runToPosition();
     }
     
 
@@ -86,10 +87,14 @@ public class IntakeSubsystem extends SubsystemBase {
     public double getArmAngle() {
         // Return real angle if not in the sim, otherwise return the sim arm angle
         if (!Robot.isSimulation()) {
-            return armMotor.getEncoder().getPosition();
+            return getIntakeAngle();
         } else {
             return intakeSim.getSimAngle();
         }
+    }
+
+    public double getIntakeAngle() {
+        return armMotor.getEncoder().getPosition() * pivotAngleConversionFactor;
     }
 
     /** Set the speed of the intake rollers 

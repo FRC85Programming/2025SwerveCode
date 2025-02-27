@@ -33,9 +33,12 @@ public class GoToPosition extends Command
   @Override
   public void execute()
   {
+    if (elevator.isInTolerance() || position.equals(Positions.INTAKE_FLOOR) || position.equals(Positions.INTAKE_STATION)) {
+      endeffector.setSetpoint(endeffector.getSetpoint(position));
+    }
     elevator.setSetpoint(elevator.getSetpoint(position));
-    intake.setSetpoint(intake.getSetpoint(position));
-    endeffector.setSetpoint(endeffector.getSetpoint(position));
+    //intake.setSetpoint(intake.getSetpoint(position));
+    
   }
 
   @Override
@@ -48,7 +51,7 @@ public class GoToPosition extends Command
   public void end(boolean interrupted)
   {
     elevator.setSetpoint(elevator.getSetpoint(Positions.HOME));
-    intake.setSetpoint(intake.getSetpoint(Positions.HOME));
+    //intake.setSetpoint(intake.getSetpoint(Positions.HOME));
     endeffector.setSetpoint(endeffector.getSetpoint(Positions.HOME));
   }
 }

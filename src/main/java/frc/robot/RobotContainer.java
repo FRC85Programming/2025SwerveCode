@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.swervedrive.auto.actions.DriveAndHoldPose;
+import frc.robot.commands.swervedrive.auto.actions.EndEffectorWheels;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -36,6 +37,8 @@ import java.io.File;
 import org.littletonrobotics.junction.Logger;
 
 import swervelib.SwerveInputStream;
+import swervelib.telemetry.SwerveDriveTelemetry;
+import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -47,6 +50,8 @@ public class RobotContainer
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
+  final         CommandXboxController opXbox = new CommandXboxController(1);
+
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
@@ -142,6 +147,7 @@ public class RobotContainer
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
   }
 
   /**
@@ -175,15 +181,19 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getSelectedScorePositionPose(drivebase.getWebServer().getSelectedScorePosition())));
+      driverXbox.a().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2_ALGAE));
       driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2));
       driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3));
       driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4));
+      driverXbox.leftBumper().whileTrue(new EndEffectorWheels(endeffector, true));
+      driverXbox.rightBumper().whileTrue(new EndEffectorWheels(endeffector, false));
       //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
+      opXbox.pov(90).whileTrue(new InstantCommand(() -> elevator.setElevatorSpeed(0.05), elevator));
+      opXbox.pov(90).whileFalse(new InstantCommand(() -> elevator.setElevatorSpeed(0.0), elevator));
     }
 
   }
