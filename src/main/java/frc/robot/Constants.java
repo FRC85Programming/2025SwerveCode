@@ -20,7 +20,7 @@ import swervelib.math.Matter;
  */
 public final class Constants
 {
-  public static final double ROBOT_MASS = 40 * 0.453592; // 32lbs * kg per pound
+  public static final double ROBOT_MASS = 120 * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
   public static final double MAX_SPEED  = Units.feetToMeters(18.0);
@@ -116,9 +116,9 @@ public final class Constants
     public static final double PIVOT_ROOT_Z = 0.98;
 
     public static final double L1_PIVOT_POSITION = 0;
-    public static final double L2_PIVOT_POSITION = 4.2;
-    public static final double L3_PIVOT_POSITION = 3.9; 
-    public static final double L4_PIVOT_POSITION = 3.60;
+    public static final double L2_PIVOT_POSITION = 4.0;
+    public static final double L3_PIVOT_POSITION = 3.7; 
+    public static final double L4_PIVOT_POSITION = 3.4;
     public static final double L2_ALGAE_PIVOT_POSITION = 4.6;
     public static final double HOME_PIVOT_POSITION = 0;
     public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
@@ -153,12 +153,12 @@ public final class Constants
     // Positions are labled clockwise from position 1
 
     // Reef positions
-    public static final Pose2d reefPositionA = new Pose2d(3.075, 4.2, new Rotation2d(Math.toRadians(0)));
-    public static final Pose2d reefPositionB = new Pose2d(3.075, 3.85, new Rotation2d(Math.toRadians(0)));
-    public static final Pose2d reefPositionC = new Pose2d(3.56, 2.87, new Rotation2d(Math.toRadians(60)));
-    public static final Pose2d reefPositionD = new Pose2d(3.89, 2.67, new Rotation2d(Math.toRadians(60)));
-    public static final Pose2d reefPositionE = new Pose2d(5.00, 2.72, new Rotation2d(Math.toRadians(120)));
-    public static final Pose2d reefPositionF = new Pose2d(5.300, 2.86, new Rotation2d(Math.toRadians(120)));
+    public static final Pose2d reefPositionA = new Pose2d(3.179, 3.883, new Rotation2d(Math.toRadians(0)));
+    public static final Pose2d reefPositionB = new Pose2d(3.179, 3.560, new Rotation2d(Math.toRadians(0)));
+    public static final Pose2d reefPositionC = new Pose2d(3.932, 2.795, new Rotation2d(Math.toRadians(60)));
+    public static final Pose2d reefPositionD = new Pose2d(4.250, 2.653, new Rotation2d(Math.toRadians(60)));
+    public static final Pose2d reefPositionE = new Pose2d(5.236, 2.948, new Rotation2d(Math.toRadians(120)));
+    public static final Pose2d reefPositionF = new Pose2d(5.553, 3.049, new Rotation2d(Math.toRadians(120)));
     public static final Pose2d reefPositionG = new Pose2d(5.9, 3.855, new Rotation2d(Math.toRadians(180)));
     public static final Pose2d reefPositionH = new Pose2d(5.9, 4.2, new Rotation2d(Math.toRadians(180)));
     public static final Pose2d reefPositionI = new Pose2d(5.300, 5.1, new Rotation2d(Math.toRadians(-120)));

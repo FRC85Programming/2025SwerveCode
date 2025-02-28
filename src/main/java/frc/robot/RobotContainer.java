@@ -181,17 +181,15 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2_ALGAE));
+      driverXbox.a().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getSelectedScorePositionPose(drivebase.getWebServer().getSelectedScorePosition())));      
       driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2));
       driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3));
       driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4));
       driverXbox.leftBumper().whileTrue(new EndEffectorWheels(endeffector, true));
       driverXbox.rightBumper().whileTrue(new EndEffectorWheels(endeffector, false));
       //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
-      driverXbox.start().whileTrue(Commands.none());
+      driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));      
       driverXbox.back().whileTrue(Commands.none());
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.rightBumper().onTrue(Commands.none());
       opXbox.pov(90).whileTrue(new InstantCommand(() -> elevator.setElevatorSpeed(0.05), elevator));
       opXbox.pov(90).whileFalse(new InstantCommand(() -> elevator.setElevatorSpeed(0.0), elevator));
     }
