@@ -1,6 +1,7 @@
 package frc.robot.subsystems.endeffector;
 
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -8,13 +9,15 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.DutyCycleEncoderSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 
 public class EndEffectorSimulation extends SubsystemBase {
 
     private final SingleJointedArmSim pivotSim;
+    private DutyCycleEncoderSim pivotEncoderSim;
 
-    public EndEffectorSimulation() {
+    public EndEffectorSimulation(EndEffectorSubsystem endeffector) {
         // Create the arm simulation object
         pivotSim =
             new SingleJointedArmSim(
@@ -26,6 +29,7 @@ public class EndEffectorSimulation extends SubsystemBase {
                 Constants.EndEffectorConstants.MAX_ANGLE_RAD,
                 false,
                 0);
+        pivotEncoderSim = new DutyCycleEncoderSim(endeffector.getPivotEncoderObject());
     }
 
     /** Apply motor voltage */
@@ -39,6 +43,14 @@ public class EndEffectorSimulation extends SubsystemBase {
 
         // Simulate battery under load
         RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(pivotSim.getCurrentDrawAmps()));
+    }
+
+    public void setPivotEncoderSim(double rotations) {
+        pivotEncoderSim.set(rotations);
+    }
+
+    public double getPivotEncoderSim() {
+        return pivotEncoderSim.get();
     }
 
     /** Get current simulated pivot angle */

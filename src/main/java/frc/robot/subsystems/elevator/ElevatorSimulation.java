@@ -5,8 +5,10 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,8 +17,9 @@ import frc.robot.Constants;
 public class ElevatorSimulation extends SubsystemBase {
 
     private final ElevatorSim elevatorSim;
+    EncoderSim elevatorEncoderSim;
 
-    public ElevatorSimulation() {
+    public ElevatorSimulation(ElevatorSubsystem elevator) {
         
       elevatorSim = new ElevatorSim(
           DCMotor.getNeoVortex(2),
@@ -29,6 +32,8 @@ public class ElevatorSimulation extends SubsystemBase {
           0,
           0.0, 
           0.000001);
+
+       elevatorEncoderSim = new EncoderSim(elevator.getElevatorEncoderObject());
     }
 
      public void updateSim() {
@@ -41,6 +46,14 @@ public class ElevatorSimulation extends SubsystemBase {
 
     public void setInputVoltage(double volts) {
         elevatorSim.setInputVoltage(volts);
+    }
+
+    public void setSimEncoder(int counts) {
+        elevatorEncoderSim.setCount(counts);
+    }
+
+    public int getSimEncoder() {
+        return elevatorEncoderSim.getCount();
     }
 
     public double getElevatorSimPosition() {

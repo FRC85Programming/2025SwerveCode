@@ -29,7 +29,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     private final PIDController angleController = new PIDController(0.1, 0, 0.0);
 
     // Sim for intake arm
-    private final EndEffectorSimulation endeffectorSim = new EndEffectorSimulation();
+    private final EndEffectorSimulation endeffectorSim = new EndEffectorSimulation(this);
     
     private double setPoint = 0.0;
     private double angleConversionFactor = (2*Math.PI)/9;
@@ -38,6 +38,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     public EndEffectorSubsystem() {
         // Zero the arm
         pivotMotor.set(0);
+        endeffectorSim.setPivotEncoderSim(0.945);
         setSetpoint(0);
 
         SmartDashboard.putNumber("Pivot P", 0.08);
@@ -52,8 +53,11 @@ public class EndEffectorSubsystem extends SubsystemBase {
             driveToSetPoint();
         }
         angleController.setP(0.1);
-        SmartDashboard.putNumber("Suspected Arm Radians", getPivotAngleAsRadians());
+        SmartDashboard.putNumber("Arm Radians", getEncoderValueAsRadians());
         SmartDashboard.putNumber("Pivot Rotation", pivotAbsoluteEncoder.get());
+        SmartDashboard.putNumber("Simencoder", endeffectorSim.getPivotEncoderSim());
+        SmartDashboard.putBoolean("Safe", safe);
+
     }
     
 
@@ -66,46 +70,29 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     public void driveToSetPoint() {
-        double currentAngle = getPivotAngleAsRadians();
+        double currentAngle = getPivotAngle();
+        double pidOutput;
         
         // PID output (range: -1 to 1), needs to be scaled to voltage
-        double pidOutput = angleController.calculate(currentAngle, setPoint);
+        pidOutput = angleController.calculate(currentAngle, setPoint);
         double pidVoltage = pidOutput * Constants.MAX_VOLTAGE; // Scale to motor voltage
 
-        // Gravity feedforward
-        double angleRadians = Math.toRadians(setPoint);
-        double torqueRequired = MotorUtil.calculateTorque(Constants.EndEffectorConstants.ARM_MASS_KG, Constants.EndEffectorConstants.CENTER_OF_MASS, angleRadians);
-        double feedforwardVoltage = (setPoint > currentAngle) ? 
-            MotorUtil.torqueToVoltage(torqueRequired / 9, 0) : 
-            -MotorUtil.torqueToVoltage(torqueRequired / 9, 0);
-        // Total voltage applied to the motor
-        double finalVoltage = pidVoltage /*+ feedforwardVoltage*/;
 
         // Clamp to prevent exceeding 12V
-        finalVoltage = Math.max(-Constants.MAX_VOLTAGE, Math.min(Constants.MAX_VOLTAGE, finalVoltage));
+        pidVoltage = Math.max(-Constants.MAX_VOLTAGE, Math.min(Constants.MAX_VOLTAGE, pidVoltage));
 
-        // Apply voltage to motor
-        SmartDashboard.putNumber("Volts Unclamped", finalVoltage);
+        SmartDashboard.putNumber("currentAngle", currentAngle);
+        setPivotVoltage(pidVoltage);
 
-        setPivotVoltage(finalVoltage);
-
-        SmartDashboard.putNumber("Volts Clamped", finalVoltage);
-        SmartDashboard.putNumber("Gravity Comp", torqueRequired);
-        SmartDashboard.putNumber("Gravity Comp Volts", feedforwardVoltage);
-    }
-
-    public void setPivotSpeed(double speed) {
-        speed = MathUtil.clamp(speed, -0.5, 0.5);
-        if (pivotAbsoluteEncoder.get() > 0.97 || pivotAbsoluteEncoder.get() < 0.279) {
-            pivotMotor.set(0);
-        } else {
-            pivotMotor.set(speed);
-        }
     }
 
     public void setPivotVoltage(double voltage) {
         if (pivotAbsoluteEncoder.get() < 0.97 || pivotAbsoluteEncoder.get() > 0.279) {
             pivotMotor.setVoltage(voltage);
+            if (Robot.isSimulation()) {
+                endeffectorSim.setInputVoltage(-voltage);
+                endeffectorSim.setPivotEncoderSim(getRadiansAsEncoderValue(getPivotAngle()));
+            }
         } else {
             pivotMotor.setVoltage(0);
             safe = false;
@@ -116,23 +103,35 @@ public class EndEffectorSubsystem extends SubsystemBase {
         this.setPoint = setPoint;
     }
 
+    public DutyCycleEncoder getPivotEncoderObject() {
+        return pivotAbsoluteEncoder;
+    }
+
     /**Get the value of the intake arm angle - or the sim angle if the sim is active
      */
     public double getPivotAngle() {
         // Return real angle if not in the sim, otherwise return the sim arm angle
         if (!Robot.isSimulation()) {
-            return pivotAbsoluteEncoder.get();
+            return getEncoderValueAsRadians();
         } else {
             return endeffectorSim.getSimAngle();
         }
     }
 
-    public double getPivotAngleAsRadians() {
+    public double getEncoderValueAsRadians() {
         return (0.956 - pivotAbsoluteEncoder.get()) * 2*Math.PI;
     } 
     
-    public double pivotAngleRadians() {
-        return pivotAbsoluteEncoder.get() * angleConversionFactor;
+    public double getRadiansAsEncoderValue(double angle) {
+        return 0.956 - (angle / (2 * Math.PI));
+    }
+
+    public double getPivotEncoder() {
+        if (!Robot.isSimulation()) {
+            return pivotAbsoluteEncoder.get();
+        } else {
+            return endeffectorSim.getPivotEncoderSim();
+        }
     }
 
     /** Set the speed of the intake rollers 

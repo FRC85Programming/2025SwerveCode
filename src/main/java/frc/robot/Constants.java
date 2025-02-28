@@ -103,8 +103,8 @@ public final class Constants
     public static final double GEAR_RATIO = 9.0;
 
     // Angle constraints (sim)
-    public static final double MIN_ANGLE_RAD = Math.toRadians(-180);
-    public static final double MAX_ANGLE_RAD = Math.toRadians(180);
+    public static final double MIN_ANGLE_RAD = -6.28;
+    public static final double MAX_ANGLE_RAD = 6.28;
 
     // Motor IDs
     public static final int PIVOT_MOTOR_ID = -1;
