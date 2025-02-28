@@ -1,4 +1,4 @@
-package frc.robot.commands.swervedrive.auto.actions;
+package frc.robot.commands.actions.swerve;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;

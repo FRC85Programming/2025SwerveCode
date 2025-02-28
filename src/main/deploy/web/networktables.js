@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
         selectionBox.classList.add('selection-box');
 
         const indicator = document.createElement('span');
-        indicator.textContent = position.charAt(position.length - 1).toUpperCase();
+        indicator.textContent = position.toUpperCase();
         indicator.classList.add('indicator');
 
         const dropdown1 = document.createElement('select');

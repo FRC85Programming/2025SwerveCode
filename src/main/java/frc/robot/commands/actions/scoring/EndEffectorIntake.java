@@ -1,15 +1,15 @@
-package frc.robot.commands.swervedrive.auto.actions;
+package frc.robot.commands.actions.scoring;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
-public class EndEffectorWheels extends Command {
+public class EndEffectorIntake extends Command {
 
     EndEffectorSubsystem endeffector;
     boolean shouldIntake;
 
-    public EndEffectorWheels (EndEffectorSubsystem endeffector, boolean shouldIntake) {
+    public EndEffectorIntake (EndEffectorSubsystem endeffector, boolean shouldIntake) {
         this.endeffector = endeffector;
         this.shouldIntake = shouldIntake;
     }

@@ -1,4 +1,4 @@
-package frc.robot.commands.swervedrive.auto.actions;
+package frc.robot.commands.actions.swerve;
 
 import java.util.function.Supplier;
 

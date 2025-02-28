@@ -172,6 +172,9 @@
         "string[]##v_/autoTable/autoPositions": {
           "open": true
         }
+      },
+      "reefTable": {
+        "open": true
       }
     }
   },
