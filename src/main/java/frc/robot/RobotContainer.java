@@ -13,8 +13,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.swervedrive.auto.actions.Climb;
+import frc.robot.commands.swervedrive.auto.actions.DriveAndHoldPose;
+import frc.robot.commands.swervedrive.auto.actions.EndEffectorWheels;
+import frc.robot.commands.swervedrive.auto.actions.IntakeWheels;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -22,13 +27,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PositionConstants;
 import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.scoring.GoToPosition;
-import frc.robot.commands.actions.scoring.Intake;
-import frc.robot.commands.actions.swerve.DriveAndHoldPose;
-import frc.robot.commands.auto.GenerateAuto;
-import frc.robot.commands.drivebase.AbsoluteDriveAdv;
+import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
-import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
 import frc.robot.util.Positions;
@@ -59,6 +60,8 @@ public class RobotContainer
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final EndEffectorSubsystem endeffector = new EndEffectorSubsystem();
+  private final ClimbSubsystem climb = new ClimbSubsystem();
+
 
 
   // Applies deadbands and inverts controls because joysticks
@@ -149,6 +152,9 @@ public class RobotContainer
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+    SmartDashboard.putNumber("Intake Pivot Speed", 0.1);
+    SmartDashboard.putNumber("Intake Wheel Speed", 0.5);
+    SmartDashboard.putNumber("Climb Speed", 0.1);
   }
 
   /**
@@ -191,8 +197,12 @@ public class RobotContainer
       //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));      
       driverXbox.back().whileTrue(Commands.none());
-      opXbox.pov(90).whileTrue(new InstantCommand(() -> elevator.setElevatorSpeed(0.05), elevator));
-      opXbox.pov(90).whileFalse(new InstantCommand(() -> elevator.setElevatorSpeed(0.0), elevator));
+      opXbox.leftBumper().whileTrue(new Intake(intake, SmartDashboard.getNumber("Intake Pivot Speed", 0.1)));
+      opXbox.rightBumper().whileTrue(new Intake(intake, -SmartDashboard.getNumber("Intake Pivot Speed", 0.1)));
+      opXbox.leftTrigger().whileTrue(new IntakeWheels(intake, SmartDashboard.getNumber("Intake Wheel Speed", 0.5)));
+      opXbox.rightTrigger().whileTrue(new IntakeWheels(intake, -SmartDashboard.getNumber("Intake Wheel Speed", 0.5)));
+      opXbox.a().whileTrue(new Climb(climb, SmartDashboard.getNumber("Climb Speed", 0.1)));
+      opXbox.b().whileTrue(new Climb(climb, -SmartDashboard.getNumber("Climb Speed", 0.1)));
     }
 
   }

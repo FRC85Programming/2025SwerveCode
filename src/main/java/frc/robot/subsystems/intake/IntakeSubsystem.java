@@ -21,13 +21,13 @@ public class IntakeSubsystem extends SubsystemBase {
     // TODO: Find the direction of the intake wheels
     
     // Limit on INSIDE of pivot (zero with this?)
-    private DigitalInput homeLimit = new DigitalInput(6/*Constants.IntakeConstants.INTAKE_HOME_LIMIT_ID*/);
+    private DigitalInput homeLimit = new DigitalInput(Constants.IntakeConstants.INTAKE_HOME_LIMIT_ID);
 
     // Sparkmax declaration
     private SparkMax armMotor = new SparkMax(51, MotorType.kBrushless);
     private SparkMax rollerMotor = new SparkMax(52, MotorType.kBrushless);
 
-    private final PIDController angleController = new PIDController(2, 0, 0.5);
+    private final PIDController angleController = new PIDController(0.1, 0, 0.0);
 
     // Sim for intake arm
     private final IntakeSimulation intakeSim = new IntakeSimulation();
@@ -38,8 +38,10 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem() {
         // Zero the arm
         armMotor.set(0);
+        armMotor.getEncoder().setPosition(0);
         //setSetpoint(0);
 
+        SmartDashboard.putNumber("Intake P", 0.1);
         // Tell PID to wrap between -180 and 180 degrees
         angleController.enableContinuousInput(-Math.PI, Math.PI);
     }
@@ -47,7 +49,10 @@ public class IntakeSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         //runToPosition();
+        angleController.setP(SmartDashboard.getNumber("Intake P", 0.1));
+        SmartDashboard.putNumber("Intake Encoder", armMotor.getEncoder().getPosition());
     }
+    
     
 
     @Override
@@ -71,10 +76,19 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Output Speed", output);
         SmartDashboard.putNumber("Normalized Speed", output);
 
-        armMotor.set(output);
+        driveIntakePivot(output);
 
         if (RobotBase.isSimulation()) {
             intakeSim.setInputVoltage(output * 12.0);
+        }
+    }
+
+    public void driveIntakePivot(double speed) {
+        if (homeLimit.get()) {
+            armMotor.set(Math.abs(speed));
+            armMotor.getEncoder().setPosition(0);
+        } else {
+            armMotor.set(speed);
         }
     }
 
