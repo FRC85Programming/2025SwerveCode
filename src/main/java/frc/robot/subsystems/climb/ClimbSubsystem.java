@@ -18,11 +18,6 @@ public class ClimbSubsystem extends SubsystemBase {
         climbMotor.set(0);
     }
 
-    @Override
-    public void periodic() {
-        
-    }
-
     public void setClimbSpeed(double speed) {
         if (climbLimit.get()) {
             climbMotor.set(Math.abs(speed));

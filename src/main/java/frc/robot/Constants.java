@@ -147,6 +147,10 @@ public final class Constants
     public static final double TURN_CONSTANT    = 6;
   }
 
+  public static class ClimbConstants {
+    public static final int CLIMB_LIMIT_ID = 6;
+  }
+
   public static class PositionConstants
   {
     // Top right side of the reef is position 1

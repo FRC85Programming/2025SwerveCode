@@ -1,4 +1,4 @@
-package frc.robot.commands.swervedrive.auto;
+package frc.robot.commands.swervedrive.auto.actions;
 
 import java.util.function.Supplier;
 
@@ -18,13 +18,13 @@ import frc.robot.subsystems.swervedrive.Vision;
  * Auto Balance command using a simple PID controller. Created by Team 3512
  * <a href="https://github.com/frc3512/Robot-2023/blob/main/src/main/java/frc3512/robot/commands/AutoBalance.java">...</a>
  */
-public class Intake extends Command
+public class IntakeWheels extends Command
 {
 
   private final IntakeSubsystem intakeSubsystem;
   double power;
 
-  public Intake(IntakeSubsystem intakeSubsystem, double power)
+  public IntakeWheels(IntakeSubsystem intakeSubsystem, double power)
   {
     this.intakeSubsystem = intakeSubsystem;
     this.power = power;
@@ -33,7 +33,7 @@ public class Intake extends Command
   @Override
   public void execute()
   {
-    intakeSubsystem.driveIntakePivot(power);
+    intakeSubsystem.runRollers(power);
   }
 
   @Override
@@ -45,6 +45,6 @@ public class Intake extends Command
   @Override
   public void end(boolean interrupted)
   {
-    intakeSubsystem.driveIntakePivot(0);
+    intakeSubsystem.runRollers(0);
   }
 }
