@@ -64,9 +64,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.PositionConstants;
-import frc.robot.commands.swervedrive.auto.autos.GenerateAuto;
+import frc.robot.commands.auto.GenerateAuto;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import frc.robot.subsystems.webserver.WebServer;
+import frc.robot.util.Positions;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -154,11 +155,11 @@ public class SwerveSubsystem extends SubsystemBase
     setupPhotonVision();
     setupPathPlanner();
 
-    /*SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
         // We must specify a heading since the coral is a tube
         new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
     
-    SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(2,2)));*/
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(2,2)));
     
     
   }
@@ -197,8 +198,8 @@ public class SwerveSubsystem extends SubsystemBase
 
     publishDriveMetersPerSecond();
 
-    /*Logger.recordOutput("FieldSimulation/Coral", 
-        SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));*/
+    Logger.recordOutput("FieldSimulation/Coral", 
+        SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
   }
 
   @Override
@@ -249,7 +250,16 @@ public class SwerveSubsystem extends SubsystemBase
                                );
             } else
             {
-              swerveDrive.setChassisSpeeds(speedsRobotRelative);
+              //swerveDrive.setChassisSpeeds(speedsRobotRelative);
+              try {
+                setChassisSpeedsSetpointGenerator(speedsRobotRelative);
+              } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              }
             }
           },
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
@@ -338,17 +348,6 @@ public class SwerveSubsystem extends SubsystemBase
         }
       }
     });
-  }
-
-  /**
-   * Get the path follower with events.
-   *
-   * @param pathName PathPlanner path name.
-   * @return {@link AutoBuilder#followPath(PathPlannerPath)} path command.
-   */
-  public Command getAutonomousCommand()
-  {
-    return new GenerateAuto(this);
   }
 
   /**
@@ -442,6 +441,32 @@ public class SwerveSubsystem extends SubsystemBase
     }
     return Commands.none();
 
+  }
+
+  private void setChassisSpeedsSetpointGenerator(ChassisSpeeds robotRelativeChassisSpeed)
+  throws IOException, ParseException
+  {
+    SwerveSetpointGenerator setpointGenerator = new SwerveSetpointGenerator(RobotConfig.fromGUISettings(),
+                                                                            swerveDrive.getMaximumChassisAngularVelocity());
+    AtomicReference<SwerveSetpoint> prevSetpoint
+        = new AtomicReference<>(new SwerveSetpoint(swerveDrive.getRobotVelocity(),
+                                                   swerveDrive.getStates(),
+                                                   DriveFeedforwards.zeros(swerveDrive.getModules().length)));
+    AtomicReference<Double> previousTime = new AtomicReference<>();
+
+    startRun(() -> previousTime.set(Timer.getFPGATimestamp()),
+                    () -> {
+                      double newTime = Timer.getFPGATimestamp();
+                      SwerveSetpoint newSetpoint = setpointGenerator.generateSetpoint(prevSetpoint.get(),
+                                                                                      robotRelativeChassisSpeed,
+                                                                                      newTime - previousTime.get());
+                      swerveDrive.drive(newSetpoint.robotRelativeSpeeds(),
+                                        newSetpoint.moduleStates(),
+                                        newSetpoint.feedforwards().linearForces());
+                      prevSetpoint.set(newSetpoint);
+                      previousTime.set(newTime);
+
+                    });
   }
 
 
@@ -850,40 +875,56 @@ public class SwerveSubsystem extends SubsystemBase
   // Set up a smart dashboard dropdown to choose a position to drive to
   public Pose2d getSelectedScorePositionPose(String positionString) {
     switch (positionString) {
-      case "positionA":
+      case "A":
         return PositionConstants.reefPositionA;
-      case "positionB":
+      case "B":
         return PositionConstants.reefPositionB;
-      case "positionC":
+      case "C":
         return PositionConstants.reefPositionC;
-      case "positionD":
+      case "D":
         return PositionConstants.reefPositionD;
-      case "positionE":
+      case "E":
         return PositionConstants.reefPositionE;
-      case "positionF":
+      case "F":
         return PositionConstants.reefPositionF;
-      case "positionG":
+      case "G":
         return PositionConstants.reefPositionG;
-      case "positionH":
+      case "H":
         return PositionConstants.reefPositionH;
-      case "positionI":
+      case "I":
         return PositionConstants.reefPositionI;
-      case "positionJ":
+      case "J":
         return PositionConstants.reefPositionJ;
-      case "positionK":
+      case "K":
         return PositionConstants.reefPositionK;
-      case "positionL":
+      case "L":
         return PositionConstants.reefPositionL;
       default:
         return PositionConstants.pathPlanningTestPose;
     }
   }
 
+  
+  public Positions getLevelFromString(String position) {
+    switch(position) {
+      case "1":
+        return Positions.L1;
+      case "2":
+        return Positions.L2;
+      case "3":
+        return Positions.L3;
+      case "4":
+        return Positions.L4;
+      default:
+        return Positions.HOME;
+    }
+  }
+
   public Pose2d getSelectedIntakePositionPose(String position) {
-    if (position == "positionSA") {
-      return PositionConstants.sourcePositionLeft;
-    } else {
+    if (position.equals("1")) {
       return PositionConstants.sourcePositionRight;
+    } else {
+      return PositionConstants.sourcePositionLeft;
     }
   }
 

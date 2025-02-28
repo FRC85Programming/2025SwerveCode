@@ -9,7 +9,7 @@ public class DriveAndHoldPose extends SequentialCommandGroup {
 
     public DriveAndHoldPose(SwerveSubsystem swerveSubsystem, Supplier<Pose2d> position) {
         addCommands(
-            new GoToPose(swerveSubsystem, position),
+            new DriveToPose(swerveSubsystem, position),
             new HoldPose(swerveSubsystem, position)
         );
     }

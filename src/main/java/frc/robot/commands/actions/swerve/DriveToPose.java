@@ -14,18 +14,16 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
  * Auto Balance command using a simple PID controller. Created by Team 3512
  * <a href="https://github.com/frc3512/Robot-2023/blob/main/src/main/java/frc3512/robot/commands/AutoBalance.java">...</a>
  */
-public class GoToPose extends Command
+public class DriveToPose extends Command
 {
 
   private final SwerveSubsystem swerveSubsystem;
   Supplier<Pose2d> targetPose;
   Command driveToPoseCommand;
-  int initCount = 0;
-  int exCount = 0;
   Boolean endEarly = false;
 
 
-  public GoToPose(SwerveSubsystem swerveSubsystem, Supplier<Pose2d> targetPose)
+  public DriveToPose(SwerveSubsystem swerveSubsystem, Supplier<Pose2d> targetPose)
   {
     this.swerveSubsystem = swerveSubsystem;
     this.targetPose = targetPose;
@@ -48,8 +46,6 @@ public class GoToPose extends Command
   @Override
   public void execute() {
     driveToPoseCommand.execute();
-    SmartDashboard.putNumber("Excecute Count", exCount);
-    exCount++;
   }
 
   @Override
@@ -60,6 +56,7 @@ public class GoToPose extends Command
   @Override
   public void end(boolean interrupted) {
     driveToPoseCommand.end(interrupted);
+    SmartDashboard.putBoolean("Ended DriveToPose", true);
     endEarly = false;
   }
 }

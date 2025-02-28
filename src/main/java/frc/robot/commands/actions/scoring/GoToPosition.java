@@ -1,5 +1,6 @@
 package frc.robot.commands.actions.scoring;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
@@ -14,18 +15,20 @@ import frc.robot.util.Positions;
 public class GoToPosition extends Command
 {
 
-  private final ElevatorSubsystem elevator;
-  private final EndEffectorSubsystem endeffector;
-  private final IntakeSubsystem intake;
-  private Positions position;
+  ElevatorSubsystem elevator;
+  EndEffectorSubsystem endeffector;
+  IntakeSubsystem intake;
+  Positions position;
+  Boolean endable;
 
 
-  public GoToPosition(ElevatorSubsystem elevator, EndEffectorSubsystem endeffector, IntakeSubsystem intake, Positions position)
+  public GoToPosition(ElevatorSubsystem elevator, EndEffectorSubsystem endeffector, IntakeSubsystem intake, Positions position, boolean endable)
   {
     this.elevator = elevator;
     this.endeffector = endeffector;
     this.intake = intake;
     this.position = position;
+    this.endable = endable;
 
     addRequirements(elevator, endeffector, intake);
   }
@@ -45,6 +48,7 @@ public class GoToPosition extends Command
   public boolean isFinished()
   {
     return false;
+
   }
 
   @Override
@@ -53,6 +57,7 @@ public class GoToPosition extends Command
     elevator.setSetpoint(elevator.getSetpoint(Positions.HOME));
     //intake.setSetpoint(intake.getSetpoint(Positions.HOME));
     endeffector.setSetpoint(endeffector.getSetpoint(Positions.HOME));
+    SmartDashboard.putBoolean("Ended GoToPosition", true);
   }
 }
 

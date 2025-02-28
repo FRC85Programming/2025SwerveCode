@@ -51,17 +51,16 @@ public class ElevatorSubsystem extends SubsystemBase {
         } else {
             setElevatorSpeed(0.05);
         }
+
         checkEncoderReset();
+
         if (highLimit.get() || lowLimit.get()) {
             if (!Robot.isSimulation()) {
                 setElevatorSpeed(0);
             }
         }
-        SmartDashboard.putNumber("Elevator Encoder", elevatorEncoder.get());
         SmartDashboard.putNumber("Current Height", getElevatorPosition());
-        SmartDashboard.putNumber("Height minus offset", Math.abs(getElevatorPosition() - setPoint));
-        SmartDashboard.putBoolean("Is in range", isInTolerance());
-
+        SmartDashboard.putNumber("Setpoint Difference", Math.abs(getElevatorPosition() - setPoint));
     }
 
     @Override
@@ -141,6 +140,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         } else {
             return elevatorSim.getSimEncoder();
         }
+    }
+
+    public boolean atSetpoint() {
+        return Math.abs(getElevatorPosition() - setPoint) < 0.1 && setPoint != 0;
     }
 
     public double getSetpoint(Positions position) {

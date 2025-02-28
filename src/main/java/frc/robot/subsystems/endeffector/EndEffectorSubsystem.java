@@ -146,6 +146,10 @@ public class EndEffectorSubsystem extends SubsystemBase {
         return endeffectorSim.getPivotSimPose();
     }
 
+    public boolean atSetpoint() {
+        return Math.abs(getPivotAngle() - setPoint) < 0.05;
+    }
+
     public double getSetpoint(Positions position) {
         switch (position) {
             case L1:

@@ -24,6 +24,7 @@ import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.scoring.GoToPosition;
 import frc.robot.commands.actions.scoring.Intake;
 import frc.robot.commands.actions.swerve.DriveAndHoldPose;
+import frc.robot.commands.auto.GenerateAuto;
 import frc.robot.commands.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
@@ -181,10 +182,10 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getSelectedScorePositionPose(drivebase.getWebServer().getSelectedScorePosition())));      
-      driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2));
-      driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3));
-      driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4));
+      driverXbox.a().whileTrue(new GenerateAuto(drivebase, elevator, endeffector, intake));      
+      driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2, false));
+      driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3, false));
+      driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4, false));
       driverXbox.leftBumper().whileTrue(new EndEffectorIntake(endeffector, true));
       driverXbox.rightBumper().whileTrue(new EndEffectorIntake(endeffector, false));
       //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
@@ -203,8 +204,7 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
-    // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand();
+    return new GenerateAuto(drivebase, elevator, endeffector, intake);
   }
 
   public void setDriveMode()
