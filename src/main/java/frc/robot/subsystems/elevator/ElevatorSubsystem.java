@@ -22,8 +22,8 @@ import frc.robot.util.Positions;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    private SparkFlex elevatorMotorLeft = new SparkFlex(53, MotorType.kBrushless);
-    private SparkFlex elevatorMotorRight = new SparkFlex(54, MotorType.kBrushless);
+    private SparkFlex elevatorMotor = new SparkFlex(53, MotorType.kBrushless);
+    //private SparkFlex elevatorMotorRight = new SparkFlex(54, MotorType.kBrushless);
 
     private DigitalInput highLimit = new DigitalInput(Constants.ElevatorConstants.ELEVATOR_HIGH_LIMIT);
     private DigitalInput lowLimit = new DigitalInput(Constants.ElevatorConstants.ELEVATOR_LOW_LIMIT);
@@ -118,8 +118,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void setElevatorSpeed(double speed) {
         speed = MathUtil.clamp(speed, -0.4, 0.4);
-        elevatorMotorLeft.set(speed);
-        elevatorMotorRight.set(-speed);
+        elevatorMotor.set(speed);
+        //elevatorMotorRight.set(-speed);
 
         if (RobotBase.isSimulation()) {
             elevatorSim.setInputVoltage(-speed * 12.0);
