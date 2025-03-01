@@ -48,7 +48,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //runToPosition();
+        runToPosition();
         angleController.setP(SmartDashboard.getNumber("Intake P", 0.1));
         SmartDashboard.putNumber("Intake Encoder", armMotor.getEncoder().getPosition());
     }
@@ -64,7 +64,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void runToPosition() {
-        double currentAngle = getArmAngle();
+        double currentAngle = armMotor.getAbsoluteEncoder().getPosition();
 
         // PID calculates required motor speed (-1 to 1)
         double output = angleController.calculate(currentAngle, setPoint);

@@ -55,7 +55,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
         angleController.setP(0.1);
         SmartDashboard.putNumber("Arm Radians", getEncoderValueAsRadians());
         SmartDashboard.putNumber("Pivot Rotation", pivotAbsoluteEncoder.get());
-        SmartDashboard.putNumber("Simencoder", endeffectorSim.getPivotEncoderSim());
+        //SmartDashboard.putNumber("Simencoder", endeffectorSim.getPivotEncoderSim());
         SmartDashboard.putBoolean("Safe", safe);
 
     }
@@ -87,11 +87,11 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     public void setPivotVoltage(double voltage) {
-        if (pivotAbsoluteEncoder.get() < 0.97 || pivotAbsoluteEncoder.get() > 0.279) {
+        if (pivotAbsoluteEncoder.get() < 0.97 && pivotAbsoluteEncoder.get() > 0.279) {
             pivotMotor.setVoltage(voltage);
             if (Robot.isSimulation()) {
                 endeffectorSim.setInputVoltage(-voltage);
-                endeffectorSim.setPivotEncoderSim(getRadiansAsEncoderValue(getPivotAngle()));
+                //endeffectorSim.setPivotEncoderSim(getRadiansAsEncoderValue(getPivotAngle()));
             }
         } else {
             pivotMotor.setVoltage(0);

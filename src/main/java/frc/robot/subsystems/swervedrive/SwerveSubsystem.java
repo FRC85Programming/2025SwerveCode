@@ -155,11 +155,11 @@ public class SwerveSubsystem extends SubsystemBase
     setupPhotonVision();
     setupPathPlanner();
 
-    SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
+    /*SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
         // We must specify a heading since the coral is a tube
         new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
     
-    SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(2,2)));
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(2,2)));*/
     
     
   }
@@ -198,8 +198,8 @@ public class SwerveSubsystem extends SubsystemBase
 
     publishDriveMetersPerSecond();
 
-    Logger.recordOutput("FieldSimulation/Coral", 
-        SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
+    /*Logger.recordOutput("FieldSimulation/Coral", 
+        SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));*/
   }
 
   @Override

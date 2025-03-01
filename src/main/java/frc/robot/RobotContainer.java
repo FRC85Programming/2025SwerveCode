@@ -16,10 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.swervedrive.auto.actions.Climb;
-import frc.robot.commands.swervedrive.auto.actions.DriveAndHoldPose;
-import frc.robot.commands.swervedrive.auto.actions.EndEffectorWheels;
-import frc.robot.commands.swervedrive.auto.actions.IntakeWheels;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -27,12 +23,21 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PositionConstants;
 import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.scoring.GoToPosition;
+import frc.robot.commands.actions.scoring.Intake;
+import frc.robot.commands.actions.swerve.Climb;
+import frc.robot.commands.actions.swerve.IntakeWheels;
+import frc.robot.commands.auto.GenerateAuto;
+import frc.robot.commands.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
 import frc.robot.util.Positions;
+import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
+
 
 import java.io.File;
 
@@ -153,6 +158,8 @@ public class RobotContainer
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     SmartDashboard.putNumber("Intake Pivot Speed", 0.1);
+    SmartDashboard.putNumber("Intake Pivot Speed Down", 0.1);
+
     SmartDashboard.putNumber("Intake Wheel Speed", 0.5);
     SmartDashboard.putNumber("Climb Speed", 0.1);
   }
@@ -192,17 +199,18 @@ public class RobotContainer
       driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2, false));
       driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3, false));
       driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4, false));
-      driverXbox.leftBumper().whileTrue(new EndEffectorIntake(endeffector, true));
-      driverXbox.rightBumper().whileTrue(new EndEffectorIntake(endeffector, false));
+      //driverXbox.rightTrigger().whileTrue(new EndEffectorIntake(endeffector, true));
+      //driverXbox.leftTrigger().whileTrue(new EndEffectorIntake(endeffector, false));
       //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));      
       driverXbox.back().whileTrue(Commands.none());
-      opXbox.leftBumper().whileTrue(new Intake(intake, SmartDashboard.getNumber("Intake Pivot Speed", 0.1)));
-      opXbox.rightBumper().whileTrue(new Intake(intake, -SmartDashboard.getNumber("Intake Pivot Speed", 0.1)));
-      opXbox.leftTrigger().whileTrue(new IntakeWheels(intake, SmartDashboard.getNumber("Intake Wheel Speed", 0.5)));
-      opXbox.rightTrigger().whileTrue(new IntakeWheels(intake, -SmartDashboard.getNumber("Intake Wheel Speed", 0.5)));
-      opXbox.a().whileTrue(new Climb(climb, SmartDashboard.getNumber("Climb Speed", 0.1)));
-      opXbox.b().whileTrue(new Climb(climb, -SmartDashboard.getNumber("Climb Speed", 0.1)));
+      driverXbox.leftBumper().whileTrue(new Intake(intake, SmartDashboard.getNumber("Intake Pivot Speed", 0.1)));
+      driverXbox.rightBumper().whileTrue(new Intake(intake, -SmartDashboard.getNumber("Intake Pivot Speed Down", 0.1)));
+      driverXbox.rightTrigger().whileTrue(new IntakeWheels(intake, -SmartDashboard.getNumber("Intake Wheel Speed", 0.5)));
+      driverXbox.leftTrigger().whileTrue(new IntakeWheels(intake, SmartDashboard.getNumber("Intake Wheel Speed", 0.5)));
+      opXbox.a().whileTrue(new InstantCommand(() -> intake.setSetpoint(0.1)));
+      opXbox.a().whileFalse(new InstantCommand(() -> intake.setSetpoint(0.0)));
+
     }
 
   }

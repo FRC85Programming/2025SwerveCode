@@ -46,7 +46,7 @@ public class EndEffectorSimulation extends SubsystemBase {
     }
 
     public void setPivotEncoderSim(double rotations) {
-        pivotEncoderSim.set(rotations);
+        //pivotEncoderSim.set(rotations);
     }
 
     public double getPivotEncoderSim() {
