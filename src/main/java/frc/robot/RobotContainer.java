@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -161,7 +163,7 @@ public class RobotContainer
     SmartDashboard.putNumber("Intake Pivot Speed Down", 0.1);
 
     SmartDashboard.putNumber("Intake Wheel Speed", 0.5);
-    SmartDashboard.putNumber("Climb Speed", 0.1);
+    SmartDashboard.putNumber("Climb Speed", 0.2);
   }
 
   /**
@@ -195,8 +197,15 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().whileTrue(new GenerateAuto(drivebase, elevator, endeffector, intake));      
-      driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2, false));
+      driverXbox.leftTrigger().whileTrue(new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR, false), new IntakeWheels(intake, -0.75))); 
+      driverXbox.leftBumper().whileTrue(new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR_ALGAE, false), new IntakeWheels(intake, 0.75)));  
+ 
+      driverXbox.rightTrigger().whileTrue(new IntakeWheels(intake, 0.75)); 
+      driverXbox.rightBumper().whileTrue(new IntakeWheels(intake, -0.75));      
+     
+      driverXbox.a().whileTrue(new Climb(climb, SmartDashboard.getNumber("Climb Speed", 0.2)));
+      driverXbox.b().whileTrue(new Climb(climb, -SmartDashboard.getNumber("Climb Speed", 0.2)));
+
       driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3, false));
       driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4, false));
       //driverXbox.rightTrigger().whileTrue(new EndEffectorIntake(endeffector, true));
@@ -204,10 +213,6 @@ public class RobotContainer
       //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));      
       driverXbox.back().whileTrue(Commands.none());
-      driverXbox.leftBumper().whileTrue(new Intake(intake, SmartDashboard.getNumber("Intake Pivot Speed", 0.1)));
-      driverXbox.rightBumper().whileTrue(new Intake(intake, -SmartDashboard.getNumber("Intake Pivot Speed Down", 0.1)));
-      driverXbox.rightTrigger().whileTrue(new IntakeWheels(intake, -SmartDashboard.getNumber("Intake Wheel Speed", 0.5)));
-      driverXbox.leftTrigger().whileTrue(new IntakeWheels(intake, SmartDashboard.getNumber("Intake Wheel Speed", 0.5)));
       opXbox.a().whileTrue(new InstantCommand(() -> intake.setSetpoint(0.1)));
       opXbox.a().whileFalse(new InstantCommand(() -> intake.setSetpoint(0.0)));
 

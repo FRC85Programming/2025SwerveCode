@@ -1,5 +1,6 @@
 package frc.robot.subsystems.climb;
 
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -9,7 +10,7 @@ import frc.robot.Constants;
 
 public class ClimbSubsystem extends SubsystemBase {
 
-    private SparkMax climbMotor = new SparkMax(57, MotorType.kBrushless);
+    private SparkFlex climbMotor = new SparkFlex(57, MotorType.kBrushless);
     private DigitalInput climbLimit = new DigitalInput(Constants.ClimbConstants.CLIMB_LIMIT_ID);
 
     double position = 0;
@@ -19,12 +20,14 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     public void setClimbSpeed(double speed) {
-        if (climbLimit.get()) {
+        climbMotor.set(speed);
+
+       /*  if (climbLimit.get()) {
             climbMotor.set(Math.abs(speed));
         } else {
             climbMotor.set(speed);
 
-        }
+        }*/
         
     }
 }

@@ -39,6 +39,8 @@ public class IntakeSubsystem extends SubsystemBase {
         // Zero the arm
         armMotor.set(0);
         armMotor.getEncoder().setPosition(0);
+        armMotor.getAlternateEncoder().setPosition(0);
+
         //setSetpoint(0);
 
         SmartDashboard.putNumber("Intake P", 0.1);
@@ -50,7 +52,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {
         runToPosition();
         angleController.setP(SmartDashboard.getNumber("Intake P", 0.1));
-        SmartDashboard.putNumber("Intake Encoder", armMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Intake Alt Encoder", armMotor.getEncoder().getPosition());
     }
     
     
@@ -64,7 +66,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void runToPosition() {
-        double currentAngle = armMotor.getAbsoluteEncoder().getPosition();
+        double currentAngle = armMotor.getEncoder().getPosition();
 
         // PID calculates required motor speed (-1 to 1)
         double output = angleController.calculate(currentAngle, setPoint);
@@ -72,9 +74,6 @@ public class IntakeSubsystem extends SubsystemBase {
         // Clamp output if necessary
         output = Math.max(-1, Math.min(1, output));
 
-        SmartDashboard.putNumber("Used Angle", currentAngle);
-        SmartDashboard.putNumber("Output Speed", output);
-        SmartDashboard.putNumber("Normalized Speed", output);
 
         driveIntakePivot(output);
 
@@ -139,6 +138,8 @@ public class IntakeSubsystem extends SubsystemBase {
                 return Constants.IntakeConstants.INTAKE_FLOOR_INTAKE_POSITION;
             case INTAKE_STATION:
                 return Constants.IntakeConstants.INTAKE_STATION_INTAKE_POSITION;
+            case INTAKE_FLOOR_ALGAE:
+                return Constants.IntakeConstants.INTAKE_FLOOR_INTAKE_POSITION_ALGAE;
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }

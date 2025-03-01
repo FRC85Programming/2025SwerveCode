@@ -57,7 +57,8 @@ public final class Constants
     public static final double L3_INTAKE_POSITION = 0.0;
     public static final double L4_INTAKE_POSITION = 0.0;
     public static final double HOME_INTAKE_POSITION = 0.0;
-    public static final double INTAKE_FLOOR_INTAKE_POSITION = (3*Math.PI)/4;
+    public static final double INTAKE_FLOOR_INTAKE_POSITION = 0.7;
+    public static final double INTAKE_FLOOR_INTAKE_POSITION_ALGAE = 0.5;
     public static final double INTAKE_STATION_INTAKE_POSITION = 0.0;
   }
 
@@ -82,6 +83,7 @@ public final class Constants
     public static final double L3_ELEVATOR_POSITION = 0.3;
     public static final double L4_ELEVATOR_POSITION = 0.79;
     public static final double L2_ALGAE_ELEVATOR_POSITION = .41;
+    public static final double INTAKE_FLOOR_ELEVATOR_POSITION_ALGAE = 0.0;
     public static final double HOME_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_FLOOR_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_STATION_ELEVATOR_POSITION = 0.0;
@@ -116,6 +118,7 @@ public final class Constants
     public static final double L2_ALGAE_PIVOT_POSITION = 4.6;
     public static final double HOME_PIVOT_POSITION = 0;
     public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
+    public static final double INTAKE_FLOOR_PIVOT_POSITION_ALGAE = 0.0;
     public static final double INTAKE_STATION_PIVOT_POSITION = 0;
 
     public static final int CORAL_LIMIT_SWITCH = 2;
