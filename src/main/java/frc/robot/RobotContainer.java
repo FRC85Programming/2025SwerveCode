@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.CANifier.LEDChannel;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PositionConstants;
-import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
+import frc.robot.commands.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.scoring.GoToPosition;
@@ -31,6 +33,7 @@ import frc.robot.commands.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
 import frc.robot.util.Positions;
@@ -61,9 +64,7 @@ public class RobotContainer
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final EndEffectorSubsystem endeffector = new EndEffectorSubsystem();
-
-
-  private static LedSubsystem ledSubsytem = new LedSubsystem();
+  private static final LedSubsystem leds = new LedSubsystem();
 
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
@@ -143,6 +144,7 @@ public class RobotContainer
 
   SendableChooser<Command> autoChooser = new SendableChooser<>();
 
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -152,7 +154,6 @@ public class RobotContainer
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
   }
 
   /**
@@ -225,8 +226,8 @@ public class RobotContainer
     return drivebase.getWebServer();
   }
 
-  public static LedSubsystem getLedSubsytem() {
-    return ledSubsytem;
+  public static LedSubsystem getLedSubsystem() {
+    return leds;
   }
 
   public void updateSubsystems() {

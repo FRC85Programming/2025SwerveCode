@@ -117,8 +117,6 @@ public class Robot extends LoggedRobot
     {
       m_autonomousCommand.schedule();
     }
-    RobotContainer.getLedSubsytem().setBlankAnimation();
-
   }
 
   /**
@@ -145,8 +143,6 @@ public class Robot extends LoggedRobot
     }
     //m_robotContainer.getWebServer().setAlliance();
     m_robotContainer.setDriveMode();
-    RobotContainer.getLedSubsytem().setRainbowAnimation();
-
   }
 
   /**
@@ -155,7 +151,6 @@ public class Robot extends LoggedRobot
   @Override
   public void teleopPeriodic()
   {
-    RobotContainer.getLedSubsytem().setRainbowAnimation();
   }
 
   @Override

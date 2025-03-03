@@ -9,50 +9,54 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.led.BlankAnimation;
 
 public class LedSubsystem extends SubsystemBase {
 
-    AddressableLED m_led;
-    AddressableLEDBuffer m_ledBuffer;
+    AddressableLED led;
+    AddressableLEDBuffer ledBuffer;
+
+    private final LEDPattern rainbow = LEDPattern.rainbow(255, 255);
+
+    private final LEDPattern blank = LEDPattern.solid(Color.kBlack);
+
+
+    private static final Distance ledSpacing = Meters.of(1 / 120.0);
+
+    private final LEDPattern scrollingRainbow =
+        rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.1), ledSpacing);
     
 
     public LedSubsystem() {
         // Create new led object with a port of 0
-        m_led = new AddressableLED(Constants.LEDConstants.ledPWMPort);
+        led = new AddressableLED(Constants.LEDConstants.ledPWMPort);
 
         // Create a buffer to process the signals the leds are being set to
         // Set with a length of 12
-        m_ledBuffer = new AddressableLEDBuffer(12);
-        m_led.setLength(m_ledBuffer.getLength());
+        ledBuffer = new AddressableLEDBuffer(12);
+        led.setLength(ledBuffer.getLength());
 
         // Start the leds
-        m_led.setData(m_ledBuffer);
-        m_led.start();
+        led.setData(ledBuffer);
+        led.start();
     }
 
-    public void setLedData() {
-        m_led.setData(m_ledBuffer);
+    public void periodic() {
+        runRainbow();
     }
 
-    public AddressableLEDBuffer getLedBuffer() {
-        return m_ledBuffer;
+    public void runRainbow() {
+        scrollingRainbow.applyTo(ledBuffer);
+        led.setData(ledBuffer);
     }
 
-    public void setRainbowAnimation() {
-        new RainbowAnimation();
+    public void runBlank() {
+        blank.applyTo(ledBuffer);
+        led.setData(ledBuffer);
     }
 
-    public void setBlankAnimation() {
-        new BlankAnimation();
-    }
-
-    public void turnOffLeds() {
-        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-            m_ledBuffer.setRGB(i, 0, 0, 0);
-        }
-        m_led.setData(m_ledBuffer);
-    }
 }
