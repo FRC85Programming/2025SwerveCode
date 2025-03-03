@@ -7,29 +7,41 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PositionConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.leds.LedSubsystem;
+import frc.robot.commands.actions.scoring.EndEffectorIntake;
+import frc.robot.commands.actions.scoring.GoToPosition;
+import frc.robot.commands.actions.scoring.Intake;
+import frc.robot.commands.actions.swerve.DriveAndHoldPose;
+import frc.robot.commands.auto.GenerateAuto;
+import frc.robot.commands.drivebase.AbsoluteDriveAdv;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
+import frc.robot.util.Positions;
 
 import java.io.File;
 
-import com.pathplanner.lib.commands.PathPlannerAuto;
+import org.littletonrobotics.junction.Logger;
 
 import swervelib.SwerveInputStream;
+import swervelib.telemetry.SwerveDriveTelemetry;
+import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -41,9 +53,15 @@ public class RobotContainer
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
+  final         CommandXboxController opXbox = new CommandXboxController(1);
+
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
+  private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
+  private final EndEffectorSubsystem endeffector = new EndEffectorSubsystem();
+
 
   private static LedSubsystem ledSubsytem = new LedSubsystem();
 
@@ -70,9 +88,9 @@ public class RobotContainer
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> driverXbox.getLeftY()/4 * -1,
-                                                                () -> driverXbox.getLeftX()/4 * -1)
-                                                            .withControllerRotationAxis(() -> -driverXbox.getRightX())
+                                                                () -> driverXbox.getLeftY() * -1,
+                                                                () -> driverXbox.getLeftX() * -1)
+                                                            .withControllerRotationAxis(() -> driverXbox.getRightX())
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
@@ -104,7 +122,7 @@ public class RobotContainer
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                    () -> -driverXbox.getLeftY(),
                                                                    () -> -driverXbox.getLeftX())
-                                                               .withControllerRotationAxis(() -> driverXbox.getRawAxis(2))
+                                                               .withControllerRotationAxis(() -> -driverXbox.getRawAxis(2))
                                                                .deadband(OperatorConstants.DEADBAND)
                                                                .scaleTranslation(0.8)
                                                                .allianceRelativeControl(true);
@@ -114,7 +132,7 @@ public class RobotContainer
                                                                                                     driverXbox.getRawAxis(
                                                                                                         2) * Math.PI) * (Math.PI * 2),
                                                                                                 () -> Math.cos(
-                                                                                                    driverXbox.getRawAxis(
+                                                                                                  driverXbox.getRawAxis(
                                                                                                         2) * Math.PI) *
                                                                                                       (Math.PI * 2))
                                                                      .headingWhile(true);
@@ -134,6 +152,7 @@ public class RobotContainer
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
   }
 
   /**
@@ -152,13 +171,13 @@ public class RobotContainer
 
     if (Robot.isSimulation())
     {
-      driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(0, 0, new Rotation2d()))));
     }
     if (DriverStation.isTest())
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
 
-      driverXbox.b().whileTrue(drivebase.sysIdDriveMotorCommand());
+      //driverXbox.b().whileTrue(new InstantCommand(() -> intake.setArmAngle(Math.toRadians(45)), intake));
       driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
@@ -167,14 +186,17 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.b().whileTrue(drivebase.driveToScorePosition());
-      driverXbox.y().whileTrue(drivebase.driveToSource());
-      driverXbox.start().whileTrue(Commands.none());
+      driverXbox.a().whileTrue(new GenerateAuto(drivebase, elevator, endeffector, intake));      
+      driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2, false));
+      driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3, false));
+      driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4, false));
+      driverXbox.leftBumper().whileTrue(new EndEffectorIntake(endeffector, true));
+      driverXbox.rightBumper().whileTrue(new EndEffectorIntake(endeffector, false));
+      //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
+      driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));      
       driverXbox.back().whileTrue(Commands.none());
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.rightBumper().onTrue(Commands.none());
+      opXbox.pov(90).whileTrue(new InstantCommand(() -> elevator.setElevatorSpeed(0.05), elevator));
+      opXbox.pov(90).whileFalse(new InstantCommand(() -> elevator.setElevatorSpeed(0.0), elevator));
     }
 
   }
@@ -186,8 +208,7 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
-    // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand();
+    return new GenerateAuto(drivebase, elevator, endeffector, intake);
   }
 
   public void setDriveMode()
@@ -206,5 +227,14 @@ public class RobotContainer
 
   public static LedSubsystem getLedSubsytem() {
     return ledSubsytem;
+  }
+
+  public void updateSubsystems() {
+    Logger.recordOutput("Subsystems", new Pose3d[]{intake.getIntakeSimPose(), new Pose3d(), elevator.getElevatorSimPose(), 
+      new Pose3d(endeffector.getPivotSimPose().getX(), endeffector.getPivotSimPose().getY(), 
+      endeffector.getPivotSimPose().getZ() + elevator.getElevatorPosition(), endeffector.getPivotSimPose().getRotation())});
+    /*Logger.recordOutput("Subsystems", new Pose3d[]{new Pose3d(), new Pose3d(), new Pose3d(), 
+      new Pose3d()});*/
+        
   }
 }

@@ -1,9 +1,5 @@
 package frc.robot.subsystems.swervedrive;
 
-import static edu.wpi.first.units.Units.Microseconds;
-import static edu.wpi.first.units.Units.Milliseconds;
-import static edu.wpi.first.units.Units.Seconds;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -18,7 +14,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -57,9 +52,7 @@ public class Vision
   /**
    * Ambiguity defined as a value between (0,1). Used in {@link Vision#filterPose}.
    */
-  private final       double              maximumAmbiguity                = 0.25;
-
-  private Field2d cameraField = new Field2d();
+  //private final       double              maximumAmbiguity                = 0.25;
 
   private Field2d visionField = new Field2d();
 
@@ -71,7 +64,7 @@ public class Vision
   /**
    * Count of times that the odom thinks we're more than 10meters away from the april tag.
    */
-  private             double              longDistangePoseEstimationCount = 0;
+  //private             double              longDistangePoseEstimationCount = 0;
   /**
    * Current pose from the pose estimator using wheel odometry.
    */
@@ -99,7 +92,7 @@ public class Vision
     if (Robot.isSimulation())
     {
       visionSim = new VisionSystemSim("Vision");
-      //visionSim.addAprilTags(fieldLayout);
+      visionSim.addAprilTags(fieldLayout);
 
       for (Cameras c : Cameras.values())
       {
@@ -153,17 +146,13 @@ public class Vision
     for (Cameras camera : Cameras.values())
     {
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
-      if (poseEst.isPresent())
+      if (poseEst != null && poseEst.isPresent())
       {
         var pose = poseEst.get();
-        swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
-                                         pose.timestampSeconds,
-                                         camera.curStdDevs);
-        /*swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
-                                         pose.timestampSeconds,
-                                         getFilteredStdDevs(camera));*/
-        visionField.setRobotPose(pose.estimatedPose.toPose2d());
-
+        swerveDrive.addVisionMeasurement(poseEst.get().estimatedPose.toPose2d(),
+                                          pose.timestampSeconds,
+                                          camera.curStdDevs);
+        visionField.setRobotPose(poseEst.get().estimatedPose.toPose2d());
       }
     }
 
@@ -358,17 +347,23 @@ public class Vision
      * Front Camera
      */
     FRONT_CAM("camera-front",
-             new Rotation3d(0, Units.degreesToRadians(-11), 0),
-             new Translation3d(Units.inchesToMeters(12.875),
-                               Units.inchesToMeters(0),
-                               Units.inchesToMeters(6.75)),
-             VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
-    BACK_CAM("camera-back",
-             new Rotation3d(0, Units.degreesToRadians(-27), Units.degreesToRadians(180)),
-             new Translation3d(Units.inchesToMeters(-15.50),
-                               Units.inchesToMeters(0),
-                               Units.inchesToMeters(5.5)),
+             new Rotation3d(0, Units.degreesToRadians(7), Units.degreesToRadians(180)),
+             new Translation3d(Units.inchesToMeters(-14), //11.5 pivot center
+                               Units.inchesToMeters(-11.25),
+                               Units.inchesToMeters(12.125)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
+    /*BACKRIGHT_CAM("camera-backright",
+             new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(225)),
+             new Translation3d(Units.inchesToMeters(-11.75),
+                               Units.inchesToMeters(-12.5),
+                               Units.inchesToMeters(11.25)),
+             VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+    BACKLEFT_CAM("camera-backleft",
+             new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(137)),
+             new Translation3d(Units.inchesToMeters(-12.25),
+                               Units.inchesToMeters(14.5),
+                               Units.inchesToMeters(11.25)),
+             VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));*/
     /**
      *
      * Right Camera
@@ -432,7 +427,7 @@ public class Vision
     /**
      * Last read from the camera timestamp to prevent lag due to slow data fetches.
      */
-    private       double                       lastReadTimestamp = Microseconds.of(NetworkTablesJNI.now()).in(Seconds);
+    //private       double                       lastReadTimestamp = Microseconds.of(NetworkTablesJNI.now()).in(Seconds);
 
     /**
      * Construct a Photon Camera class with help. Standard deviations are fake values, experiment and determine

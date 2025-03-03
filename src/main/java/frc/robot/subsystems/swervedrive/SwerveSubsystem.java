@@ -4,45 +4,9 @@
 
 package frc.robot.subsystems.swervedrive;
 
+import static edu.wpi.first.units.Units.FeetPerSecond;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meter;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.DriveFeedforwards;
-import com.pathplanner.lib.util.swerve.SwerveSetpoint;
-import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
-import frc.robot.Constants;
-import frc.robot.Constants.PositionConstants;
-import frc.robot.subsystems.swervedrive.Vision.Cameras;
-import frc.robot.subsystems.webserver.WebServer;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,10 +16,58 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import javax.lang.model.util.ElementScanner14;
-
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnField;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
 import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.DriveFeedforwards;
+import com.pathplanner.lib.util.swerve.SwerveSetpoint;
+import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
+import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.Constants.PositionConstants;
+import frc.robot.commands.auto.GenerateAuto;
+import frc.robot.subsystems.swervedrive.Vision.Cameras;
+import frc.robot.subsystems.webserver.WebServer;
+import frc.robot.util.Positions;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -75,11 +87,8 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * AprilTag field layout.
    */
-  private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
-  /**
-   * Enable vision odometry updates while driving.
-   */
-  private final boolean             visionDriveTest     = false;
+  private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+
   /**
    * PhotonVision class to keep an accurate odometry.
    */
@@ -87,32 +96,38 @@ public class SwerveSubsystem extends SubsystemBase
 
   SendableChooser<Pose2d> sourceChooser = new SendableChooser<>();
 
-  private Field2d visionField = new Field2d();
-
   private final WebServer webServer = new WebServer();
 
   String selectedPosition;
 
-  /**
-   * Initialize {@link SwerveDrive} with the directory provided.
-   *
-   * @param directory Directory of swerve drive config files.
-   */
-  public SwerveSubsystem(File directory)
-  {
-    // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
-    //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
-    //  The encoder resolution per motor revolution is 1 per motor revolution.
-    double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(12.8);
-    // Motor conversion factor is (PI * WHEEL DIAMETER IN METERS) / (GEAR RATIO * ENCODER RESOLUTION).
-    //  In this case the wheel diameter is 4 inches, which must be converted to meters to get meters/second.
-    //  The gear ratio is 6.75 motor revolutions per wheel rotation.
-    //  The encoder resolution per motor revolution is 1 per motor revolution.
-    double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75);
-    System.out.println("\"conversionFactors\": {");
-    System.out.println("\t\"angle\": {\"factor\": " + angleConversionFactor + " },");
-    System.out.println("\t\"drive\": {\"factor\": " + driveConversionFactor + " }");
-    System.out.println("}");
+  double pathPlannerXp = 0;
+  double pathPlannerXi = 0;
+  double pathPlannerXd = 0;
+
+  double pathPlannerRotationp = 0;
+  double pathPlannerRotationi = 0;
+  double pathPlannerRotationd = 0;
+  
+    /**
+     * Initialize {@link SwerveDrive} with the directory provided.
+     *
+     * @param directory Directory of swerve drive config files.
+     */
+    public SwerveSubsystem(File directory)
+    {
+      // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
+      //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
+      //  The encoder resolution per motor revolution is 1 per motor revolution.
+      double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(12.8);
+      // Motor conversion factor is (PI * WHEEL DIAMETER IN METERS) / (GEAR RATIO * ENCODER RESOLUTION).
+      //  In this case the wheel diameter is 4 inches, which must be converted to meters to get meters/second.
+      //  The gear ratio is 6.75 motor revolutions per wheel rotation.
+      //  The encoder resolution per motor revolution is 1 per motor revolution.
+      double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75);
+      System.out.println("\"conversionFactors\": {");
+      System.out.println("\t\"angle\": {\"factor\": " + angleConversionFactor + " },");
+      System.out.println("\t\"drive\": {\"factor\": " + driveConversionFactor + " }");
+      System.out.println("}");
 
     
     try
@@ -139,6 +154,14 @@ public class SwerveSubsystem extends SubsystemBase
     //swerveDrive.stopOdometryThread(); // Part of the visionDriveTest usage to switch on vision mode
     setupPhotonVision();
     setupPathPlanner();
+
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
+        // We must specify a heading since the coral is a tube
+        new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
+    
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(2,2)));
+    
+    
   }
 
   /**
@@ -167,21 +190,16 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
-    // When vision is enabled we must manually update odometry in SwerveDrive
-    if (visionDriveTest)
-    {
-      swerveDrive.updateOdometry();
-      vision.updatePoseEstimation(swerveDrive);
-    }
 
-    swerveDrive.updateOdometry();
+    //swerveDrive.updateOdometry();
     vision.updatePoseEstimation(swerveDrive);
 
-    SmartDashboard.putString("Selected Reef Position", webServer.getSelectedReefPosition());
-    SmartDashboard.putString("Selected Source Position", webServer.getSelectedSourcePosition());
-    SmartDashboard.putString("Selected Auto", webServer.getSelectedAuto());
+    displayMotorRPMs();
 
     publishDriveMetersPerSecond();
+
+    Logger.recordOutput("FieldSimulation/Coral", 
+        SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
   }
 
   @Override
@@ -203,6 +221,18 @@ public class SwerveSubsystem extends SubsystemBase
 
       final boolean enableFeedforward = true;
       // Configure AutoBuilder last
+      if (Robot.isSimulation()) {
+        pathPlannerXp = 6.0;
+
+        pathPlannerRotationp = 5;
+      } else {
+        pathPlannerXp = 4.25;
+        pathPlannerXd =  0.17;
+        pathPlannerXi = 0.0;
+
+        pathPlannerRotationp = 4.0;
+        pathPlannerRotationi = 0.0;
+      }
       AutoBuilder.configure(
           this::getPose,
           // Robot pose supplier
@@ -220,15 +250,24 @@ public class SwerveSubsystem extends SubsystemBase
                                );
             } else
             {
-              swerveDrive.setChassisSpeeds(speedsRobotRelative);
+              //swerveDrive.setChassisSpeeds(speedsRobotRelative);
+              try {
+                setChassisSpeedsSetpointGenerator(speedsRobotRelative);
+              } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              }
             }
           },
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
           new PPHolonomicDriveController(
               // PPHolonomicController is the built in path following controller for holonomic drive trains
-              new PIDConstants(10.0, 0.0, 0.0),
+              new PIDConstants(pathPlannerXp, pathPlannerXi, pathPlannerXd),
               // Translation PID constants
-              new PIDConstants(10.0, 0.0, 0.0) 
+              new PIDConstants(pathPlannerRotationp, pathPlannerRotationi, pathPlannerRotationd) 
               // Rotation PID constants
           ),
           config,
@@ -288,25 +327,6 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   /**
-   * Aim the robot at the speaker.
-   *
-   * @param tolerance Tolerance in degrees.
-   * @return Command to turn the robot to the speaker.
-   */
-  public Command aimAtSpeaker(double tolerance)
-  {
-    SwerveController controller = swerveDrive.getSwerveController();
-    return run(
-        () -> {
-          ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0,
-                                                   controller.headingCalculate(getHeading().getRadians(),
-                                                                               getSpeakerYaw().getRadians()),
-                                                                       getHeading());
-          drive(speeds);
-        }).until(() -> Math.abs(getSpeakerYaw().minus(getHeading()).getDegrees()) < tolerance);
-  }
-
-  /**
    * Aim the robot at the target returned by PhotonVision.
    *
    * @return A {@link Command} which will run the alignment.
@@ -331,33 +351,21 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   /**
-   * Get the path follower with events.
-   *
-   * @param pathName PathPlanner path name.
-   * @return {@link AutoBuilder#followPath(PathPlannerPath)} path command.
-   */
-  public Command getAutonomousCommand()
-  {
-    // Create a path following command using AutoBuilder. This will also trigger event markers.
-    return new PathPlannerAuto(webServer.getSelectedAuto());
-  }
-
-  /**
    * Use PathPlanner Path finding to go to a point on the field.
    *
    * @param pose Target {@link Pose2d} to go to.
    * @return PathFinding command
    */
-  public Command driveToPose(Pose2d pose)
+  public Command driveToPose(Supplier<Pose2d> pose)
   {
-// Create the constraints to use while pathfinding
+    // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
         swerveDrive.getMaximumChassisVelocity(), 4.0,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
 
-// Since AutoBuilder is configured, we can use it to build pathfinding commands
-    return AutoBuilder.pathfindToPose(
-        pose,
+    // Since AutoBuilder is configured, we can use it to build pathfinding commands
+    return AutoBuilder.pathfindToPose (
+        pose.get(),
         constraints,
         edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
                                      );
@@ -367,6 +375,16 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putNumber("X Speed MPS", SwerveDriveTelemetry.measuredChassisSpeedsObj.vxMetersPerSecond);
     SmartDashboard.putNumber("Y Speed MPS", SwerveDriveTelemetry.measuredChassisSpeedsObj.vyMetersPerSecond);
     SmartDashboard.putNumber("Max Speed MPS", SwerveDriveTelemetry.maxSpeed);
+  }
+
+  public Pose2d getClosestSource() {
+    double distanceToLeftSource = PhotonUtils.getDistanceToPose(getPose(), Constants.PositionConstants.sourcePositionLeft);
+    double distanceToRightSource = PhotonUtils.getDistanceToPose(getPose(), Constants.PositionConstants.sourcePositionRight);
+    if (distanceToLeftSource > distanceToRightSource) {
+      return Constants.PositionConstants.sourcePositionRight;
+    } else {
+      return Constants.PositionConstants.sourcePositionLeft;
+    }
   }
 
   /**
@@ -425,6 +443,32 @@ public class SwerveSubsystem extends SubsystemBase
 
   }
 
+  private void setChassisSpeedsSetpointGenerator(ChassisSpeeds robotRelativeChassisSpeed)
+  throws IOException, ParseException
+  {
+    SwerveSetpointGenerator setpointGenerator = new SwerveSetpointGenerator(RobotConfig.fromGUISettings(),
+                                                                            swerveDrive.getMaximumChassisAngularVelocity());
+    AtomicReference<SwerveSetpoint> prevSetpoint
+        = new AtomicReference<>(new SwerveSetpoint(swerveDrive.getRobotVelocity(),
+                                                   swerveDrive.getStates(),
+                                                   DriveFeedforwards.zeros(swerveDrive.getModules().length)));
+    AtomicReference<Double> previousTime = new AtomicReference<>();
+
+    startRun(() -> previousTime.set(Timer.getFPGATimestamp()),
+                    () -> {
+                      double newTime = Timer.getFPGATimestamp();
+                      SwerveSetpoint newSetpoint = setpointGenerator.generateSetpoint(prevSetpoint.get(),
+                                                                                      robotRelativeChassisSpeed,
+                                                                                      newTime - previousTime.get());
+                      swerveDrive.drive(newSetpoint.robotRelativeSpeeds(),
+                                        newSetpoint.moduleStates(),
+                                        newSetpoint.feedforwards().linearForces());
+                      prevSetpoint.set(newSetpoint);
+                      previousTime.set(newTime);
+
+                    });
+  }
+
 
   /**
    * Command to characterize the robot drive motors using SysId
@@ -436,7 +480,7 @@ public class SwerveSubsystem extends SubsystemBase
     return SwerveDriveTest.generateSysIdCommand(
         SwerveDriveTest.setDriveSysIdRoutine(
             new Config(),
-            this, swerveDrive, 12),
+            this, swerveDrive, 12, true),
         3.0, 5.0, 3.0);
   }
 
@@ -765,6 +809,13 @@ public class SwerveSubsystem extends SubsystemBase
     return swerveDrive.getRobotVelocity();
   }
 
+  public void displayMotorRPMs() {
+    SmartDashboard.putNumber("Max ft per sec", Units.metersToFeet(swerveDrive.getMaximumChassisVelocity()));
+    SmartDashboard.putNumber("Max velocity", swerveDrive.getModules()[0].getMaxVelocity().in(FeetPerSecond));
+    SmartDashboard.putNumber("FL output", swerveDrive.getModules()[0].getDriveMotor().getAppliedOutput());
+    SmartDashboard.putNumber("FL ft per sec", Units.metersToFeet(swerveDrive.getModules()[0].getDriveMotor().getVelocity()));
+  }
+
   /**
    * Get the {@link SwerveController} in the swerve drive.
    *
@@ -808,7 +859,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public void addFakeVisionReading()
   {
-    swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
+    //swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
 
   /**
@@ -822,62 +873,59 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   // Set up a smart dashboard dropdown to choose a position to drive to
-  private Pose2d getSelectedScorePositionPose() {
-    selectedPosition = webServer.getSelectedReefPosition();
-    switch (selectedPosition) {
-      case "positionA":
+  public Pose2d getSelectedScorePositionPose(String positionString) {
+    switch (positionString) {
+      case "A":
         return PositionConstants.reefPositionA;
-      case "positionB":
+      case "B":
         return PositionConstants.reefPositionB;
-      case "positionC":
+      case "C":
         return PositionConstants.reefPositionC;
-      case "positionD":
+      case "D":
         return PositionConstants.reefPositionD;
-      case "positionE":
+      case "E":
         return PositionConstants.reefPositionE;
-      case "positionF":
+      case "F":
         return PositionConstants.reefPositionF;
-      case "positionG":
+      case "G":
         return PositionConstants.reefPositionG;
-      case "positionH":
+      case "H":
         return PositionConstants.reefPositionH;
-      case "positionI":
+      case "I":
         return PositionConstants.reefPositionI;
-      case "positionJ":
+      case "J":
         return PositionConstants.reefPositionJ;
-      case "positionK":
+      case "K":
         return PositionConstants.reefPositionK;
-      case "positionL":
+      case "L":
         return PositionConstants.reefPositionL;
       default:
-        return PositionConstants.reefPositionA;
+        return PositionConstants.pathPlanningTestPose;
     }
   }
 
-  public Command driveToScorePosition() {
-    return new InstantCommand(() -> {
-        Pose2d selectedPose = getSelectedScorePositionPose();
-        if (selectedPose != null) {
-            driveToPose(selectedPose).schedule(); // Schedule the command dynamically
-        }
-    });
+  
+  public Positions getLevelFromString(String position) {
+    switch(position) {
+      case "1":
+        return Positions.L1;
+      case "2":
+        return Positions.L2;
+      case "3":
+        return Positions.L3;
+      case "4":
+        return Positions.L4;
+      default:
+        return Positions.HOME;
+    }
   }
 
-  private Pose2d getSelectedIntakePositionPose() {
-    if (webServer.getSelectedSourcePosition().equals("positionSA")) {
-      return PositionConstants.sourcePosition1;
+  public Pose2d getSelectedIntakePositionPose(String position) {
+    if (position.equals("1")) {
+      return PositionConstants.sourcePositionRight;
     } else {
-      return PositionConstants.sourcePosition2;
+      return PositionConstants.sourcePositionLeft;
     }
-  }
-
-  public Command driveToSource() {
-    return new InstantCommand(() -> {
-        Pose2d selectedPose = getSelectedIntakePositionPose();
-        if (selectedPose != null) {
-            driveToPose(selectedPose).schedule(); // Schedule the command dynamically
-        }
-    });
   }
 
   public WebServer getWebServer() {

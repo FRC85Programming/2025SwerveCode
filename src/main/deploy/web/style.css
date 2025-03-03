@@ -1,15 +1,57 @@
+/* Background */
 body {
     background-color: #121318;
 }
 
+/* Tabs */
+.tabs { 
+    display: flex; 
+    gap: 10px; 
+    margin-bottom: 10px; 
+}
+.tab-button { 
+    padding: 10px 20px; 
+    cursor: pointer; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+}
+.tab-button.active { 
+    background-color: #007BFF; 
+    color: white; 
+}
+
+/* General Containers */
+.container {
+    position: relative;
+    display: none;
+    text-align: center;
+}
+.active {
+    display: inline-block;
+}
+
+/* Images */
 .reef {
     display: block;
-    width: 350px;  
+    position: absolute;
+    height: 325px;
+    width: 325px;
+    left: 750px;
+    transform: rotate(-90deg);
+}
+
+.autoReef {
+    display: block;
+    position: absolute;
+    height: 325px;
+    width: 325px;
+    left: 750px;
+    transform: rotate(-90deg);
 }
 
 .source {
     display: block;
-    width: 150px;  
+    width: 150px;
     height: 450px;
 }
 
@@ -21,17 +63,11 @@ body {
     width: 80px;
 }
 
-.container {
-    position: relative;
-    display: inline-block;
-    text-align: center;
+/* Reef & Source Containers */
+.reefcontainer {
+
 }
 
-.reefcontainer {
-    top: -10px;
-    left: 800px;
-    transform: rotate(-90deg);
-}
 
 .sourcecontainer {
     top: -90px;
@@ -43,6 +79,7 @@ body {
     display: block;
 }
 
+/* Buttons */
 .button {
     position: absolute;
     width: 60px;
@@ -56,49 +93,161 @@ body {
     filter: brightness(0.7);
 }
 
-/* Blue hex: #0048a7 */
-/* Red hex: #a20010 */
-/* OG orange hex: #ff5722 */
 .selected {
     border: 4px solid #a20010;
     filter: brightness(0.5);
 }
 
-.container.dropdown {
-    position: absolute; /* Allows the container to move freely */
-    top: 50%; /* Position from the top of the viewport */
-    left: 15%; /* Position from the left of the viewport */
-    transform: translate(-50%, -50%); /* Centers the container */
-    width: 300px;
-    padding: 10px;
-    background-color: #9b27b06f;
+/* Tabs container */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* Tab buttons */
+.tab-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 2px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    border: 2px solid #00b3ff; 
+    background-color: #121318;
+    color: #00b3ff;
+    transition: background 0.2s, transform 0.1s;
+}
+
+/* Active tab styling */
+.tab-button.active {
+    background-color: #00b3ff;
+    color: white;
+}
+
+.tab-button:hover {
+    background-color: #4159a6; /* Darker blue */
+}
+
+/* General Containers */
+.container {
+    position: relative;
+    display: none; /* Hide all containers by default */
     text-align: center;
 }
 
-#autoselector {
-    width: 100%; /* Make the select box full width */
-    padding: 10px; /* Padding inside the select box */
-    font-size: 16px; /* Adjust the font size */
-    border: 1px solid #bfbcbc; /* Light border */
-    border-radius: 5px; /* Rounded corners for the select */
-    background-color: #bfbcbc; /* White background for the dropdown */
-    transition: border-color 0.3s ease; /* Smooth transition for border color */
+/* Show active parent container */
+.container.active {
+    display: block; /* Or inline-block, depending on your desired layout */
 }
 
-/* Button positions */
-.positionA { top: 35%; left: -60px; transform: translateY(-50%); }
-.positionB { top: 65%; left: -60px; transform: translateY(-50%); }
-.positionC { bottom: -15px; left: 5%; transform: translateX(-50%); }
-.positionD { bottom: -60px; left: 30%; transform: translateX(-50%); }
-.positionE { bottom: -60px; right: 30%; transform: translateX(50%); }
-.positionF { bottom: -15px; right: 5%; transform: translateX(50%); }
-.positionG { top: 65%; right: -60px; transform: translateY(-50%); }
-.positionH { top: 35%; right: -60px; transform: translateY(-50%); }
-.positionI { top: -15px; right: 5%; transform: translateX(50%); }
-.positionJ { top: -60px; right: 30%; transform: translateX(50%); }
-.positionK { top: -60px; left: 30%; transform: translateX(-50%); }
-.positionL { top: -15px; left: 5%; transform: translateX(-50%); }
-.positionSA { top: 70px; left: 50%; transform: translateX(-50%); }
-.positionSB { top: 310px; left: 50%; transform: translateX(-50%); }
+.selection-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid #0048a7; /* Blue border */
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 10px; /* Rounded corners for box */
+    background-color: #e6f0ff;;
+    max-width: 250px;
+    box-sizing: border-box;
+}
+
+.selection-box select {
+    padding: 5px;
+    border: 2px solid #0048a7; /* Blue border for dropdowns */
+    border-radius: 8px; /* Rounded dropdown corners */
+    background-color: white; 
+    color: #0048a7; /* Blue text in dropdowns */
+    outline: none;
+    cursor: pointer;
+}
+
+.selection-box select:focus {
+    border-color: #003580; /* Darker blue for focus effect */
+}
+
+.indicator {
+    color: #0048a7; /* Blue text */
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+/* Button Positions */
+.positionA {top: 320px; left: 840px;}
+.positionB {top: 320px; left: 932px;}
+.positionC {top: 270px; left: 1025px;}
+.positionD {top: 200px; left: 1065px;}
+.positionE {top: 80px; left: 1065px;}
+.positionF {top: 10px; left: 1025px;}
+.positionG {top: -40px; left: 932px;}
+.positionH {top: -40px; left: 840px;}
+.positionI {top: 10px; left: 745px;}
+.positionJ {top: 80px; left: 705px;}
+.positionL {top: 200px; left: 705px;}
+.positionK {top: 270px; left: 745px;}
+
+
+/* Auto Position Buttons */
+.autoPositionA, .autoPositionB, .autoPositionC, .autoPositionD, 
+.autoPositionE, .autoPositionF, .autoPositionG, .autoPositionH, 
+.autoPositionI, .autoPositionJ, .autoPositionK, .autoPositionL {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+}
+
+.autoPositionA {top: 320px; left: 840px;}
+.autoPositionB {top: 320px; left: 932px;}
+.autoPositionC {top: 270px; left: 1025px;}
+.autoPositionD {top: 200px; left: 1065px;}
+.autoPositionE {top: 80px; left: 1065px;}
+.autoPositionF {top: 10px; left: 1025px;}
+.autoPositionG {top: -40px; left: 932px;}
+.autoPositionH {top: -40px; left: 840px;}
+.autoPositionI {top: 10px; left: 745px;}
+.autoPositionJ {top: 80px; left: 705px;}
+.autoPositionL {top: 200px; left: 705px;}
+.autoPositionK {top: 270px; left: 745px;}
+.updateselectionbutton {
+    position: absolute; 
+    top: 375px; 
+    left: 140px;
+    width: 120px;
+    height: 60px;
+    border: 2px solid #9c27b0;
+    border-radius: 15px;
+    background-color: #121318;
+    color: #ee90e3;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+.resetautoselectionsbutton {
+    position: absolute; 
+    top: 375px; 
+    left: 0px;
+    width: 120px;
+    height: 60px;
+    border: 2px solid #9c27b0;
+    border-radius: 15px;
+    background-color: #121318;
+    color: #ee90e3;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.updateselectionbutton:hover, .resetautoselectionsbutton:hover {
+    background-color: #af5abe; 
+}
+
+/* Color Codes */
+/* Blue hex: #0048a7 */
+/* Red hex: #a20010 */
+/* OG orange hex: #ff5722 */
