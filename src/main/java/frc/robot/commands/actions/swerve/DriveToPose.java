@@ -7,6 +7,7 @@ import org.photonvision.PhotonUtils;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 
@@ -41,6 +42,7 @@ public class DriveToPose extends Command
     }
       
     driveToPoseCommand.initialize();
+    LedSubsystem.startSlowBlinkingGreen();
   }
 
   @Override
@@ -57,6 +59,7 @@ public class DriveToPose extends Command
   public void end(boolean interrupted) {
     driveToPoseCommand.end(interrupted);
     SmartDashboard.putBoolean("Ended DriveToPose", true);
+    LedSubsystem.stopPattern();
     endEarly = false;
   }
 }

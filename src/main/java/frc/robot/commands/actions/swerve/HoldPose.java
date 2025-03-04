@@ -7,18 +7,21 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class HoldPose extends Command {
 
-    private final SwerveSubsystem swerve;
-    private Supplier<Pose2d> poseFinal;
-    private Pose2d currentPose;
+    SwerveSubsystem swerve;
+    Supplier<Pose2d> poseFinal;
+    Pose2d currentPose;
 
-    private final PIDController xTranslationPID, yTranslationPID;
-    private final PIDController rotationPID;
+    PIDController xTranslationPID, yTranslationPID;
+    PIDController rotationPID;
 
-    public HoldPose(SwerveSubsystem swerve, Supplier<Pose2d> finalPose) {
+    boolean endable;
+
+    public HoldPose(SwerveSubsystem swerve, Supplier<Pose2d> finalPose, boolean endable) {
         this.swerve = swerve;
         this.poseFinal = finalPose;
         this.xTranslationPID = new PIDController(4.0, 
@@ -34,6 +37,8 @@ public class HoldPose extends Command {
         xTranslationPID.setTolerance(0.05);
         yTranslationPID.setTolerance(0.05);
         rotationPID.setTolerance(0.5);
+
+        this.endable = endable;
         
         addRequirements(swerve);
     }
@@ -49,6 +54,8 @@ public class HoldPose extends Command {
         xTranslationPID.setSetpoint(poseFinal.get().getX());
         yTranslationPID.setSetpoint(poseFinal.get().getY());
         rotationPID.setSetpoint(poseFinal.get().getRotation().getRadians());
+
+        LedSubsystem.startSlowBlinkingGreen();
     }
 
     @Override
@@ -61,6 +68,10 @@ public class HoldPose extends Command {
         
         ChassisSpeeds wheelSpeeds = new ChassisSpeeds(xSpeed, ySpeed, thetaSpeed);
 
+        if (xTranslationPID.atSetpoint() && yTranslationPID.atSetpoint() && rotationPID.atSetpoint()) {
+            LedSubsystem.startFastBlinkingGreen();
+        }
+
         swerve.driveFieldOriented(wheelSpeeds);
     }
 
@@ -70,13 +81,13 @@ public class HoldPose extends Command {
         boolean yTranslationDone = yTranslationPID.atSetpoint();
         boolean rotationDone = rotationPID.atSetpoint();
         
-        return xTranslationDone && yTranslationDone && rotationDone;
+        return xTranslationDone && yTranslationDone && rotationDone && endable;
     }
     
     @Override
     public void end(boolean interrupted) {
         SmartDashboard.putBoolean("Ended Holdpose", true);
-
+        LedSubsystem.stopPattern();
         swerve.drive(new ChassisSpeeds(0, 0, 0));
     }
 }

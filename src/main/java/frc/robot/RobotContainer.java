@@ -23,20 +23,19 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PositionConstants;
 import frc.robot.commands.drivebase.AbsoluteDriveAdv;
-import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.scoring.GoToPosition;
 import frc.robot.commands.actions.scoring.Intake;
 import frc.robot.commands.actions.swerve.DriveAndHoldPose;
 import frc.robot.commands.auto.GenerateAuto;
-import frc.robot.commands.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
 import frc.robot.util.Positions;
+import frc.robot.subsystems.leds.LedSubsystem;
+
 
 import java.io.File;
 
@@ -187,7 +186,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().whileTrue(new GenerateAuto(drivebase, elevator, endeffector, intake));      
+      driverXbox.a().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getSelectedScorePositionPose(drivebase.getWebServer().getSelectedScorePosition()), false));      
       driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2, false));
       driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3, false));
       driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4, false));

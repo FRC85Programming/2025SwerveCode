@@ -47,7 +47,7 @@ public class GenerateAuto extends Command {
             Positions level = swerve.getLevelFromString(autoScorePositions[i].substring(1, 2));
 
             autoRoutine.addCommands(new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
-                new DriveAndHoldPose(swerve, () -> selectedSourcePose));
+                new DriveAndHoldPose(swerve, () -> selectedSourcePose, true));
         }
         autoRoutine.schedule();
     }

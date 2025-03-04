@@ -7,10 +7,10 @@ import java.util.function.Supplier;
 
 public class DriveAndHoldPose extends SequentialCommandGroup {
 
-    public DriveAndHoldPose(SwerveSubsystem swerveSubsystem, Supplier<Pose2d> position) {
+    public DriveAndHoldPose(SwerveSubsystem swerveSubsystem, Supplier<Pose2d> position, boolean endable) {
         addCommands(
             new DriveToPose(swerveSubsystem, position),
-            new HoldPose(swerveSubsystem, position)
+            new HoldPose(swerveSubsystem, position, endable)
         );
     }
 }
