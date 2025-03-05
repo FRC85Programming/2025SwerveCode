@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.76,
-  "robotLength": 0.74,
+  "robotWidth": 0.927,
+  "robotLength": 0.902,
   "holonomicMode": true,
   "pathFolders": [
     "LeftJKL",
@@ -33,6 +33,6 @@
   "bumperOffsetX": 0.0,
   "bumperOffsetY": 0.0,
   "robotFeatures": [
-    "{\"name\":\"Pivot\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.0,\"y\":0.2921},\"end\":{\"x\":0.2,\"y\":0.292},\"strokeWidth\":0.02}}"
+    "{\"name\":\"Pivot\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.0,\"y\":0.311},\"end\":{\"x\":1.0,\"y\":0.311},\"strokeWidth\":0.02}}"
   ]
 }

@@ -353,7 +353,7 @@ public class Vision
                                Units.inchesToMeters(12.125)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     MIDDLEFRONT_CAM("camera-front2",
-             new Rotation3d(0, Units.degreesToRadians(-27), Units.degreesToRadians(180)),
+             new Rotation3d(0, Units.degreesToRadians(-26), Units.degreesToRadians(180)),
              new Translation3d(Units.inchesToMeters(-6.5),
                                Units.inchesToMeters(-2),
                                Units.inchesToMeters(5)),

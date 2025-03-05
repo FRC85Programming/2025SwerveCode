@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import swervelib.math.Matter;
 
 /**
@@ -57,9 +58,9 @@ public final class Constants
     public static final double L3_INTAKE_POSITION = 0.0;
     public static final double L4_INTAKE_POSITION = 0.0;
     public static final double HOME_INTAKE_POSITION = 0.0;
-    public static final double INTAKE_FLOOR_INTAKE_POSITION = 0.7;
-    public static final double INTAKE_FLOOR_INTAKE_POSITION_ALGAE = 0.5;
-    public static final double INTAKE_STATION_INTAKE_POSITION = 0.0;
+    public static double INTAKE_FLOOR_INTAKE_POSITION = SmartDashboard.getNumber("Floor Coral Pos", 0.915);
+    public static double INTAKE_FLOOR_INTAKE_POSITION_ALGAE = SmartDashboard.getNumber("Floor Alg Pos", 0.1);
+    public static double INTAKE_STATION_INTAKE_POSITION = 0.0;
   }
 
   public static final class ElevatorConstants {
@@ -83,7 +84,6 @@ public final class Constants
     public static final double L3_ELEVATOR_POSITION = 0.3;
     public static final double L4_ELEVATOR_POSITION = 0.79;
     public static final double L2_ALGAE_ELEVATOR_POSITION = .41;
-    public static final double INTAKE_FLOOR_ELEVATOR_POSITION_ALGAE = 0.0;
     public static final double HOME_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_FLOOR_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_STATION_ELEVATOR_POSITION = 0.0;
@@ -106,6 +106,10 @@ public final class Constants
     public static final double MIN_ANGLE_RAD = -6.28;
     public static final double MAX_ANGLE_RAD = 6.28;
 
+    // Motor IDs
+    public static final int PIVOT_MOTOR_ID = -1;
+    public static final int ROLLER_MOTOR_ID = -1;
+
     // Origin of pivot point
     public static final double PIVOT_ROOT_X = -0.153;
     public static final double PIVOT_ROOT_Y = -0.303;
@@ -118,7 +122,6 @@ public final class Constants
     public static final double L2_ALGAE_PIVOT_POSITION = 4.6;
     public static final double HOME_PIVOT_POSITION = 0;
     public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
-    public static final double INTAKE_FLOOR_PIVOT_POSITION_ALGAE = 0.0;
     public static final double INTAKE_STATION_PIVOT_POSITION = 0;
 
     public static final int CORAL_LIMIT_SWITCH = 2;
@@ -154,25 +157,27 @@ public final class Constants
     // Positions are labled clockwise from position 1
 
     // Reef positions
-    public static final Pose2d reefPositionA = new Pose2d(3.179, 3.883, new Rotation2d(Math.toRadians(180)));
-    public static final Pose2d reefPositionB = new Pose2d(3.179, 3.560, new Rotation2d(Math.toRadians(180)));
-    public static final Pose2d reefPositionC = new Pose2d(3.932, 2.795, new Rotation2d(Math.toRadians(240)));
-    public static final Pose2d reefPositionD = new Pose2d(4.250, 2.653, new Rotation2d(Math.toRadians(240)));
-    public static final Pose2d reefPositionE = new Pose2d(5.236, 2.948, new Rotation2d(Math.toRadians(300)));
-    public static final Pose2d reefPositionF = new Pose2d(5.553, 3.049, new Rotation2d(Math.toRadians(300)));
-    public static final Pose2d reefPositionG = new Pose2d(5.9, 3.855, new Rotation2d(Math.toRadians(0)));
-    public static final Pose2d reefPositionH = new Pose2d(5.9, 4.2, new Rotation2d(Math.toRadians(0)));
-    public static final Pose2d reefPositionI = new Pose2d(5.300, 5.1, new Rotation2d(Math.toRadians(60)));
-    public static final Pose2d reefPositionJ = new Pose2d(5.0, 5.26, new Rotation2d(Math.toRadians(60)));
-    public static final Pose2d reefPositionK = new Pose2d(3.97, 5.26, new Rotation2d(Math.toRadians(120)));
-    public static final Pose2d reefPositionL = new Pose2d(3.68, 5.1, new Rotation2d(Math.toRadians(120)));
+    public static final Pose2d reefPositionA = new Pose2d(3.2, 3.93, new Rotation2d(Math.toRadians(0)));
+    public static final Pose2d reefPositionB = new Pose2d(3.179, 3.560, new Rotation2d(Math.toRadians(0)));
+    public static final Pose2d reefPositionC = new Pose2d(3.916, 2.743, new Rotation2d(Math.toRadians(-120)));
+    public static final Pose2d reefPositionD = new Pose2d(4.188, 2.596, new Rotation2d(Math.toRadians(-120)));
+    public static final Pose2d reefPositionE = new Pose2d(5.236, 2.948, new Rotation2d(Math.toRadians(-60)));
+    public static final Pose2d reefPositionF = new Pose2d(5.553, 3.049, new Rotation2d(Math.toRadians(-60)));
+    public static final Pose2d reefPositionG = new Pose2d(5.9, 3.855, new Rotation2d(Math.toRadians(180)));
+    public static final Pose2d reefPositionH = new Pose2d(5.9, 4.2, new Rotation2d(Math.toRadians(180)));
+    public static final Pose2d reefPositionI = new Pose2d(5.300, 5.1, new Rotation2d(Math.toRadians(-120)));
+    public static final Pose2d reefPositionJ = new Pose2d(5.0, 5.26, new Rotation2d(Math.toRadians(-120)));
+    public static final Pose2d reefPositionK = new Pose2d(3.97, 5.26, new Rotation2d(Math.toRadians(-60)));
+    public static final Pose2d reefPositionL = new Pose2d(3.68, 5.1, new Rotation2d(Math.toRadians(-60)));
 
-    public static final Pose2d pathPlanningTestPose = new Pose2d(1.8, 4, new Rotation2d(Math.toRadians(180)));
+    public static final Pose2d pathPlanningTestPose = new Pose2d(1.8, 4, new Rotation2d(Math.toRadians(0)));
+
+
 
 
     // Source positions
-    public static final Pose2d sourcePositionLeft = new Pose2d(.9, 6.8, new Rotation2d(Math.toRadians(130)));
-    public static final Pose2d sourcePositionRight = new Pose2d(1.625, 0.825, new Rotation2d(Math.toRadians(230)));
+    public static final Pose2d sourcePositionLeft = new Pose2d(.9, 6.8, new Rotation2d(Math.toRadians(-50)));
+    public static final Pose2d sourcePositionRight = new Pose2d(1.625, 0.825, new Rotation2d(Math.toRadians(50)));
 
 
   }

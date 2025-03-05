@@ -27,6 +27,7 @@ import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.scoring.GoToPosition;
 import frc.robot.commands.actions.scoring.Intake;
 import frc.robot.commands.actions.swerve.Climb;
+import frc.robot.commands.actions.swerve.DriveAndHoldPose;
 import frc.robot.commands.actions.swerve.IntakeWheels;
 import frc.robot.commands.auto.GenerateAuto;
 import frc.robot.commands.drivebase.AbsoluteDriveAdv;
@@ -164,6 +165,15 @@ public class RobotContainer
 
     SmartDashboard.putNumber("Intake Wheel Speed", 0.5);
     SmartDashboard.putNumber("Climb Speed", 0.2);
+
+    SmartDashboard.putNumber("Floor Coral Pos", 0.1);
+    SmartDashboard.putNumber("Floor Alg Pos", 0.1);
+
+    
+    SmartDashboard.putNumber("Rot P", 0.1);
+    SmartDashboard.putNumber("X P", 5);
+    SmartDashboard.putNumber("Y P", 5);
+    SmartDashboard.putNumber("Rot Tolerance", 0.01);
   }
 
   /**
@@ -203,11 +213,14 @@ public class RobotContainer
       driverXbox.rightTrigger().whileTrue(new IntakeWheels(intake, 0.75)); 
       driverXbox.rightBumper().whileTrue(new IntakeWheels(intake, -0.75));      
      
-      driverXbox.a().whileTrue(new Climb(climb, SmartDashboard.getNumber("Climb Speed", 0.2)));
-      driverXbox.b().whileTrue(new Climb(climb, -SmartDashboard.getNumber("Climb Speed", 0.2)));
+      driverXbox.a().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getSelectedScorePositionPose(drivebase.getWebServer().getSelectedScorePosition())));
 
+      driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2, false));
       driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3, false));
       driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4, false));
+      driverXbox.pov(0).whileTrue(new EndEffectorIntake(endeffector, true));
+      driverXbox.pov(180).whileTrue(new EndEffectorIntake(endeffector, false));
+
       //driverXbox.rightTrigger().whileTrue(new EndEffectorIntake(endeffector, true));
       //driverXbox.leftTrigger().whileTrue(new EndEffectorIntake(endeffector, false));
       //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));

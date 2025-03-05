@@ -28,6 +28,5 @@ public class ClimbSubsystem extends SubsystemBase {
             climbMotor.set(speed);
 
         }*/
-        
     }
 }

@@ -27,13 +27,14 @@ public class HoldPose extends Command {
         this.yTranslationPID = new PIDController(4.0, 
                                                 0.0, 
                                                 0.0);
-        this.rotationPID = new PIDController(3.0, 
+        this.rotationPID = new PIDController(0.1
+        , 
                                              0.0, 
                                              0.0);
         
         xTranslationPID.setTolerance(0.05);
         yTranslationPID.setTolerance(0.05);
-        rotationPID.setTolerance(0.5);
+        rotationPID.setTolerance(0.01);
         
         addRequirements(swerve);
     }
@@ -49,10 +50,17 @@ public class HoldPose extends Command {
         xTranslationPID.setSetpoint(poseFinal.get().getX());
         yTranslationPID.setSetpoint(poseFinal.get().getY());
         rotationPID.setSetpoint(poseFinal.get().getRotation().getRadians());
+
     }
 
     @Override
     public void execute() {
+        rotationPID.setP(SmartDashboard.getNumber("Rot P", 0.1));
+        xTranslationPID.setP(SmartDashboard.getNumber("X P", 5));
+        yTranslationPID.setP(SmartDashboard.getNumber("Y P", 5));
+        rotationPID.setTolerance(SmartDashboard.getNumber("Rot Tolerance", 0.01));
+
+
         currentPose = swerve.getPose();
         
         double xSpeed = xTranslationPID.calculate(currentPose.getX());
@@ -70,7 +78,7 @@ public class HoldPose extends Command {
         boolean yTranslationDone = yTranslationPID.atSetpoint();
         boolean rotationDone = rotationPID.atSetpoint();
         
-        return xTranslationDone && yTranslationDone && rotationDone;
+        return false;
     }
     
     @Override

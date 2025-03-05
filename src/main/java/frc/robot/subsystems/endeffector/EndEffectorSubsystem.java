@@ -22,7 +22,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     
     // Sparkmax declaration
     private SparkFlex pivotMotor = new SparkFlex(55, MotorType.kBrushless);
-    private SparkMax rollerMotor = new SparkMax(56, MotorType.kBrushless);
+    private SparkFlex rollerMotor = new SparkFlex(56, MotorType.kBrushless);
 
     private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(Constants.EndEffectorConstants.PIVOT_ENCODER);
 
@@ -168,8 +168,6 @@ public class EndEffectorSubsystem extends SubsystemBase {
                 return Constants.EndEffectorConstants.INTAKE_STATION_PIVOT_POSITION;
             case L2_ALGAE:
                 return Constants.EndEffectorConstants.L2_ALGAE_PIVOT_POSITION;
-            case INTAKE_FLOOR_ALGAE:
-                return Constants.EndEffectorConstants.INTAKE_FLOOR_PIVOT_POSITION_ALGAE;
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }

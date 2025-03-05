@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -24,8 +25,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private DigitalInput homeLimit = new DigitalInput(Constants.IntakeConstants.INTAKE_HOME_LIMIT_ID);
 
     // Sparkmax declaration
-    private SparkMax armMotor = new SparkMax(51, MotorType.kBrushless);
-    private SparkMax rollerMotor = new SparkMax(52, MotorType.kBrushless);
+    private SparkFlex armMotor = new SparkFlex(51, MotorType.kBrushless);
+    private SparkFlex rollerMotor = new SparkFlex(52, MotorType.kBrushless);
 
     private final PIDController angleController = new PIDController(0.1, 0, 0.0);
 
@@ -35,11 +36,13 @@ public class IntakeSubsystem extends SubsystemBase {
     private double setPoint = 0;
     private double pivotAngleConversionFactor = Math.PI/9;
 
+    private boolean homed = false;
+
     public IntakeSubsystem() {
         // Zero the arm
         armMotor.set(0);
         armMotor.getEncoder().setPosition(0);
-        armMotor.getAlternateEncoder().setPosition(0);
+        //armMotor.getAlternateEncoder().setPosition(0);
 
         //setSetpoint(0);
 
@@ -50,9 +53,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        runToPosition();
+        if (!homed) {
+            driveIntakePivot(-0.3);
+        } else {
+            runToPosition();
+        }
         angleController.setP(SmartDashboard.getNumber("Intake P", 0.1));
-        SmartDashboard.putNumber("Intake Alt Encoder", armMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Intake Encoder", armMotor.getEncoder().getPosition());
+        SmartDashboard.putBoolean("Homed", homed);
     }
     
     
@@ -84,6 +92,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void driveIntakePivot(double speed) {
         if (homeLimit.get()) {
+            homed = true;
             armMotor.set(Math.abs(speed));
             armMotor.getEncoder().setPosition(0);
         } else {
@@ -135,7 +144,8 @@ public class IntakeSubsystem extends SubsystemBase {
             case HOME:
                 return Constants.IntakeConstants.HOME_INTAKE_POSITION;
             case INTAKE_FLOOR:
-                return Constants.IntakeConstants.INTAKE_FLOOR_INTAKE_POSITION;
+                //return Constants.IntakeConstants.INTAKE_FLOOR_INTAKE_POSITION;
+                return SmartDashboard.getNumber("Floor Coral Pos", 0.915);
             case INTAKE_STATION:
                 return Constants.IntakeConstants.INTAKE_STATION_INTAKE_POSITION;
             case INTAKE_FLOOR_ALGAE:
