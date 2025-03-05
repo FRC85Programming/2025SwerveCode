@@ -170,7 +170,7 @@ public class RobotContainer
     SmartDashboard.putNumber("Floor Alg Pos", 0.1);
 
     
-    SmartDashboard.putNumber("Rot P", 0.1);
+    SmartDashboard.putNumber("Rot P", 0.4);
     SmartDashboard.putNumber("X P", 5);
     SmartDashboard.putNumber("Y P", 5);
     SmartDashboard.putNumber("Rot Tolerance", 0.01);

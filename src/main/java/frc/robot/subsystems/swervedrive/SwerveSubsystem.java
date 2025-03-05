@@ -224,7 +224,7 @@ public class SwerveSubsystem extends SubsystemBase
       final boolean enableFeedforward = true;
       // Configure AutoBuilder last
       if (Robot.isSimulation()) {
-        pathPlannerXp = 6.0;
+        pathPlannerXp = 5;
 
         pathPlannerRotationp = 5;
       } else {
@@ -876,34 +876,67 @@ public class SwerveSubsystem extends SubsystemBase
 
   /**Takes in a string containing the desired score position and returns the pose of the apriltag on that side of the reef */
   public Pose2d getScorePoseFromString(String positionString) {
-    switch (positionString) {
-      case "A":
-        return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(18).get().toPose2d());
-      case "B":
-        return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(18).get().toPose2d());
-      case "C":
-        return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(17).get().toPose2d());
-      case "D":
-        return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(17).get().toPose2d());
-      case "E":
-        return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(22).get().toPose2d());
-      case "F":
-        return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(22).get().toPose2d());
-      case "G":
-        return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(21).get().toPose2d());
-      case "H":
-        return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(21).get().toPose2d());
-      case "I":
-        return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(20).get().toPose2d());
-      case "J":
-        return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(20).get().toPose2d());
-      case "K":
-        return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(19).get().toPose2d());
-      case "L":
-        return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(19).get().toPose2d());
-      default:
-        return PositionConstants.pathPlanningTestPose;
+    if (DriverStation.getAlliance().get() == Alliance.Blue) {
+      switch (positionString) {
+        case "A":
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(18).get().toPose2d());
+        case "B":
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(18).get().toPose2d());
+        case "C":
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(17).get().toPose2d());
+        case "D":
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(17).get().toPose2d());
+        case "E":
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(22).get().toPose2d());
+        case "F":
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(22).get().toPose2d());
+        case "G":
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(21).get().toPose2d());
+        case "H":
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(21).get().toPose2d());
+        case "I":
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(20).get().toPose2d());
+        case "J":
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(20).get().toPose2d());
+        case "K":
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(19).get().toPose2d());
+        case "L":
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(19).get().toPose2d());
+        default:
+          return PositionConstants.pathPlanningTestPose;
       }
+    } else {
+      switch (positionString) {
+        case "A":
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(7).get().toPose2d());
+        case "B":
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(7).get().toPose2d());
+        case "C":
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(8).get().toPose2d());
+        case "D":
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(8).get().toPose2d());
+        case "E":
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(9).get().toPose2d());
+        case "F":
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(9).get().toPose2d());
+        case "G":
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(10).get().toPose2d());
+        case "H":
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(10).get().toPose2d());
+        case "I":
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(11).get().toPose2d());
+        case "J":
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(11).get().toPose2d());
+        case "K":
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(6).get().toPose2d());
+        case "L":
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(6).get().toPose2d());
+        default:
+          return PositionConstants.pathPlanningTestPose;
+      }
+    }
+
+
   }
 
   
@@ -939,8 +972,8 @@ public class SwerveSubsystem extends SubsystemBase
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
   
-      double translatedX = x1 + ((Constants.ROBOT_WIDTH / 2) * Math.cos(z1));
-      double translatedY = y1 + ((Constants.ROBOT_WIDTH / 2) * Math.sin(z1));
+      double translatedX = x1 + (((Constants.ROBOT_WIDTH + Constants.BUMPER_WIDTH) / 2) * Math.cos(z1));
+      double translatedY = y1 + (((Constants.ROBOT_WIDTH + Constants.BUMPER_WIDTH) / 2) * Math.sin(z1));
       double translatedRot = z1 - Math.PI;
       switch (side) {
         case Left:
@@ -958,10 +991,7 @@ public class SwerveSubsystem extends SubsystemBase
               * Math.sin(z1 + Math.PI / 2);
           break;
       }
-  
-      SmartDashboard.putNumber("Translated X", translatedX);
-      SmartDashboard.putNumber("Translated Y", translatedY);
-  
-      return new Pose2d(translatedX, translatedY, new Rotation2d(translatedRot));
+
+      return new Pose2d(translatedX, translatedY, new Rotation2d(translatedRot + Math.PI));
   }
 }

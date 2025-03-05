@@ -27,7 +27,7 @@ public class HoldPose extends Command {
         this.yTranslationPID = new PIDController(4.0, 
                                                 0.0, 
                                                 0.0);
-        this.rotationPID = new PIDController(0.1
+        this.rotationPID = new PIDController(0.4
         , 
                                              0.0, 
                                              0.0);
@@ -55,7 +55,7 @@ public class HoldPose extends Command {
 
     @Override
     public void execute() {
-        rotationPID.setP(SmartDashboard.getNumber("Rot P", 0.1));
+        rotationPID.setP(SmartDashboard.getNumber("Rot P", 0.4));
         xTranslationPID.setP(SmartDashboard.getNumber("X P", 5));
         yTranslationPID.setP(SmartDashboard.getNumber("Y P", 5));
         rotationPID.setTolerance(SmartDashboard.getNumber("Rot Tolerance", 0.01));
