@@ -26,6 +26,10 @@ public final class Constants
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
   public static final double MAX_SPEED  = Units.feetToMeters(18.0);
   public static final double MAX_VOLTAGE = 12;
+  public static final double ROBOT_WIDTH = 0.762;
+  public static final double ROBOT_LENGTH = 0.7366;
+  public static final double CORAL_OFFSET = -0.31115;
+
   // Maximum speed of the robot in meters per second, used to limit acceleration.
 
 //  public static final class AutonConstants

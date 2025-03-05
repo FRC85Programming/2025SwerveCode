@@ -213,7 +213,7 @@ public class RobotContainer
       driverXbox.rightTrigger().whileTrue(new IntakeWheels(intake, 0.75)); 
       driverXbox.rightBumper().whileTrue(new IntakeWheels(intake, -0.75));      
      
-      driverXbox.a().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getSelectedScorePositionPose(drivebase.getWebServer().getSelectedScorePosition())));
+      driverXbox.a().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getScorePoseFromString(drivebase.getWebServer().getSelectedScorePosition())));
 
       driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2, false));
       driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3, false));

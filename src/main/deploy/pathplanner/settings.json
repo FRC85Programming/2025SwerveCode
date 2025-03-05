@@ -32,7 +32,5 @@
   "brModuleY": -0.281,
   "bumperOffsetX": 0.0,
   "bumperOffsetY": 0.0,
-  "robotFeatures": [
-    "{\"name\":\"Pivot\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.0,\"y\":0.311},\"end\":{\"x\":1.0,\"y\":0.311},\"strokeWidth\":0.02}}"
-  ]
+  "robotFeatures": []
 }

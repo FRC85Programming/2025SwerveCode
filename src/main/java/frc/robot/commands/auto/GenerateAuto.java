@@ -42,11 +42,11 @@ public class GenerateAuto extends Command {
         autoScorePositions = webServer.getSelectedAuto();
 
         for (int i = 0; i < autoScorePositions.length; i++) {
-            Pose2d selectedReefPose = swerve.getSelectedScorePositionPose(autoScorePositions[i].substring(0, 1));
+            Pose2d selectedReefPose = swerve.getScorePoseFromString(autoScorePositions[i].substring(0, 1));
             Pose2d selectedSourcePose = swerve.getSelectedIntakePositionPose(autoScorePositions[i].substring(2, 3));
             Positions level = swerve.getLevelFromString(autoScorePositions[i].substring(1, 2));
 
-            if (selectedReefPose != null || selectedSourcePose != null || level != null) {
+            if (selectedReefPose != null && selectedSourcePose != null && level != null) {
                 autoRoutine.addCommands(new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
                     new DriveAndHoldPose(swerve, () -> selectedSourcePose));
             }

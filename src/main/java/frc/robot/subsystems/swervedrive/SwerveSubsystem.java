@@ -11,6 +11,7 @@ import static edu.wpi.first.units.Units.Meter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleSupplier;
@@ -68,6 +69,7 @@ import frc.robot.commands.auto.GenerateAuto;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import frc.robot.subsystems.webserver.WebServer;
 import frc.robot.util.Positions;
+import frc.robot.util.ReefPositions;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -872,36 +874,36 @@ public class SwerveSubsystem extends SubsystemBase
     return swerveDrive;
   }
 
-  // Set up a smart dashboard dropdown to choose a position to drive to
-  public Pose2d getSelectedScorePositionPose(String positionString) {
+  /**Takes in a string containing the desired score position and returns the pose of the apriltag on that side of the reef */
+  public Pose2d getScorePoseFromString(String positionString) {
     switch (positionString) {
       case "A":
-        return PositionConstants.reefPositionA;
+        return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(18).get().toPose2d());
       case "B":
-        return PositionConstants.reefPositionB;
+        return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(18).get().toPose2d());
       case "C":
-        return PositionConstants.reefPositionC;
+        return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(17).get().toPose2d());
       case "D":
-        return PositionConstants.reefPositionD;
+        return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(17).get().toPose2d());
       case "E":
-        return PositionConstants.reefPositionE;
+        return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(22).get().toPose2d());
       case "F":
-        return PositionConstants.reefPositionF;
+        return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(22).get().toPose2d());
       case "G":
-        return PositionConstants.reefPositionG;
+        return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(21).get().toPose2d());
       case "H":
-        return PositionConstants.reefPositionH;
+        return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(21).get().toPose2d());
       case "I":
-        return PositionConstants.reefPositionI;
+        return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(20).get().toPose2d());
       case "J":
-        return PositionConstants.reefPositionJ;
+        return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(20).get().toPose2d());
       case "K":
-        return PositionConstants.reefPositionK;
+        return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(19).get().toPose2d());
       case "L":
-        return PositionConstants.reefPositionL;
+        return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(19).get().toPose2d());
       default:
         return PositionConstants.pathPlanningTestPose;
-    }
+      }
   }
 
   
@@ -930,5 +932,36 @@ public class SwerveSubsystem extends SubsystemBase
 
   public WebServer getWebServer() {
     return webServer;
+  }
+
+  public Pose2d getScorePose(ReefPositions side, Pose2d tagPose) {
+      double x1 = tagPose.getX();
+      double y1 = tagPose.getY();
+      double z1 = tagPose.getRotation().getRadians();
+  
+      double translatedX = x1 + ((Constants.ROBOT_WIDTH / 2) * Math.cos(z1));
+      double translatedY = y1 + ((Constants.ROBOT_WIDTH / 2) * Math.sin(z1));
+      double translatedRot = z1 - Math.PI;
+      switch (side) {
+        case Left:
+        // 0.1643126 corresponds to reef spacing? Idk what this means
+          translatedX += (0.1643126 + Constants.CORAL_OFFSET)
+              * Math.cos(z1 - Math.PI / 2);
+          translatedY += (0.1643126 + Constants.CORAL_OFFSET)
+              * Math.sin(z1 - Math.PI / 2);
+          break;
+  
+        case Right:
+          translatedX += (0.1643126 - Constants.CORAL_OFFSET)
+              * Math.cos(z1 + Math.PI / 2);
+          translatedY += (0.1643126 - Constants.CORAL_OFFSET)
+              * Math.sin(z1 + Math.PI / 2);
+          break;
+      }
+  
+      SmartDashboard.putNumber("Translated X", translatedX);
+      SmartDashboard.putNumber("Translated Y", translatedY);
+  
+      return new Pose2d(translatedX, translatedY, new Rotation2d(translatedRot));
   }
 }
