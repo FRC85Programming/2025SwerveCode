@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.CANifier.LEDChannel;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PositionConstants;
+import frc.robot.commands.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.scoring.GoToPosition;
 import frc.robot.commands.actions.scoring.Intake;
@@ -38,6 +41,8 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
 import frc.robot.util.Positions;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.leds.LedSubsystem;
+import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 
@@ -69,8 +74,7 @@ public class RobotContainer
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final EndEffectorSubsystem endeffector = new EndEffectorSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
-
-
+  private static final LedSubsystem leds = new LedSubsystem();
 
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
@@ -150,6 +154,7 @@ public class RobotContainer
 
   SendableChooser<Command> autoChooser = new SendableChooser<>();
 
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -159,7 +164,6 @@ public class RobotContainer
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     SmartDashboard.putNumber("Intake Pivot Speed", 0.1);
     SmartDashboard.putNumber("Intake Pivot Speed Down", 0.1);
 
@@ -207,14 +211,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.leftTrigger().whileTrue(new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR, false), new IntakeWheels(intake, -0.75))); 
-      driverXbox.leftBumper().whileTrue(new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR_ALGAE, false), new IntakeWheels(intake, 0.75)));  
- 
-      driverXbox.rightTrigger().whileTrue(new IntakeWheels(intake, 0.75)); 
-      driverXbox.rightBumper().whileTrue(new IntakeWheels(intake, -0.75));      
-     
-      driverXbox.a().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getScorePoseFromString(drivebase.getWebServer().getSelectedScorePosition())));
-
+      driverXbox.a().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getScorePoseFromString(drivebase.getWebServer().getSelectedScorePosition()), false));      
       driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2, false));
       driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3, false));
       driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4, false));
@@ -255,6 +252,10 @@ public class RobotContainer
 
   public WebServer getWebServer() {
     return drivebase.getWebServer();
+  }
+
+  public static LedSubsystem getLedSubsystem() {
+    return leds;
   }
 
   public void updateSubsystems() {
