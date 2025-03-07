@@ -36,10 +36,15 @@
       "Pos": "102,93",
       "Size": "403,66"
     },
+    "###Addressable LEDs": {
+      "Collapsed": "0",
+      "Pos": "983,507",
+      "Size": "229,246"
+    },
     "###FMS": {
       "Collapsed": "0",
       "Pos": "5,420",
-      "Size": "235,244"
+      "Size": "388,176"
     },
     "###Joysticks": {
       "Collapsed": "0",

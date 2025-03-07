@@ -2,9 +2,13 @@ package frc.robot.subsystems.elevator;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SmartMotionConfigAccessor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -40,12 +44,19 @@ public class ElevatorSubsystem extends SubsystemBase {
     boolean hasHomed = false;
 
     public ElevatorSubsystem() {
+        SparkFlexConfig brakemode = new SparkFlexConfig();
+        brakemode.idleMode(IdleMode.kBrake);
+        elevatorMotor.configure(brakemode, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         setSetpoint(0.0);
         SmartDashboard.putNumber("Elevator Tolerance", 0.01);
+        SmartDashboard.putNumber("Elevator P", 0.0001);
+
     }
     
     @Override
     public void periodic() {
+        elevatorController.setP(SmartDashboard.getNumber("Elevator P", 0.0001));
         if (hasHomed || Robot.isSimulation()) {
             runToPosition(setPoint);
         } else {

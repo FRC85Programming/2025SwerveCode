@@ -48,7 +48,7 @@ public class GenerateAuto extends Command {
 
             if (selectedReefPose != null && selectedSourcePose != null && level != null) {
                 autoRoutine.addCommands(new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
-                    new DriveAndHoldPose(swerve, () -> selectedSourcePose));
+                    new DriveAndHoldPose(swerve, () -> selectedSourcePose, true));
             }
         }
         autoRoutine.schedule();

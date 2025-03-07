@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
+import java.lang.ProcessBuilder.Redirect;
 import java.sql.Driver;
 
 import edu.wpi.first.units.Units;
@@ -35,14 +36,13 @@ public class LedSubsystem extends SubsystemBase {
     private static final LEDPattern iceGradient = LEDPattern.gradient(LEDPattern.GradientType.kContinuous, Color.kAqua, Color.kLightBlue);
     private static final LEDPattern ambientIce =
         iceGradient
-            .scrollAtAbsoluteSpeed(MetersPerSecond.of(0.03), ledSpacing)  // Slow Scroll                              
-            .blink(Seconds.of(0.07));       
+            .scrollAtAbsoluteSpeed(MetersPerSecond.of(0.03), ledSpacing);  // Slow Scroll                                  
     private static final LEDPattern scrollingRainbow = LEDPattern.rainbow(255, 255).scrollAtAbsoluteSpeed(MetersPerSecond.of(0.1), ledSpacing);
 
     private static LEDPattern currentPattern;
 
     public LedSubsystem() {
-        led = new AddressableLED(Constants.LEDConstants.ledPWMPort);
+        led = new AddressableLED(Constants.LEDConstants.LED_PORT);
         ledBuffer = new AddressableLEDBuffer(12);
         led.setLength(ledBuffer.getLength());
         led.setData(ledBuffer);
@@ -98,9 +98,9 @@ public class LedSubsystem extends SubsystemBase {
             return blinkingorange;
         } else if (DriverStation.isTeleop()) {
             if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-                return blue;
-            } else {
                 return red;
+            } else {
+                return blue;
             }
         } else {
             return blank;

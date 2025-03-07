@@ -179,6 +179,7 @@ public class SwerveSubsystem extends SubsystemBase
                                   Constants.MAX_SPEED,
                                   new Pose2d(new Translation2d(Meter.of(2), Meter.of(0)),
                                              Rotation2d.fromDegrees(0)));
+    SmartDashboard.putNumber("Lineup Offset", 0.5);
   }
 
   /**
@@ -221,18 +222,18 @@ public class SwerveSubsystem extends SubsystemBase
     {
       config = RobotConfig.fromGUISettings();
 
-      final boolean enableFeedforward = true;
+      final boolean enableFeedforward = false;
       // Configure AutoBuilder last
       if (Robot.isSimulation()) {
         pathPlannerXp = 5;
 
         pathPlannerRotationp = 5;
       } else {
-        pathPlannerXp = 4.25;
-        pathPlannerXd =  0.17;
+        pathPlannerXp = 5;
+        pathPlannerXd =  0.0;
         pathPlannerXi = 0.0;
 
-        pathPlannerRotationp = 4.0;
+        pathPlannerRotationp = 5.0;
         pathPlannerRotationi = 0.0;
       }
       AutoBuilder.configure(
@@ -252,16 +253,16 @@ public class SwerveSubsystem extends SubsystemBase
                                );
             } else
             {
-              //swerveDrive.setChassisSpeeds(speedsRobotRelative);
-              try {
+              swerveDrive.setChassisSpeeds(new ChassisSpeeds(speedsRobotRelative.vxMetersPerSecond, speedsRobotRelative.vyMetersPerSecond, -speedsRobotRelative.omegaRadiansPerSecond));
+              /*try {
                 setChassisSpeedsSetpointGenerator(speedsRobotRelative);
               } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
               } catch (ParseException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
-              }
+               // e.printStackTrace();
+              }*/
             }
           },
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
@@ -972,9 +973,10 @@ public class SwerveSubsystem extends SubsystemBase
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
   
-      double translatedX = x1 + (((Constants.ROBOT_WIDTH + Constants.BUMPER_WIDTH) / 2) * Math.cos(z1));
-      double translatedY = y1 + (((Constants.ROBOT_WIDTH + Constants.BUMPER_WIDTH) / 2) * Math.sin(z1));
+      double translatedX = x1 + (((Constants.ROBOT_WIDTH + SmartDashboard.getNumber("Lineup Offset", 0.5)) / 2) * Math.cos(z1));
+      double translatedY = y1 + (((Constants.ROBOT_WIDTH + SmartDashboard.getNumber("Lineup Offset", 0.5)) / 2) * Math.sin(z1));
       double translatedRot = z1 - Math.PI;
+
       switch (side) {
         case Left:
         // 0.1643126 corresponds to reef spacing? Idk what this means

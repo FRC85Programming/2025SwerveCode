@@ -1,6 +1,10 @@
 package frc.robot.subsystems.intake;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -39,6 +43,10 @@ public class IntakeSubsystem extends SubsystemBase {
     private boolean homed = false;
 
     public IntakeSubsystem() {
+        SparkFlexConfig brakemode = new SparkFlexConfig();
+        brakemode.idleMode(IdleMode.kBrake);
+        armMotor.configure(brakemode, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         // Zero the arm
         armMotor.set(0);
         armMotor.getEncoder().setPosition(0);

@@ -178,6 +178,9 @@ public class RobotContainer
     SmartDashboard.putNumber("X P", 5);
     SmartDashboard.putNumber("Y P", 5);
     SmartDashboard.putNumber("Rot Tolerance", 0.01);
+
+    SmartDashboard.putNumber("Rot D", 0.1);
+
   }
 
   /**
@@ -211,17 +214,20 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getScorePoseFromString(drivebase.getWebServer().getSelectedScorePosition()), false));      
-      driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2, false));
-      driverXbox.x().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3, false));
+      driverXbox.x().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getScorePoseFromString(drivebase.getWebServer().getSelectedScorePosition()), false));      
+      driverXbox.a().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2, false));
+      driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3, false));
       driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4, false));
-      driverXbox.pov(0).whileTrue(new EndEffectorIntake(endeffector, true));
-      driverXbox.pov(180).whileTrue(new EndEffectorIntake(endeffector, false));
+      driverXbox.leftTrigger().whileTrue(new EndEffectorIntake(endeffector, false)); 
+      driverXbox.rightTrigger().whileTrue(new EndEffectorIntake(endeffector, true)); 
 
       //driverXbox.rightTrigger().whileTrue(new EndEffectorIntake(endeffector, true));
       //driverXbox.leftTrigger().whileTrue(new EndEffectorIntake(endeffector, false));
       //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
-      driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));      
+      driverXbox.rightBumper().whileTrue(new Climb(climb, 0.6));
+      driverXbox.leftBumper().whileTrue(new Climb(climb, -0.6));   
+      //driverXbox.rightTrigger().whileTrue(new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR, false), new IntakeWheels(intake, 0.5))); 
+      //driverXbox.leftTrigger().whileTrue(new IntakeWheels(intake, -0.5)); 
       driverXbox.back().whileTrue(Commands.none());
       opXbox.a().whileTrue(new InstantCommand(() -> intake.setSetpoint(0.1)));
       opXbox.a().whileFalse(new InstantCommand(() -> intake.setSetpoint(0.0)));

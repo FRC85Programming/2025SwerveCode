@@ -35,11 +35,6 @@ public class DriveToPose extends Command
   public void initialize()
   {
     driveToPoseCommand = swerveSubsystem.driveToPose(targetPose);
-    if (PhotonUtils.getDistanceToPose(swerveSubsystem.getPose(), targetPose.get()) < 1) {
-      endEarly = true;
-    } else {
-      endEarly = false;
-    }
       
     driveToPoseCommand.initialize();
     LedSubsystem.startSlowBlinkingGreen();
@@ -52,7 +47,7 @@ public class DriveToPose extends Command
 
   @Override
   public boolean isFinished() {
-    return driveToPoseCommand.isFinished() || endEarly;
+    return driveToPoseCommand.isFinished();
   }
 
   @Override
@@ -60,6 +55,5 @@ public class DriveToPose extends Command
     driveToPoseCommand.end(interrupted);
     SmartDashboard.putBoolean("Ended DriveToPose", true);
     LedSubsystem.stopPattern();
-    endEarly = false;
   }
 }

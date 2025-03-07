@@ -28,7 +28,7 @@ public final class Constants
   public static final double MAX_VOLTAGE = 12;
   public static final double ROBOT_WIDTH = 0.762;
   public static final double ROBOT_LENGTH = 0.7366;
-  public static final double CORAL_OFFSET = -0.31115;
+  public static final double CORAL_OFFSET = -0.3;
   public static final double CORAL_OFFSET_Y = 0.1016;
   // Both sides
   public static final double BUMPER_WIDTH = 0.1651;
@@ -53,7 +53,7 @@ public final class Constants
     public static final double MAX_ANGLE_RAD = Math.toRadians(180);
 
     // Motor IDs
-    public static final int INTAKE_HOME_LIMIT_ID = 6;
+    public static final int INTAKE_HOME_LIMIT_ID = 7;
 
     // Origin of pivot point
     public static final double INTAKE_ROOT_X = 0.32;
@@ -144,6 +144,10 @@ public final class Constants
     public static final double WHEEL_LOCK_TIME = 10; // seconds
   }
 
+  public static final class LEDConstants {
+    public static final int LED_PORT = 8;
+  }
+
   public static class OperatorConstants
   {
 
@@ -155,7 +159,7 @@ public final class Constants
   }
 
   public static class ClimbConstants {
-    public static final int CLIMB_LIMIT_ID = 7;
+    public static final int CLIMB_LIMIT_ID = 6;
   }
 
   public static class PositionConstants
