@@ -40,6 +40,8 @@ public class HoldPose extends Command {
 
         rotationPID.setTolerance(0.01);
 
+        rotationPID.enableContinuousInput(-Math.PI, Math.PI);
+
         this.endable = endable;
         
         addRequirements(swerve);
@@ -62,8 +64,8 @@ public class HoldPose extends Command {
 
     @Override
     public void execute() {
-        rotationPID.setP(SmartDashboard.getNumber("Rot P", 0.6));
-        rotationPID.setD(SmartDashboard.getNumber("Rot D", 0.1));
+        rotationPID.setP(SmartDashboard.getNumber("Rot P", 5));
+        rotationPID.setD(SmartDashboard.getNumber("Rot D", 0.0));
 
         xTranslationPID.setP(SmartDashboard.getNumber("X P", 5));
         yTranslationPID.setP(SmartDashboard.getNumber("Y P", 5));

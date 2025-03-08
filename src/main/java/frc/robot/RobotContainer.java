@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -40,6 +41,7 @@ import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
 import frc.robot.util.Positions;
+import frc.robot.util.RobotStates;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.leds.LedSubsystem;
@@ -48,6 +50,7 @@ import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 
 
 import java.io.File;
+import java.util.Map;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -154,6 +157,8 @@ public class RobotContainer
 
   SendableChooser<Command> autoChooser = new SendableChooser<>();
 
+  static RobotStates currentMode = RobotStates.CORAL;
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -162,6 +167,7 @@ public class RobotContainer
   {
     // Configure the trigger bindings
     configureBindings();
+    rebind();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
     SmartDashboard.putNumber("Intake Pivot Speed", 0.1);
@@ -174,7 +180,7 @@ public class RobotContainer
     SmartDashboard.putNumber("Floor Alg Pos", 0.1);
 
     
-    SmartDashboard.putNumber("Rot P", 0.4);
+    SmartDashboard.putNumber("Rot P", 5.0);
     SmartDashboard.putNumber("X P", 5);
     SmartDashboard.putNumber("Y P", 5);
     SmartDashboard.putNumber("Rot Tolerance", 0.01);
@@ -212,28 +218,154 @@ public class RobotContainer
       driverXbox.back().whileTrue(drivebase.centerModulesCommand());
       driverXbox.leftBumper().onTrue(Commands.none());
       driverXbox.rightBumper().onTrue(Commands.none());
-    } else
-    {
-      driverXbox.x().whileTrue(new DriveAndHoldPose(drivebase, () -> drivebase.getScorePoseFromString(drivebase.getWebServer().getSelectedScorePosition()), false));      
-      driverXbox.a().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L2, false));
-      driverXbox.b().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L3, false));
-      driverXbox.y().whileTrue(new GoToPosition(elevator, endeffector, intake, Positions.L4, false));
-      driverXbox.leftTrigger().whileTrue(new EndEffectorIntake(endeffector, false)); 
-      driverXbox.rightTrigger().whileTrue(new EndEffectorIntake(endeffector, true)); 
-
-      //driverXbox.rightTrigger().whileTrue(new EndEffectorIntake(endeffector, true));
-      //driverXbox.leftTrigger().whileTrue(new EndEffectorIntake(endeffector, false));
-      //driverXbox.y().whileTrue(new InstantCommand(() -> intake.setArmAngle(Units.degreesToRadians(-120)), intake));
-      driverXbox.rightBumper().whileTrue(new Climb(climb, 0.6));
-      driverXbox.leftBumper().whileTrue(new Climb(climb, -0.6));   
-      //driverXbox.rightTrigger().whileTrue(new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR, false), new IntakeWheels(intake, 0.5))); 
-      //driverXbox.leftTrigger().whileTrue(new IntakeWheels(intake, -0.5)); 
-      driverXbox.back().whileTrue(Commands.none());
-      opXbox.a().whileTrue(new InstantCommand(() -> intake.setSetpoint(0.1)));
-      opXbox.a().whileFalse(new InstantCommand(() -> intake.setSetpoint(0.0)));
-
     }
+  }
 
+  @SuppressWarnings({"unchecked", "rawtypes" })
+  private void rebind() {
+        // TODO: Make positions a press instead of a hold
+        // Coral: L2, Algae: None
+        driverXbox.a().whileTrue(new SelectCommand(
+            Map.ofEntries(
+                Map.entry(1, new GoToPosition(elevator, endeffector, intake, Positions.L2, false)),
+                Map.entry(2, new InstantCommand())
+            ),
+            () -> currentMode == RobotStates.CORAL ? 1 : 2
+        ));
+        // Coral: L3, Algae: None
+        driverXbox.b().whileTrue(new SelectCommand(
+            Map.ofEntries(
+                Map.entry(1, new GoToPosition(elevator, endeffector, intake, Positions.L3, false)),
+                Map.entry(2, new InstantCommand())
+            ),
+            () -> currentMode == RobotStates.CORAL ? 1 : 2
+        ));
+        // Coral: L4, Algae: None
+        driverXbox.b().whileTrue(new SelectCommand(
+            Map.ofEntries(
+                Map.entry(1, new GoToPosition(elevator, endeffector, intake, Positions.L4, false)),
+                Map.entry(2, new InstantCommand())
+            ),
+            () -> currentMode == RobotStates.CORAL ? 1 : 2
+        ));
+        // Coral: Switch modes, Algae: Switch modes, Climb: Switch modes
+        driverXbox.b().onTrue(new SelectCommand(
+            Map.ofEntries(
+                Map.entry(1, new InstantCommand(() -> setMode(RobotStates.ALGAE))),
+                Map.entry(2, new InstantCommand(() -> setMode(RobotStates.CORAL)))
+            ),
+            () -> currentMode == RobotStates.CORAL ? 1 : 2
+        ));
+
+        // Coral: Intake with elevator correction, Algae: Intake algae, Climb: Deploy climb
+        driverXbox.leftTrigger().whileTrue(new SelectCommand(
+            Map.ofEntries(
+                Map.entry(1, new SequentialCommandGroup(
+                  new InstantCommand(() -> endeffector.setSetpoint(0)), 
+                  new InstantCommand(() -> elevator.setSetpoint(0)), 
+                  new ParallelCommandGroup(
+                    new EndEffectorIntake(endeffector, true), 
+                    new InstantCommand(() -> elevator.setElevatorSpeed(0.05))))),
+
+                Map.entry(2, new ParallelCommandGroup(
+                  new Intake(intake, -0.5),
+                  new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR_ALGAE, false))),
+
+                Map.entry(3, new Climb(climb, -0.6))
+            ),
+            () -> { 
+                if (currentMode == RobotStates.CORAL) return 1;
+                else if (currentMode == RobotStates.ALGAE) return 2;  
+                else return 3;
+            }
+        ));
+
+        // Coral: Outtake held piece, Algae: Outtake algae, Climb: Rectract climb
+        driverXbox.rightTrigger().whileTrue(new SelectCommand(
+            Map.ofEntries(
+                Map.entry(1, new SequentialCommandGroup(
+                  new EndEffectorIntake(endeffector, false))),
+
+                Map.entry(2, new ParallelCommandGroup(
+                  new Intake(intake, 0.5),
+                  new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR_ALGAE, false))),
+
+                Map.entry(3, new Climb(climb, 0.6))
+            ),
+            () -> { 
+                if (currentMode == RobotStates.CORAL) return 1;
+                else if (currentMode == RobotStates.ALGAE) return 2;  
+                else return 3;
+            }
+        ));
+
+        // Coral: Intake ground, Algae: Nothing, Climb: Manual
+        driverXbox.leftBumper().whileTrue(new SelectCommand(
+            Map.ofEntries(
+                Map.entry(1, new ParallelCommandGroup(
+                  new Intake(intake, 0.5), 
+                  new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR, false))),
+
+                Map.entry(2, new InstantCommand()),
+
+                Map.entry(3, new Climb(climb, -0.3))
+            ),
+            () -> { 
+                if (currentMode == RobotStates.CORAL) return 1;
+                else if (currentMode == RobotStates.ALGAE) return 2;  
+                else return 3;
+            }
+        ));
+
+        // Coral: Nothing, Algae: Nothing, Climb: Manual
+        driverXbox.rightBumper().whileTrue(new SelectCommand(
+            Map.ofEntries(
+                Map.entry(1, new InstantCommand()),
+
+                Map.entry(2, new InstantCommand()),
+
+                Map.entry(3, new Climb(climb, 0.3))
+            ),
+            () -> { 
+                if (currentMode == RobotStates.CORAL) return 1;
+                else if (currentMode == RobotStates.ALGAE) return 2;  
+                else return 3;
+            }
+        ));
+
+        // Coral: Removal of algae, Else: Nothing
+        driverXbox.pov(0).whileTrue(new SelectCommand(
+            Map.ofEntries(
+                Map.entry(1, new GoToPosition(elevator, endeffector, intake, Positions.L3_ALGAE, false)),
+                Map.entry(2, new InstantCommand())
+            ),
+            () -> currentMode == RobotStates.CORAL ? 1 : 2
+        ));
+
+        // Coral: Removal of algae, Else: Nothing
+        driverXbox.pov(180).whileTrue(new SelectCommand(
+            Map.ofEntries(
+                Map.entry(1, new GoToPosition(elevator, endeffector, intake, Positions.L2_ALGAE, false)),
+                Map.entry(2, new InstantCommand())
+            ),
+            () -> currentMode == RobotStates.CORAL ? 1 : 2
+        ));
+
+        // All: Drive to relevant position
+        driverXbox.pov(270).whileTrue(new SelectCommand(
+            Map.ofEntries(
+                Map.entry(1, new DriveAndHoldPose(drivebase, () -> drivebase.getScorePoseFromString(drivebase.getWebServer().getSelectedScorePosition()), false)),
+
+                Map.entry(2, new DriveAndHoldPose(drivebase, () -> Constants.PositionConstants.processorPositionBlue, false)),
+
+                Map.entry(3, new DriveAndHoldPose(drivebase, () -> Constants.PositionConstants.cagePosition1Blue, false))
+            ),
+            () -> { 
+                if (currentMode == RobotStates.CORAL) return 1;
+                else if (currentMode == RobotStates.ALGAE) return 2;  
+                else return 3;
+            }
+        ));
   }
 
   /**
@@ -262,6 +394,14 @@ public class RobotContainer
 
   public static LedSubsystem getLedSubsystem() {
     return leds;
+  }
+
+  public void setMode(RobotStates mode) {
+    currentMode = mode;
+  }
+
+  public static RobotStates getCurrentMode() {
+    return currentMode;
   }
 
   public void updateSubsystems() {

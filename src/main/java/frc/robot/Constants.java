@@ -91,6 +91,7 @@ public final class Constants
     public static final double L3_ELEVATOR_POSITION = 0.3;
     public static final double L4_ELEVATOR_POSITION = 0.79;
     public static final double L2_ALGAE_ELEVATOR_POSITION = .41;
+    public static final double L3_ALGAE_ELEVATOR_POSITION = .41;
     public static final double HOME_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_FLOOR_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_STATION_ELEVATOR_POSITION = 0.0;
@@ -127,6 +128,7 @@ public final class Constants
     public static final double L3_PIVOT_POSITION = 3.7; 
     public static final double L4_PIVOT_POSITION = 3.4;
     public static final double L2_ALGAE_PIVOT_POSITION = 4.6;
+    public static final double L3_ALGAE_PIVOT_POSITION = 4.6;
     public static final double HOME_PIVOT_POSITION = 0;
     public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
     public static final double INTAKE_STATION_PIVOT_POSITION = 0;
@@ -169,5 +171,21 @@ public final class Constants
     // Source positions
     public static final Pose2d sourcePositionLeft = new Pose2d(.9, 6.8, new Rotation2d(Math.toRadians(-50)));
     public static final Pose2d sourcePositionRight = new Pose2d(1.625, 0.825, new Rotation2d(Math.toRadians(50)));
+
+    // Processor positions
+    public static final Pose2d processorPositionBlue = new Pose2d(5.980, 0.734, new Rotation2d(-90));
+    public static final Pose2d processorPositionRed = new Pose2d(11.527, 7.346, new Rotation2d(90));
+
+    // Cage positions
+    public static final Pose2d cagePosition1Blue = new Pose2d(8.087, 7.256, new Rotation2d(0));
+    public static final Pose2d cagePosition2Blue = new Pose2d(8.087, 6.169, new Rotation2d(0));
+    public static final Pose2d cagePosition3Blue = new Pose2d(8.087, 5.052, new Rotation2d(0));
+
+    public static final Pose2d cagePosition1Red = new Pose2d(9.513, 0.841, new Rotation2d(180));
+    public static final Pose2d cagePosition2Red = new Pose2d(9.513, 1.921, new Rotation2d(180));
+    public static final Pose2d cagePosition3Red = new Pose2d(9.513, 3.018, new Rotation2d(180));
+
+
+
   }
 }

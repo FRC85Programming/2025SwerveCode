@@ -222,7 +222,7 @@ public class SwerveSubsystem extends SubsystemBase
     {
       config = RobotConfig.fromGUISettings();
 
-      final boolean enableFeedforward = false;
+      final boolean enableFeedforward = true;
       // Configure AutoBuilder last
       if (Robot.isSimulation()) {
         pathPlannerXp = 5;
@@ -253,7 +253,12 @@ public class SwerveSubsystem extends SubsystemBase
                                );
             } else
             {
-              swerveDrive.setChassisSpeeds(new ChassisSpeeds(speedsRobotRelative.vxMetersPerSecond, speedsRobotRelative.vyMetersPerSecond, -speedsRobotRelative.omegaRadiansPerSecond));
+              if (Robot.isReal()) {
+                swerveDrive.setChassisSpeeds(new ChassisSpeeds(speedsRobotRelative.vxMetersPerSecond, speedsRobotRelative.vyMetersPerSecond, -speedsRobotRelative.omegaRadiansPerSecond));
+              } else {
+                swerveDrive.setChassisSpeeds(new ChassisSpeeds(speedsRobotRelative.vxMetersPerSecond, speedsRobotRelative.vyMetersPerSecond, speedsRobotRelative.omegaRadiansPerSecond));
+
+              }
               /*try {
                 setChassisSpeedsSetpointGenerator(speedsRobotRelative);
               } catch (IOException e) {

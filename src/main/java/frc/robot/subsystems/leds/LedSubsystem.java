@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
+import frc.robot.util.RobotStates;
 
 public class LedSubsystem extends SubsystemBase {
 
@@ -38,6 +40,9 @@ public class LedSubsystem extends SubsystemBase {
         iceGradient
             .scrollAtAbsoluteSpeed(MetersPerSecond.of(0.03), ledSpacing);  // Slow Scroll                                  
     private static final LEDPattern scrollingRainbow = LEDPattern.rainbow(255, 255).scrollAtAbsoluteSpeed(MetersPerSecond.of(0.1), ledSpacing);
+    private static final LEDPattern blinkingbluegreen = LEDPattern.solid(new Color("#45d4c2")).blink(Seconds.of(0.1));
+    private static final LEDPattern blinkingwhite = LEDPattern.solid(Color.kWhite).blink(Seconds.of(0.1));
+
 
     private static LEDPattern currentPattern;
 
@@ -97,10 +102,12 @@ public class LedSubsystem extends SubsystemBase {
         } else if (DriverStation.isAutonomous()) {
             return blinkingorange;
         } else if (DriverStation.isTeleop()) {
-            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-                return red;
+            if (RobotContainer.getCurrentMode() == RobotStates.CORAL) {
+                return blinkingwhite;
+            } else if (RobotContainer.getCurrentMode() == RobotStates.ALGAE) {
+                return blinkingbluegreen;
             } else {
-                return blue;
+                return scrollingRainbow;
             }
         } else {
             return blank;

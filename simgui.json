@@ -6,6 +6,11 @@
       }
     },
     "Other Devices": {
+      "SPARK MAX [12] RELATIVE ENCODER": {
+        "header": {
+          "open": true
+        }
+      },
       "SPARK MAX [22] RELATIVE ENCODER": {
         "header": {
           "open": true

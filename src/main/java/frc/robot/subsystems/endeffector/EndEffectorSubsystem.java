@@ -168,6 +168,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
                 return Constants.EndEffectorConstants.INTAKE_STATION_PIVOT_POSITION;
             case L2_ALGAE:
                 return Constants.EndEffectorConstants.L2_ALGAE_PIVOT_POSITION;
+            case L3_ALGAE:
+                return Constants.EndEffectorConstants.L3_ALGAE_PIVOT_POSITION;
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }
