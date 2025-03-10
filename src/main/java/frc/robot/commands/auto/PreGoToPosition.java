@@ -61,13 +61,7 @@ public class PreGoToPosition extends Command {
 
     @Override
     public boolean isFinished() {
-        return elevator.atSetpoint();
+        return elevator.atSetpoint() && endeffector.atSetpoint();
 
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        elevator.setSetpoint(elevator.getSetpoint(Positions.HOME));
-        endeffector.setSetpoint(endeffector.getSetpoint(Positions.HOME));
     }
 }

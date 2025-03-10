@@ -5,6 +5,8 @@ import java.util.List;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
@@ -50,8 +52,8 @@ public class GenerateAuto extends Command {
             if (selectedReefPose != null && selectedSourcePose != null && level != null) {
                 autoRoutine.addCommands(new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
                     new WaitCommand(2),
-                    new EndEffectorIntake(endeffector, elevator, intake, true, true),
-                    new DriveAndHoldPose(swerve, () -> selectedSourcePose, true));
+                    new EndEffectorIntake(endeffector, elevator, intake, false, true),
+                    new ParallelRaceGroup(new DriveAndHoldPose(swerve, () -> selectedSourcePose, true), new EndEffectorIntake(endeffector, elevator, intake, false, false)));
             }
         }
         autoRoutine.schedule();

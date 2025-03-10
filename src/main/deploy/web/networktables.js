@@ -149,3 +149,24 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll('.selection-box').forEach(box => box.remove());
         autoSelections = [];
     }
+
+    function selectCage(position) {
+        var snd = new Audio("sounds/metalpipe.mp3");
+        snd.play();
+        snd.currentTime=0;
+
+        updateButtonSelection("reef", position);
+        fetch("/setPosition", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ variable: "cagePositionValue", value: position })
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log(`Source position ${position} sent to NetworkTables.`);
+            } else {
+                console.error("Failed to send source position.");
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }

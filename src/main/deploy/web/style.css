@@ -36,7 +36,18 @@ body {
     position: absolute;
     height: 325px;
     width: 325px;
-    left: 425px;
+    left: 410px;
+    top: 50px;
+    transform: rotate(-90deg);
+}
+
+.barge {
+    display: block;
+    position: absolute;
+    height: 350px;
+    width: 100px;
+    left: 900px;
+    top: -175px;
     transform: rotate(-90deg);
 }
 
@@ -64,10 +75,6 @@ body {
 }
 
 /* Reef & Source Containers */
-.reefcontainer {
-
-}
-
 
 .sourcecontainer {
     top: -90px;
@@ -179,18 +186,18 @@ body {
 }
 
 /* Button Positions */
-.positionA {top: 320px; left: 515px;}
-.positionB {top: 320px; left: 607px;}
-.positionC {top: 270px; left: 700px;}
-.positionD {top: 200px; left: 740px;}
-.positionE {top: 80px; left: 740px;}
-.positionF {top: 10px; left: 700px;}
-.positionG {top: -40px; left: 607px;}
-.positionH {top: -40px; left: 515px;}
-.positionI {top: 10px; left: 420px;}
-.positionJ {top: 80px; left: 380px;}
-.positionL {top: 200px; left: 380px;}
-.positionK {top: 270px; left: 420px;}
+.positionA {top: 370px; left: 500px;}
+.positionB {top: 370px; left: 593px;}
+.positionC {top: 320px; left: 685px;}
+.positionD {top: 250px; left: 725px;}
+.positionE {top: 130px; left: 725px;}
+.positionF {top: 60px; left: 685px;}
+.positionG {top: 10px; left: 593px;}
+.positionH {top: 10px; left: 500px;}
+.positionI {top: 60px; left: 405px;}
+.positionJ {top: 130px; left: 365px;}
+.positionL {top: 250px; left: 365px;}
+.positionK {top: 320px; left: 405px;}
 
 
 /* Auto Position Buttons */
@@ -235,6 +242,9 @@ body {
     cursor: pointer;
 }
 
+.cageA { left: 815px; top: -30px;}
+.cageB { left: 920px; top: -30px;}
+.cageC { left: 1025px; top: -30px;}
 
 .resetautoselectionsbutton {
     position: absolute; 

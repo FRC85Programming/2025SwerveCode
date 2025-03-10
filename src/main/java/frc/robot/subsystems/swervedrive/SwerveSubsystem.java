@@ -973,7 +973,6 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   public Pose2d getScorePose(ReefPositions side, Pose2d tagPose) {
-      double newCoralOffset = SmartDashboard.getNumber("Coral Offset", -0.3);
       double x1 = tagPose.getX();
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
@@ -985,16 +984,16 @@ public class SwerveSubsystem extends SubsystemBase
       switch (side) {
         case Left:
         // 0.1643126 corresponds to reef spacing? Idk what this means
-          translatedX += (0.1643126 + -0.25)
+          translatedX += (0.1643126 + Constants.CORAL_OFFSET)
               * Math.cos(z1 - Math.PI / 2);
-          translatedY += (0.1643126 + -0.25)
+          translatedY += (0.1643126 + Constants.CORAL_OFFSET)
               * Math.sin(z1 - Math.PI / 2);
           break;
   
         case Right:
-          translatedX += (0.1643126 - newCoralOffset)
+          translatedX += (0.1643126 - Constants.CORAL_OFFSET)
               * Math.cos(z1 + Math.PI / 2);
-          translatedY += (0.1643126 - newCoralOffset)
+          translatedY += (0.1643126 - Constants.CORAL_OFFSET)
               * Math.sin(z1 + Math.PI / 2);
           break;
       }

@@ -266,7 +266,7 @@ public class RobotContainer
                   new InstantCommand(() -> endeffector.setSetpoint(0)), 
                   new InstantCommand(() -> elevator.setSetpoint(0)), 
                   new ParallelCommandGroup(
-                    new EndEffectorIntake(endeffector, elevator, intake, false, false), 
+                    new EndEffectorIntake(endeffector, elevator, intake, true, false), 
                     new InstantCommand(() -> elevator.setElevatorSpeed(0.1))))),
 
                 Map.entry(2, new ParallelCommandGroup(
@@ -286,7 +286,7 @@ public class RobotContainer
         driverXbox.rightTrigger().whileTrue(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new SequentialCommandGroup(
-                  new EndEffectorIntake(endeffector, elevator, intake, true, false))),
+                  new EndEffectorIntake(endeffector, elevator, intake, false, false))),
 
                 Map.entry(2, new ParallelCommandGroup(
                   new Intake(intake, 0.5),
