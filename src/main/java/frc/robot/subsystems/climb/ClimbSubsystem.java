@@ -20,6 +20,7 @@ public class ClimbSubsystem extends SubsystemBase {
     private DigitalInput climbLimit = new DigitalInput(Constants.ClimbConstants.CLIMB_LIMIT_ID);
 
     double position = 0;
+    boolean atLimit = false;
 
     public ClimbSubsystem() {
         SparkFlexConfig brakemode = new SparkFlexConfig();
@@ -29,14 +30,33 @@ public class ClimbSubsystem extends SubsystemBase {
         climbMotor.set(0);
     }
 
-    public void setClimbSpeed(double speed) {
-        climbMotor.set(speed);
+    @Override
+    public void periodic() {
         SmartDashboard.putNumber("Deep climb enc", climbMotor.getEncoder().getPosition());
 
-        // -50 rot to be flat
-        if (climbLimit.get() ) {
-            climbMotor.getEncoder().setPosition(0);
-        } 
+    }
+
+    public void setClimbSpeed(double speed) {
         climbMotor.set(speed);
+
+        //-95.083427
+
+
+        if (climbLimit.get()) {
+            if (!atLimit) {
+                climbMotor.getEncoder().setPosition(0);
+            }
+            atLimit = true;
+        } else {
+            atLimit = false;
+        }
+
+        if ((climbMotor.getEncoder().getPosition() < -95 && speed < 0) || (climbMotor.getEncoder().getPosition() > 11.88 && atLimit && speed > 0)) {
+            climbMotor.set(0);
+        } else {
+            climbMotor.set(speed);
+        }
+        
+  
     }
 }

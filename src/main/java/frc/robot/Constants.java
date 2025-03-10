@@ -129,7 +129,7 @@ public final class Constants
     public static final double L4_PIVOT_POSITION = 3.4;
     public static final double L2_ALGAE_PIVOT_POSITION = 4.6;
     public static final double L3_ALGAE_PIVOT_POSITION = 4.6;
-    public static final double HOME_PIVOT_POSITION = 0;
+    public static final double HOME_PIVOT_POSITION = .1;
     public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
     public static final double INTAKE_STATION_PIVOT_POSITION = 0;
 
@@ -166,7 +166,7 @@ public final class Constants
 
   public static class PositionConstants
   {
-    public static final Pose2d pathPlanningTestPose = new Pose2d(1.8, 4, new Rotation2d(Math.toRadians(0)));
+    public static final Pose2d pathPlanningTestPose = new Pose2d(1.8, 3, new Rotation2d(Math.toRadians(0)));
 
     // Source positions
     public static final Pose2d sourcePositionLeft = new Pose2d(.9, 6.8, new Rotation2d(Math.toRadians(-50)));
@@ -184,8 +184,5 @@ public final class Constants
     public static final Pose2d cagePosition1Red = new Pose2d(9.513, 0.841, new Rotation2d(180));
     public static final Pose2d cagePosition2Red = new Pose2d(9.513, 1.921, new Rotation2d(180));
     public static final Pose2d cagePosition3Red = new Pose2d(9.513, 3.018, new Rotation2d(180));
-
-
-
   }
 }

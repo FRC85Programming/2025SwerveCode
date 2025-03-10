@@ -153,11 +153,11 @@ public class IntakeSubsystem extends SubsystemBase {
                 return Constants.IntakeConstants.HOME_INTAKE_POSITION;
             case INTAKE_FLOOR:
                 //return Constants.IntakeConstants.INTAKE_FLOOR_INTAKE_POSITION;
-                return SmartDashboard.getNumber("Floor Coral Pos", 0.915);
+                return SmartDashboard.getNumber("Floor Coral Pos", 22.4);
             case INTAKE_STATION:
                 return Constants.IntakeConstants.INTAKE_STATION_INTAKE_POSITION;
             case INTAKE_FLOOR_ALGAE:
-                return Constants.IntakeConstants.INTAKE_FLOOR_INTAKE_POSITION_ALGAE;
+                return SmartDashboard.getNumber("Floor Alg Pos", 10.5);
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }

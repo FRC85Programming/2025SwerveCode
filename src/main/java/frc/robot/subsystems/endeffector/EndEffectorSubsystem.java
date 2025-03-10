@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +25,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
     private SparkFlex pivotMotor = new SparkFlex(55, MotorType.kBrushless);
     private SparkFlex rollerMotor = new SparkFlex(56, MotorType.kBrushless);
 
+    private DigitalInput coralLimit = new DigitalInput(Constants.EndEffectorConstants.CORAL_LIMIT_SWITCH);
+
     private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(Constants.EndEffectorConstants.PIVOT_ENCODER);
 
     private final PIDController angleController = new PIDController(0.1, 0, 0.0);
@@ -34,6 +37,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     private double setPoint = 0.0;
     private double angleConversionFactor = (2*Math.PI)/9;
     boolean safe = true;
+    boolean hasCoral = false;
 
     public EndEffectorSubsystem() {
         // Zero the arm
@@ -49,14 +53,20 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (safe) {
-            driveToSetPoint();
+        driveToSetPoint();
+        if (hasCoral) {
+            holdCoral();
         }
+        if (coralLimit.get()) {
+            hasCoral = true;
+        }
+
         angleController.setP(0.1);
         SmartDashboard.putNumber("Arm Radians", getEncoderValueAsRadians());
         SmartDashboard.putNumber("Pivot Rotation", pivotAbsoluteEncoder.get());
         //SmartDashboard.putNumber("Simencoder", endeffectorSim.getPivotEncoderSim());
         SmartDashboard.putBoolean("Safe", safe);
+        SmartDashboard.putBoolean("Coral Switch", coralLimit.get());
 
     }
     
@@ -86,9 +96,22 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     }
 
+    public boolean getCoralSwitch() {
+        return coralLimit.get();
+    }
+
+    public void holdCoral() {
+        if (!coralLimit.get()) {
+            rollerMotor.set(0.2);
+        } else {
+            rollerMotor.set(0.0);
+        }
+    }
+
     public void setPivotVoltage(double voltage) {
-        if (pivotAbsoluteEncoder.get() < 0.97 && pivotAbsoluteEncoder.get() > 0.279) {
+        if (pivotAbsoluteEncoder.get() < 0.97 && pivotAbsoluteEncoder.get() > 0.262) {
             pivotMotor.setVoltage(voltage);
+            safe = true;
             if (Robot.isSimulation()) {
                 endeffectorSim.setInputVoltage(-voltage);
                 //endeffectorSim.setPivotEncoderSim(getRadiansAsEncoderValue(getPivotAngle()));
@@ -139,6 +162,9 @@ public class EndEffectorSubsystem extends SubsystemBase {
      * TODO: Figure out what direction in and out is
      */
     public void runRollers(double speed) {
+        if (speed < 0) {
+            hasCoral = false;
+        }
         rollerMotor.set(speed);
     }
 

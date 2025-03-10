@@ -40,7 +40,7 @@ public class HoldPose extends Command {
 
         rotationPID.setTolerance(0.01);
 
-        rotationPID.enableContinuousInput(-Math.PI, Math.PI);
+        rotationPID.enableContinuousInput(-2*Math.PI, 2*Math.PI);
 
         this.endable = endable;
         
@@ -67,6 +67,10 @@ public class HoldPose extends Command {
         rotationPID.setP(SmartDashboard.getNumber("Rot P", 5));
         rotationPID.setD(SmartDashboard.getNumber("Rot D", 0.0));
 
+        xTranslationPID.setTolerance(SmartDashboard.getNumber("X Tolerance", 0.05));
+        yTranslationPID.setTolerance(SmartDashboard.getNumber("Y Tolerance", 0.05));
+
+
         xTranslationPID.setP(SmartDashboard.getNumber("X P", 5));
         yTranslationPID.setP(SmartDashboard.getNumber("Y P", 5));
         rotationPID.setTolerance(SmartDashboard.getNumber("Rot Tolerance", 0.01));
@@ -78,7 +82,7 @@ public class HoldPose extends Command {
         double ySpeed = yTranslationPID.calculate(currentPose.getY());
         double thetaSpeed = rotationPID.calculate(currentPose.getRotation().getRadians());
         
-        ChassisSpeeds wheelSpeeds = new ChassisSpeeds(xSpeed, ySpeed, thetaSpeed);
+        ChassisSpeeds wheelSpeeds = new ChassisSpeeds(xSpeed, ySpeed, -thetaSpeed);
 
         if (xTranslationPID.atSetpoint() && yTranslationPID.atSetpoint() && rotationPID.atSetpoint()) {
             LedSubsystem.startFastBlinkingGreen();

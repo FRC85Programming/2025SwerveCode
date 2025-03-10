@@ -179,7 +179,6 @@ public class SwerveSubsystem extends SubsystemBase
                                   Constants.MAX_SPEED,
                                   new Pose2d(new Translation2d(Meter.of(2), Meter.of(0)),
                                              Rotation2d.fromDegrees(0)));
-    SmartDashboard.putNumber("Lineup Offset", 0.5);
   }
 
   /**
@@ -222,7 +221,7 @@ public class SwerveSubsystem extends SubsystemBase
     {
       config = RobotConfig.fromGUISettings();
 
-      final boolean enableFeedforward = true;
+      final boolean enableFeedforward = false;
       // Configure AutoBuilder last
       if (Robot.isSimulation()) {
         pathPlannerXp = 5;
@@ -368,7 +367,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
-        swerveDrive.getMaximumChassisVelocity(), 4.0,
+        swerveDrive.getMaximumChassisVelocity()*0.75, 2.0,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
 
     // Since AutoBuilder is configured, we can use it to build pathfinding commands
@@ -974,27 +973,28 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   public Pose2d getScorePose(ReefPositions side, Pose2d tagPose) {
+      double newCoralOffset = SmartDashboard.getNumber("Coral Offset", -0.3);
       double x1 = tagPose.getX();
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
   
-      double translatedX = x1 + (((Constants.ROBOT_WIDTH + SmartDashboard.getNumber("Lineup Offset", 0.5)) / 2) * Math.cos(z1));
-      double translatedY = y1 + (((Constants.ROBOT_WIDTH + SmartDashboard.getNumber("Lineup Offset", 0.5)) / 2) * Math.sin(z1));
+      double translatedX = x1 + (((Constants.ROBOT_WIDTH + SmartDashboard.getNumber("Lineup Offset", 0.3)) / 2) * Math.cos(z1));
+      double translatedY = y1 + (((Constants.ROBOT_WIDTH + SmartDashboard.getNumber("Lineup Offset", 0.3)) / 2) * Math.sin(z1));
       double translatedRot = z1 - Math.PI;
 
       switch (side) {
         case Left:
         // 0.1643126 corresponds to reef spacing? Idk what this means
-          translatedX += (0.1643126 + Constants.CORAL_OFFSET)
+          translatedX += (0.1643126 + -0.25)
               * Math.cos(z1 - Math.PI / 2);
-          translatedY += (0.1643126 + Constants.CORAL_OFFSET)
+          translatedY += (0.1643126 + -0.25)
               * Math.sin(z1 - Math.PI / 2);
           break;
   
         case Right:
-          translatedX += (0.1643126 - Constants.CORAL_OFFSET)
+          translatedX += (0.1643126 - newCoralOffset)
               * Math.cos(z1 + Math.PI / 2);
-          translatedY += (0.1643126 - Constants.CORAL_OFFSET)
+          translatedY += (0.1643126 - newCoralOffset)
               * Math.sin(z1 + Math.PI / 2);
           break;
       }

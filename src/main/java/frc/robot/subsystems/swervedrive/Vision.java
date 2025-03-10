@@ -346,24 +346,30 @@ public class Vision
     /**
      * Front Camera
      */
-    RIGHTFRONT_CAM("camera-front",
+    BACK_CAM("camera-back",
              new Rotation3d(0, Units.degreesToRadians(7), Units.degreesToRadians(180)),
              new Translation3d(Units.inchesToMeters(-14),
                                Units.inchesToMeters(-11.25),
                                Units.inchesToMeters(12.125)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
-    MIDDLEFRONT_CAM("camera-front2",
+    BACK2_CAM("camera-back2",
              new Rotation3d(0, Units.degreesToRadians(-26), Units.degreesToRadians(180)),
              new Translation3d(Units.inchesToMeters(-6.5),
                                Units.inchesToMeters(-2),
                                Units.inchesToMeters(5)),
+             VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+    FRONT_LEFT_CAM("camera-frontleft",
+             new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(45)),
+             new Translation3d(Units.inchesToMeters(-14.68),
+                               Units.inchesToMeters(14.7),
+                               Units.inchesToMeters(7.2)),
+             VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+    FRONT_RIGHT_CAM("camera-frontright",
+             new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(-45)),
+             new Translation3d(Units.inchesToMeters(14.68),
+                               Units.inchesToMeters(14.7),
+                               Units.inchesToMeters(7.2)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
-    /*BACKLEFT_CAM("camera-backleft",
-             new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(137)),
-             new Translation3d(Units.inchesToMeters(-12.25),
-                               Units.inchesToMeters(14.5),
-                               Units.inchesToMeters(11.25)),
-             VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));*/
     /**
      *
      * Right Camera

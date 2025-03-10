@@ -169,12 +169,7 @@ public class RobotContainer
     configureBindings();
     rebind();
     DriverStation.silenceJoystickConnectionWarning(true);
-    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
-    SmartDashboard.putNumber("Intake Pivot Speed", 0.1);
-    SmartDashboard.putNumber("Intake Pivot Speed Down", 0.1);
-
     SmartDashboard.putNumber("Intake Wheel Speed", 0.5);
-    SmartDashboard.putNumber("Climb Speed", 0.2);
 
     SmartDashboard.putNumber("Floor Coral Pos", 0.1);
     SmartDashboard.putNumber("Floor Alg Pos", 0.1);
@@ -186,6 +181,13 @@ public class RobotContainer
     SmartDashboard.putNumber("Rot Tolerance", 0.01);
 
     SmartDashboard.putNumber("Rot D", 0.1);
+    SmartDashboard.putNumber("Floor Alg Pos", 10.5);
+    SmartDashboard.putNumber("Lineup Offset", 0.3);
+
+    SmartDashboard.putNumber("Coral Offset", -0.3);
+
+    SmartDashboard.putNumber("X Tolerance", 0.05);
+    SmartDashboard.putNumber("X Tolerance", 0.05);
 
   }
 
@@ -241,7 +243,7 @@ public class RobotContainer
             () -> currentMode == RobotStates.CORAL ? 1 : 2
         ));
         // Coral: L4, Algae: None
-        driverXbox.b().whileTrue(new SelectCommand(
+        driverXbox.y().whileTrue(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new GoToPosition(elevator, endeffector, intake, Positions.L4, false)),
                 Map.entry(2, new InstantCommand())
@@ -249,9 +251,9 @@ public class RobotContainer
             () -> currentMode == RobotStates.CORAL ? 1 : 2
         ));
         // Coral: Switch modes, Algae: Switch modes, Climb: Switch modes
-        driverXbox.b().onTrue(new SelectCommand(
+        driverXbox.x().onTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new InstantCommand(() -> setMode(RobotStates.ALGAE))),
+                Map.entry(1, new InstantCommand(() -> setMode(RobotStates.CLIMB))),
                 Map.entry(2, new InstantCommand(() -> setMode(RobotStates.CORAL)))
             ),
             () -> currentMode == RobotStates.CORAL ? 1 : 2
@@ -264,8 +266,8 @@ public class RobotContainer
                   new InstantCommand(() -> endeffector.setSetpoint(0)), 
                   new InstantCommand(() -> elevator.setSetpoint(0)), 
                   new ParallelCommandGroup(
-                    new EndEffectorIntake(endeffector, true), 
-                    new InstantCommand(() -> elevator.setElevatorSpeed(0.05))))),
+                    new EndEffectorIntake(endeffector, elevator, intake, false, false), 
+                    new InstantCommand(() -> elevator.setElevatorSpeed(0.1))))),
 
                 Map.entry(2, new ParallelCommandGroup(
                   new Intake(intake, -0.5),
@@ -284,7 +286,7 @@ public class RobotContainer
         driverXbox.rightTrigger().whileTrue(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new SequentialCommandGroup(
-                  new EndEffectorIntake(endeffector, false))),
+                  new EndEffectorIntake(endeffector, elevator, intake, true, false))),
 
                 Map.entry(2, new ParallelCommandGroup(
                   new Intake(intake, 0.5),
@@ -345,7 +347,7 @@ public class RobotContainer
         // Coral: Removal of algae, Else: Nothing
         driverXbox.pov(180).whileTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new GoToPosition(elevator, endeffector, intake, Positions.L2_ALGAE, false)),
+                Map.entry(1, new GoToPosition(elevator, endeffector, intake, Positions.L2, false)),
                 Map.entry(2, new InstantCommand())
             ),
             () -> currentMode == RobotStates.CORAL ? 1 : 2

@@ -33,8 +33,8 @@ public class LedSubsystem extends SubsystemBase {
     private static final LEDPattern red = LEDPattern.solid(Color.kRed).breathe(Units.Seconds.of(4));
     private static final LEDPattern blue = LEDPattern.solid(Color.kBlue).breathe(Units.Seconds.of(4));
     private static final LEDPattern blinkingorange = LEDPattern.solid(Color.kOrange).blink(Seconds.of(0.1));
-    private static final LEDPattern slowblinkinggreen = LEDPattern.solid(Color.kGreen).blink(Seconds.of(0.5));
-    private static final LEDPattern fastblinkinggreen = LEDPattern.solid(Color.kGreen).blink(Seconds.of(0.1));
+    private static final LEDPattern slowblinkinggreen = LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.5));
+    private static final LEDPattern fastblinkinggreen = LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.1));
     private static final LEDPattern iceGradient = LEDPattern.gradient(LEDPattern.GradientType.kContinuous, Color.kAqua, Color.kLightBlue);
     private static final LEDPattern ambientIce =
         iceGradient

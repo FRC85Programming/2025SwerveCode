@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.swerve.DriveAndHoldPose;
@@ -48,6 +49,8 @@ public class GenerateAuto extends Command {
 
             if (selectedReefPose != null && selectedSourcePose != null && level != null) {
                 autoRoutine.addCommands(new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
+                    new WaitCommand(2),
+                    new EndEffectorIntake(endeffector, elevator, intake, true, true),
                     new DriveAndHoldPose(swerve, () -> selectedSourcePose, true));
             }
         }

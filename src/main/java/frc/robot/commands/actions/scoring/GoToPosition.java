@@ -47,7 +47,7 @@ public class GoToPosition extends Command
   @Override
   public void end(boolean interrupted)
   {
-    if (endable) {
+    if (endable || position == Positions.INTAKE_FLOOR || position == Positions.INTAKE_FLOOR_ALGAE) {
       elevator.setSetpoint(elevator.getSetpoint(Positions.HOME));
       intake.setSetpoint(intake.getSetpoint(Positions.HOME));
       endeffector.setSetpoint(endeffector.getSetpoint(Positions.HOME));
