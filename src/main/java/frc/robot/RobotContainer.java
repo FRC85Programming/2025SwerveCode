@@ -182,7 +182,7 @@ public class RobotContainer
 
     SmartDashboard.putNumber("Rot D", 0.1);
     SmartDashboard.putNumber("Floor Alg Pos", 10.5);
-    SmartDashboard.putNumber("Lineup Offset", 0.7);
+    SmartDashboard.putNumber("Lineup Offset", 0.3);
 
     SmartDashboard.putNumber("Coral Offset", -0.3);
 
@@ -191,6 +191,22 @@ public class RobotContainer
 
     SmartDashboard.getNumber("i upspeed", 0.1);
     SmartDashboard.getNumber("i downspeed", 0.1);
+
+    SmartDashboard.putNumber("Reef A X", 3.062); // 180 rot
+    SmartDashboard.putNumber("Reef A Y", 3.890);
+    SmartDashboard.putNumber("Reef B X", 3.062);
+    SmartDashboard.putNumber("Reef B Y", 3.560);
+    SmartDashboard.putNumber("Reef C X", 3.887); // -120 rot
+    SmartDashboard.putNumber("Reef C Y", 2.719);
+    SmartDashboard.putNumber("Reef D X", 4.185);
+    SmartDashboard.putNumber("Reef D Y", 2.570);
+    SmartDashboard.putNumber("Reef E X", 0);
+    SmartDashboard.putNumber("Reef E Y", 0);
+    SmartDashboard.putNumber("Reef F X", 0);
+    SmartDashboard.putNumber("Reef F Y", 0);
+
+
+
 
   }
 

@@ -28,7 +28,7 @@ public final class Constants
   public static final double MAX_VOLTAGE = 12;
   public static final double ROBOT_WIDTH = 0.762;
   public static final double ROBOT_LENGTH = 0.7366;
-  public static final double CORAL_OFFSET = -0.3;
+  public static final double CORAL_OFFSET = -0.36;
   public static final double CORAL_OFFSET_Y = 0.1016;
   // Both sides
   public static final double BUMPER_WIDTH = 0.1651;

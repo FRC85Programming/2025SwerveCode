@@ -106,8 +106,10 @@ public class LedSubsystem extends SubsystemBase {
                 return blinkingwhite;
             } else if (RobotContainer.getCurrentMode() == RobotStates.ALGAE) {
                 return blinkingbluegreen;
-            } else {
+            } else if (RobotContainer.getCurrentMode() == RobotStates.CLIMB) {
                 return scrollingRainbow;
+            } else {
+                return blank;
             }
         } else {
             return blank;

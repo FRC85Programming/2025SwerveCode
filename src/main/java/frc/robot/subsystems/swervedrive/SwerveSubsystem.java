@@ -972,13 +972,13 @@ public class SwerveSubsystem extends SubsystemBase
     return webServer;
   }
 
-  public Pose2d getScorePose(ReefPositions side, Pose2d tagPose) {
+  public Pose2d getScorePoseOLD(ReefPositions side, Pose2d tagPose) {
       double x1 = tagPose.getX();
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
   
-      double translatedX = x1 + (((Constants.ROBOT_WIDTH + SmartDashboard.getNumber("Lineup Offset", 0.3)) / 2) * Math.cos(z1));
-      double translatedY = y1 + (((Constants.ROBOT_WIDTH + SmartDashboard.getNumber("Lineup Offset", 0.3)) / 2) * Math.sin(z1));
+      double translatedX = x1 + (Constants.ROBOT_WIDTH / 2) * Math.cos(z1);
+      double translatedY = y1 + (Constants.ROBOT_WIDTH / 2) * Math.sin(z1);
       double translatedRot = z1 - Math.PI;
 
       switch (side) {
@@ -999,5 +999,35 @@ public class SwerveSubsystem extends SubsystemBase
       }
 
       return new Pose2d(translatedX, translatedY, new Rotation2d(translatedRot + Math.PI));
+  }
+
+  public Pose2d getScorePose(ReefPositions side, Pose2d tagPose) {
+      double x1 = tagPose.getX();
+      double y1 = tagPose.getY();
+      double z1 = tagPose.getRotation().getRadians();
+
+      // Shift back so back of robot aligns with reef
+      double translatedX = x1 + (Constants.ROBOT_WIDTH / 2) * Math.cos(z1);
+      double translatedY = y1 + (Constants.ROBOT_LENGTH / 2) * Math.sin(z1);
+
+      // Shift left/right based on scoring location
+      double scoringOffset = 0.1643126;
+      switch (side) {
+          case Left:
+              translatedX += (scoringOffset + Constants.CORAL_OFFSET) * Math.cos(z1 - Math.PI / 2);
+              translatedY += (scoringOffset + Constants.CORAL_OFFSET) * Math.sin(z1 - Math.PI / 2);
+              break;
+          case Right:
+              translatedX += (scoringOffset - Constants.CORAL_OFFSET) * Math.cos(z1 + Math.PI / 2);
+              translatedY += (scoringOffset - Constants.CORAL_OFFSET) * Math.sin(z1 + Math.PI / 2);
+              break;
+      }
+
+      // Move away from the reef by pushBackDistance
+      translatedX += 0.2 * Math.cos(z1);
+      translatedY += 0.2 * Math.sin(z1);
+
+      // Rotate to face away from the reef
+      return new Pose2d(translatedX, translatedY, new Rotation2d(z1));
   }
 }

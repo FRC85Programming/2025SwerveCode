@@ -24,13 +24,13 @@ public class HoldPose extends Command {
     public HoldPose(SwerveSubsystem swerve, Supplier<Pose2d> finalPose, boolean endable) {
         this.swerve = swerve;
         this.poseFinal = finalPose;
-        this.xTranslationPID = new PIDController(4.0, 
+        this.xTranslationPID = new PIDController(6.0, 
                                                 0.0, 
                                                 0.0);
-        this.yTranslationPID = new PIDController(4.0, 
+        this.yTranslationPID = new PIDController(6.0, 
                                                 0.0, 
                                                 0.0);
-        this.rotationPID = new PIDController(4.0
+        this.rotationPID = new PIDController(8.0
         , 
                                              0.0, 
                                              0.0);
@@ -64,16 +64,10 @@ public class HoldPose extends Command {
 
     @Override
     public void execute() {
-        rotationPID.setP(SmartDashboard.getNumber("Rot P", 5));
-        rotationPID.setD(SmartDashboard.getNumber("Rot D", 0.0));
+        xTranslationPID.setTolerance(0.005);
+        yTranslationPID.setTolerance(0.005);
 
-        xTranslationPID.setTolerance(SmartDashboard.getNumber("X Tolerance", 0.05));
-        yTranslationPID.setTolerance(SmartDashboard.getNumber("Y Tolerance", 0.05));
-
-
-        xTranslationPID.setP(SmartDashboard.getNumber("X P", 5));
-        yTranslationPID.setP(SmartDashboard.getNumber("Y P", 5));
-        rotationPID.setTolerance(SmartDashboard.getNumber("Rot Tolerance", 0.01));
+        rotationPID.setTolerance(SmartDashboard.getNumber("Rot Tolerance", 0.005));
 
 
         currentPose = swerve.getPose();
