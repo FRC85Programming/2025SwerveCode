@@ -159,9 +159,6 @@ public class RobotContainer
 
   static RobotStates currentMode = RobotStates.CORAL;
 
-  String currentCage = "0";
-
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -170,6 +167,7 @@ public class RobotContainer
     // Configure the trigger bindings
     configureBindings();
     rebind();
+    
     DriverStation.silenceJoystickConnectionWarning(true);
     SmartDashboard.putNumber("Intake Wheel Speed", 0.5);
 
@@ -184,7 +182,7 @@ public class RobotContainer
 
     SmartDashboard.putNumber("Rot D", 0.1);
     SmartDashboard.putNumber("Floor Alg Pos", 10.5);
-    SmartDashboard.putNumber("Lineup Offset", 0.3);
+    SmartDashboard.putNumber("Lineup Offset", 0.7);
 
     SmartDashboard.putNumber("Coral Offset", -0.3);
 
@@ -370,9 +368,9 @@ public class RobotContainer
             Map.ofEntries(
                 Map.entry(1, new DriveAndHoldPose(drivebase, () -> drivebase.getScorePoseFromString(drivebase.getWebServer().getSelectedScorePosition()), false)),
 
-                Map.entry(2, new DriveAndHoldPose(drivebase, () -> Constants.PositionConstants.processorPositionBlue, false)),
+                Map.entry(2, new DriveAndHoldPose(drivebase, () -> intake.getCurrentProcessor(), false)),
 
-                Map.entry(3, new DriveAndHoldPose(drivebase, () -> Constants.PositionConstants.cagePosition1Blue, false))
+                Map.entry(3, new DriveAndHoldPose(drivebase, () -> climb.getCagePoseFromString(drivebase.getWebServer().getSelectedCagePosition()), false))
             ),
             () -> { 
                 if (currentMode == RobotStates.CORAL) return 1;
@@ -410,11 +408,8 @@ public class RobotContainer
     return leds;
   }
 
-  public void setMode(RobotStates mode) {
+  public static void setMode(RobotStates mode) {
     currentMode = mode;
-    elevator.setSetpoint(0);
-    endeffector.setSetpoint(0);
-    intake.setSetpoint(0);
   }
 
   public static RobotStates getCurrentMode() {

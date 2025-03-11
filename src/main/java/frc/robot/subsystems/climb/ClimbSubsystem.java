@@ -9,7 +9,10 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -21,6 +24,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     double position = 0;
     boolean atLimit = false;
+    String selectedCage = "N";
 
     public ClimbSubsystem() {
         SparkFlexConfig brakemode = new SparkFlexConfig();
@@ -33,7 +37,12 @@ public class ClimbSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Deep climb enc", climbMotor.getEncoder().getPosition());
+        checkClimbMode();
 
+    }
+
+    public void checkClimbMode() {
+    
     }
 
     public void setClimbSpeed(double speed) {
@@ -58,5 +67,31 @@ public class ClimbSubsystem extends SubsystemBase {
         }
         
   
+    }
+
+    public Pose2d getCagePoseFromString(String cage) {
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+            switch (cage) {
+                case "CA" :
+                    return Constants.PositionConstants.cagePosition1Blue;
+                case "CB" :
+                    return Constants.PositionConstants.cagePosition2Blue;
+                case "CC" :
+                    return Constants.PositionConstants.cagePosition3Blue;
+                default:
+                    return Constants.PositionConstants.cagePosition1Blue;
+            }
+        } else {
+            switch (cage) {
+                case "CA" :
+                    return Constants.PositionConstants.cagePosition1Red;
+                case "CB" :
+                    return Constants.PositionConstants.cagePosition2Red;
+                case "CC" :
+                    return Constants.PositionConstants.cagePosition3Red;
+                default:
+                    return Constants.PositionConstants.cagePosition1Red;
+            }
+        }
     }
 }

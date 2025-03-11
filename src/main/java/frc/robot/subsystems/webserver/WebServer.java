@@ -13,6 +13,8 @@ import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StringSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import frc.robot.RobotContainer;
+import frc.robot.util.RobotStates;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
@@ -91,7 +93,8 @@ public class WebServer {
 
                 if (variable.equals("cagePositionValue")) {
                     // Convert List to Array
-                   cagePositionPublisher.set(value); // Update auto positions in NetworkTables
+                    RobotContainer.setMode(RobotStates.CLIMB);
+                    cagePositionPublisher.set(value); // Update auto positions in NetworkTables
                }
         
                 ctx.status(200);

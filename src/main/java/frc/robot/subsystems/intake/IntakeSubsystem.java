@@ -9,10 +9,13 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.IntakeSimulation;
@@ -160,6 +163,14 @@ public class IntakeSubsystem extends SubsystemBase {
                 return SmartDashboard.getNumber("Floor Alg Pos", 10.5);
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
+        }
+    }
+
+    public Pose2d getCurrentProcessor() {
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+            return Constants.PositionConstants.processorPositionBlue;
+        } else {
+            return Constants.PositionConstants.processorPositionRed;
         }
     }
 }
