@@ -20,8 +20,8 @@ import io.javalin.http.staticfiles.Location;
 public class WebServer {
     private final StringPublisher reefPositionPublisher;
     private final StringSubscriber reefPositionSubscriber;
-    private final StringPublisher sourcePositionPublisher;
-    private final StringSubscriber sourcePositionSubscriber;
+    private final StringPublisher cagePositionPublisher;
+    private final StringSubscriber cagePositionSubscriber;
     private static BooleanPublisher alliancePublisher;
     private final StringArrayPublisher autoPublisher;
     private final StringArraySubscriber autoSubscriber;
@@ -30,15 +30,15 @@ public class WebServer {
     public WebServer() {
         // Initialize NetworkTables
         var reefTable = NetworkTableInstance.getDefault().getTable("reefTable");
-        var sourceTable = NetworkTableInstance.getDefault().getTable("sourceTable");
+        var sourceTable = NetworkTableInstance.getDefault().getTable("cageTable");
         var allianceTable = NetworkTableInstance.getDefault().getTable("allianceTable");
         var autoTable = NetworkTableInstance.getDefault().getTable("autoTable");
 
         // Publishers and Subscribers
         reefPositionPublisher = reefTable.getStringTopic("positionValue").publish();
         reefPositionSubscriber = reefTable.getStringTopic("positionValue").subscribe(new String(), PubSubOption.sendAll(true));
-        sourcePositionPublisher = sourceTable.getStringTopic("sourcePositionValue").publish();
-        sourcePositionSubscriber = sourceTable.getStringTopic("sourcePositionValue").subscribe(new String(), PubSubOption.sendAll(true));
+        cagePositionPublisher = sourceTable.getStringTopic("cagePositionValue").publish();
+        cagePositionSubscriber = sourceTable.getStringTopic("cagePositionValue").subscribe(new String(), PubSubOption.sendAll(true));
 
         // Array for selected auto positions
         autoPublisher = autoTable.getStringArrayTopic("autoPositions").publish();
@@ -89,9 +89,9 @@ public class WebServer {
                     reefPositionPublisher.set(value); // Update auto positions in NetworkTables
                 }
 
-                if (variable.equals("sourcePositionValue")) {
+                if (variable.equals("cagePositionValue")) {
                     // Convert List to Array
-                   sourcePositionPublisher.set(value); // Update auto positions in NetworkTables
+                   cagePositionPublisher.set(value); // Update auto positions in NetworkTables
                }
         
                 ctx.status(200);
@@ -112,8 +112,8 @@ public class WebServer {
         return reefPositionSubscriber.get();
     }
 
-    public String getSelectedIntakePosition() {
-        return sourcePositionSubscriber.get();
+    public String getSelectedCagePosition() {
+        return cagePositionSubscriber.get();
     }
 
     public String[] getSelectedAuto() {

@@ -159,6 +159,8 @@ public class RobotContainer
 
   static RobotStates currentMode = RobotStates.CORAL;
 
+  String currentCage = "0";
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -188,6 +190,9 @@ public class RobotContainer
 
     SmartDashboard.putNumber("X Tolerance", 0.05);
     SmartDashboard.putNumber("X Tolerance", 0.05);
+
+    SmartDashboard.getNumber("i upspeed", 0.1);
+    SmartDashboard.getNumber("i downspeed", 0.1);
 
   }
 
@@ -220,6 +225,13 @@ public class RobotContainer
       driverXbox.back().whileTrue(drivebase.centerModulesCommand());
       driverXbox.leftBumper().onTrue(Commands.none());
       driverXbox.rightBumper().onTrue(Commands.none());
+      opXbox.leftBumper().whileTrue(new InstantCommand(() -> intake.driveIntakePivot(-SmartDashboard.getNumber("i upspeed", 0.1))));
+      opXbox.rightBumper().whileTrue(new InstantCommand(() -> intake.driveIntakePivot(SmartDashboard.getNumber("i downspeed", 0.1))));
+      opXbox.leftTrigger().whileTrue(new Intake(intake, 0.3));
+      opXbox.rightTrigger().whileTrue(new Intake(intake, -0.3));
+
+
+
     }
   }
 
@@ -253,7 +265,7 @@ public class RobotContainer
         // Coral: Switch modes, Algae: Switch modes, Climb: Switch modes
         driverXbox.x().onTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new InstantCommand(() -> setMode(RobotStates.CLIMB))),
+                Map.entry(1, new InstantCommand(() -> setMode(RobotStates.ALGAE))),
                 Map.entry(2, new InstantCommand(() -> setMode(RobotStates.CORAL)))
             ),
             () -> currentMode == RobotStates.CORAL ? 1 : 2
@@ -336,18 +348,18 @@ public class RobotContainer
         ));
 
         // Coral: Removal of algae, Else: Nothing
-        driverXbox.pov(0).whileTrue(new SelectCommand(
+        driverXbox.pov(0).onTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new GoToPosition(elevator, endeffector, intake, Positions.L3_ALGAE, false)),
+                Map.entry(1, new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L3, false), new EndEffectorIntake(endeffector, elevator, intake, true, false))),
                 Map.entry(2, new InstantCommand())
             ),
             () -> currentMode == RobotStates.CORAL ? 1 : 2
         ));
 
         // Coral: Removal of algae, Else: Nothing
-        driverXbox.pov(180).whileTrue(new SelectCommand(
+        driverXbox.pov(180).onTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new GoToPosition(elevator, endeffector, intake, Positions.L2, false)),
+                Map.entry(1, new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L2, false), new EndEffectorIntake(endeffector, elevator, intake, true, false))),
                 Map.entry(2, new InstantCommand())
             ),
             () -> currentMode == RobotStates.CORAL ? 1 : 2
@@ -400,11 +412,15 @@ public class RobotContainer
 
   public void setMode(RobotStates mode) {
     currentMode = mode;
+    elevator.setSetpoint(0);
+    endeffector.setSetpoint(0);
+    intake.setSetpoint(0);
   }
 
   public static RobotStates getCurrentMode() {
     return currentMode;
   }
+
 
   public void updateSubsystems() {
     Logger.recordOutput("Subsystems", new Pose3d[]{intake.getIntakeSimPose(), new Pose3d(), elevator.getElevatorSimPose(), 

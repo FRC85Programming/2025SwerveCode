@@ -185,6 +185,9 @@
           "open": true
         }
       },
+      "cageTable": {
+        "open": true
+      },
       "reefTable": {
         "open": true
       }

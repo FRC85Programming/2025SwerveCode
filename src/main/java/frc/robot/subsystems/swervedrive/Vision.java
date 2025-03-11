@@ -145,15 +145,18 @@ public class Vision
     }
     for (Cameras camera : Cameras.values())
     {
-      Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
-      if (poseEst != null && poseEst.isPresent())
-      {
-        var pose = poseEst.get();
-        swerveDrive.addVisionMeasurement(poseEst.get().estimatedPose.toPose2d(),
-                                          pose.timestampSeconds,
-                                          camera.curStdDevs);
-        visionField.setRobotPose(poseEst.get().estimatedPose.toPose2d());
-      }
+        Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
+
+        if (poseEst.isPresent()) {
+          var pose = poseEst.get();
+            //if (poseEst.get().targetsUsed.get(0).getPoseAmbiguity() < 0.5) {
+              swerveDrive.addVisionMeasurement(poseEst.get().estimatedPose.toPose2d(),
+                                                pose.timestampSeconds,
+                                                camera.curStdDevs);
+              visionField.setRobotPose(poseEst.get().estimatedPose.toPose2d());
+            
+          //}
+        }
     }
 
   }
@@ -194,7 +197,8 @@ public class Vision
    * @param pose Estimated robot pose.
    * @return Could be empty if there isn't a good reading.
    */
-  /*@Deprecated(since = "2024", forRemoval = true)
+  /*
+  @Deprecated(since = "2024", forRemoval = true)
   private Optional<EstimatedRobotPose> filterPose(Optional<EstimatedRobotPose> pose)
   {
     if (pose.isPresent())

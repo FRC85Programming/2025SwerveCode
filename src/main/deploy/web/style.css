@@ -242,9 +242,9 @@ body {
     cursor: pointer;
 }
 
-.cageA { left: 815px; top: -30px;}
-.cageB { left: 920px; top: -30px;}
-.cageC { left: 1025px; top: -30px;}
+.cageCA { left: 815px; top: -30px;}
+.cageCB { left: 920px; top: -30px;}
+.cageCC { left: 1025px; top: -30px;}
 
 .resetautoselectionsbutton {
     position: absolute; 

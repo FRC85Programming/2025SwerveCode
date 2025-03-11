@@ -19,7 +19,7 @@
     "###/FMSInfo": {
       "Collapsed": "0",
       "Pos": "63,175",
-      "Size": "235,221"
+      "Size": "254,221"
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
@@ -44,7 +44,7 @@
     "###FMS": {
       "Collapsed": "0",
       "Pos": "5,420",
-      "Size": "244,244"
+      "Size": "235,244"
     },
     "###Joysticks": {
       "Collapsed": "0",
@@ -58,7 +58,7 @@
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "190,566",
+      "Pos": "283,118",
       "Size": "749,373"
     },
     "###NetworkTables Info": {

@@ -65,13 +65,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         checkEncoderReset();
 
-        if (highLimit.get() || lowLimit.get()) {
-            if (!Robot.isSimulation()) {
-                setElevatorSpeed(0);
-            }
-        }
         SmartDashboard.putNumber("Current Height", getElevatorPosition());
         SmartDashboard.putNumber("Setpoint Difference", Math.abs(getElevatorPosition() - setPoint));
+        SmartDashboard.putNumber("Setpoint", setPoint);
     }
 
     @Override
@@ -128,8 +124,15 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void setElevatorSpeed(double speed) {
         speed = MathUtil.clamp(speed, -0.4, 0.4);
-        elevatorMotor.set(speed);
         //elevatorMotorRight.set(-speed);
+
+        if (!Robot.isSimulation()) {
+            if ((highLimit.get() && speed < 0) || (lowLimit.get() && speed > 0)) {
+                setElevatorSpeed(0);
+            } else {
+                elevatorMotor.set(speed);
+            }
+        }
 
         if (RobotBase.isSimulation()) {
             elevatorSim.setInputVoltage(-speed * 12.0);

@@ -40,7 +40,7 @@ public class HoldPose extends Command {
 
         rotationPID.setTolerance(0.01);
 
-        rotationPID.enableContinuousInput(-2*Math.PI, 2*Math.PI);
+        rotationPID.enableContinuousInput(-Math.PI, Math.PI);
 
         this.endable = endable;
         
