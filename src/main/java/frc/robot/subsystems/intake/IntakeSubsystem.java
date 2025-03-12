@@ -49,6 +49,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private boolean homed = false;
 
+    boolean atTolerance = false;
+
     public IntakeSubsystem() {
         SparkFlexConfig brakemode = new SparkFlexConfig();
         brakemode.idleMode(IdleMode.kBrake);
@@ -95,7 +97,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean atTolerance() {
-        return angleController.atSetpoint();
+        return atTolerance;
     }
 
     public void runToPosition() {
@@ -112,10 +114,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
         if (Math.abs(currentAngle-setPoint) < SmartDashboard.getNumber("Intake Tolerance", 0.5)) {
             driveIntakePivot(0.0);
+            if (setPoint != 0) {
+                atTolerance = true;
+            }
         } else if (currentAngle>setPoint){
             driveIntakePivot(-SmartDashboard.getNumber("i upspeed", 0.1));
+            atTolerance = false;
         } else {
             driveIntakePivot(SmartDashboard.getNumber("i downspeed", 0.1));
+            atTolerance = false;
         }
 
         if (RobotBase.isSimulation()) {

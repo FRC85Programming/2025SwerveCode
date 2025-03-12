@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.swerve.DriveAndHoldPose;
+import frc.robot.commands.actions.swerve.DriveToPose;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -53,6 +54,7 @@ public class GenerateAuto extends Command {
             if (selectedReefPose != null && selectedSourcePose != null && level != null) {
                 autoRoutine.addCommands(new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
                     new EndEffectorIntake(endeffector, elevator, intake, false, true),
+                    new WaitCommand(0.2),
                     new ParallelCommandGroup(new DriveAndHoldPose(swerve, () -> selectedSourcePose, true), new SequentialCommandGroup(
                   new InstantCommand(() -> endeffector.setSetpoint(0)), 
                   new InstantCommand(() -> elevator.setSetpoint(0)), 

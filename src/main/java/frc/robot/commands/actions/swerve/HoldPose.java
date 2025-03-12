@@ -24,10 +24,10 @@ public class HoldPose extends Command {
     public HoldPose(SwerveSubsystem swerve, Supplier<Pose2d> finalPose, boolean endable) {
         this.swerve = swerve;
         this.poseFinal = finalPose;
-        this.xTranslationPID = new PIDController(6.0, 
+        this.xTranslationPID = new PIDController(9.0, 
                                                 0.0, 
                                                 0.0);
-        this.yTranslationPID = new PIDController(6.0, 
+        this.yTranslationPID = new PIDController(9.0, 
                                                 0.0, 
                                                 0.0);
         this.rotationPID = new PIDController(8.0
