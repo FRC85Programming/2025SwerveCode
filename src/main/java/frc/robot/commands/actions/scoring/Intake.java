@@ -33,7 +33,7 @@ public class Intake extends Command
   @Override
   public void execute()
   {
-    intakeSubsystem.driveIntakePivot(power);
+    intakeSubsystem.runRollers(power);
   }
 
   @Override
@@ -45,6 +45,6 @@ public class Intake extends Command
   @Override
   public void end(boolean interrupted)
   {
-    intakeSubsystem.driveIntakePivot(0);
+    intakeSubsystem.runRollers(0);
   }
 }

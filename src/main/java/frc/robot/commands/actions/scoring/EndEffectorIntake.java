@@ -34,7 +34,11 @@ public class EndEffectorIntake extends Command {
 
     @Override
     public boolean isFinished() {
-        return endable && !endeffector.getCoralSwitch();
+        if (shouldIntake == false) {
+            return endable && !endeffector.getCoralSwitch();
+        } else {
+            return endable && endeffector.getCoralSwitch();
+        }
     }
     
     @Override

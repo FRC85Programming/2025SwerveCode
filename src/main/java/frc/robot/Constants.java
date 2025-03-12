@@ -65,7 +65,7 @@ public final class Constants
     public static final double L3_INTAKE_POSITION = 0.0;
     public static final double L4_INTAKE_POSITION = 0.0;
     public static final double HOME_INTAKE_POSITION = 0.0;
-    public static double INTAKE_FLOOR_INTAKE_POSITION = SmartDashboard.getNumber("Floor Coral Pos", 0.915);
+    public static double INTAKE_FLOOR_INTAKE_POSITION = SmartDashboard.getNumber("Floor Coral Pos", 27);
     public static double INTAKE_FLOOR_INTAKE_POSITION_ALGAE = SmartDashboard.getNumber("Floor Alg Pos", 0.1);
     public static double INTAKE_STATION_INTAKE_POSITION = 0.0;
   }
@@ -169,8 +169,8 @@ public final class Constants
     public static final Pose2d pathPlanningTestPose = new Pose2d(1.8, 3, new Rotation2d(Math.toRadians(0)));
 
     // Source positions
-    public static final Pose2d sourcePositionLeft = new Pose2d(.9, 6.8, new Rotation2d(Math.toRadians(-50)));
-    public static final Pose2d sourcePositionRight = new Pose2d(1.625, 0.825, new Rotation2d(Math.toRadians(50)));
+    public static final Pose2d sourcePositionLeft = new Pose2d(.9, 6.8, new Rotation2d(Math.toRadians(120)));
+    public static final Pose2d sourcePositionRight = new Pose2d(1.157, 1.083, new Rotation2d(Math.toRadians(-125)));
 
     // Processor positions
     public static final Pose2d processorPositionBlue = new Pose2d(5.980, 0.734, new Rotation2d(-90));

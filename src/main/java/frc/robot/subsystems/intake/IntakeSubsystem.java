@@ -3,11 +3,15 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
+import org.eclipse.jetty.util.MathUtils;
+
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -49,10 +53,13 @@ public class IntakeSubsystem extends SubsystemBase {
         SparkFlexConfig brakemode = new SparkFlexConfig();
         brakemode.idleMode(IdleMode.kBrake);
         armMotor.configure(brakemode, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        rollerMotor.configure(brakemode, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // Zero the arm
         armMotor.set(0);
         armMotor.getEncoder().setPosition(0);
+
+        angleController.setTolerance(0.1);
         //armMotor.getAlternateEncoder().setPosition(0);
 
         //setSetpoint(0);
@@ -60,6 +67,7 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Intake P", 0.1);
         // Tell PID to wrap between -180 and 180 degrees
         angleController.enableContinuousInput(-Math.PI, Math.PI);
+        SmartDashboard.putNumber("Intake Tolerance", 0.5);
     }
 
     @Override
@@ -72,6 +80,8 @@ public class IntakeSubsystem extends SubsystemBase {
         angleController.setP(SmartDashboard.getNumber("Intake P", 0.1));
         SmartDashboard.putNumber("Intake Encoder", armMotor.getEncoder().getPosition());
         SmartDashboard.putBoolean("Homed", homed);
+        SmartDashboard.putNumber("Setpoint Intake", setPoint);
+        
     }
     
     
@@ -84,28 +94,46 @@ public class IntakeSubsystem extends SubsystemBase {
         }
     }
 
+    public boolean atTolerance() {
+        return angleController.atSetpoint();
+    }
+
     public void runToPosition() {
         double currentAngle = armMotor.getEncoder().getPosition();
 
         // PID calculates required motor speed (-1 to 1)
-        double output = angleController.calculate(currentAngle, setPoint);
+        /*double output = angleController.calculate(currentAngle, setPoint);
 
+        SmartDashboard.putNumber("Intake output", output);
         // Clamp output if necessary
-        output = Math.max(-1, Math.min(1, output));
+        output = MathUtil.clamp(output, -1, 1);
+        SmartDashboard.putNumber("Intake output clamped", output);*/
+        SmartDashboard.putNumber("intake difference", Math.abs(currentAngle-setPoint));
 
-
-        driveIntakePivot(output);
+        if (Math.abs(currentAngle-setPoint) < SmartDashboard.getNumber("Intake Tolerance", 0.5)) {
+            driveIntakePivot(0.0);
+        } else if (currentAngle>setPoint){
+            driveIntakePivot(-SmartDashboard.getNumber("i upspeed", 0.1));
+        } else {
+            driveIntakePivot(SmartDashboard.getNumber("i downspeed", 0.1));
+        }
 
         if (RobotBase.isSimulation()) {
-            intakeSim.setInputVoltage(output * 12.0);
+            //intakeSim.setInputVoltage(output * 12.0);
         }
     }
 
     public void driveIntakePivot(double speed) {
         if (homeLimit.get()) {
+            if (!homed) {
+                armMotor.getEncoder().setPosition(0); 
+            }
             homed = true;
-            armMotor.set(Math.abs(speed));
-            armMotor.getEncoder().setPosition(0);
+            if (speed < 0) {
+                armMotor.set(0);
+            } else {
+                armMotor.set(speed);
+            }
         } else {
             armMotor.set(speed);
         }
@@ -145,7 +173,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public double getSetpoint(Positions position) {
         switch (position) {
             case L1:
-                return Constants.IntakeConstants.L1_INTAKE_POSITION;
+                return SmartDashboard.getNumber("L1 Position", 5);
             case L2:
                 return Constants.IntakeConstants.L2_INTAKE_POSITION;
             case L3:

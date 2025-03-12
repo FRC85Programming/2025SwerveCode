@@ -32,6 +32,7 @@ import frc.robot.commands.actions.scoring.GoToPosition;
 import frc.robot.commands.actions.scoring.Intake;
 import frc.robot.commands.actions.swerve.Climb;
 import frc.robot.commands.actions.swerve.DriveAndHoldPose;
+import frc.robot.commands.actions.swerve.DriveToPose;
 import frc.robot.commands.actions.swerve.IntakeWheels;
 import frc.robot.commands.auto.GenerateAuto;
 import frc.robot.commands.drivebase.AbsoluteDriveAdv;
@@ -171,8 +172,10 @@ public class RobotContainer
     DriverStation.silenceJoystickConnectionWarning(true);
     SmartDashboard.putNumber("Intake Wheel Speed", 0.5);
 
-    SmartDashboard.putNumber("Floor Coral Pos", 0.1);
-    SmartDashboard.putNumber("Floor Alg Pos", 0.1);
+    SmartDashboard.putNumber("L1 Position", 5);
+
+    SmartDashboard.putNumber("Floor Coral Pos", 27);
+    SmartDashboard.putNumber("Floor Alg Pos", 10.5);
 
     
     SmartDashboard.putNumber("Rot P", 5.0);
@@ -186,11 +189,11 @@ public class RobotContainer
 
     SmartDashboard.putNumber("Coral Offset", -0.3);
 
-    SmartDashboard.putNumber("X Tolerance", 0.05);
-    SmartDashboard.putNumber("X Tolerance", 0.05);
+    SmartDashboard.putNumber("X Tolerance", 0.005);
+    SmartDashboard.putNumber("X Tolerance", 0.005);
 
-    SmartDashboard.getNumber("i upspeed", 0.1);
-    SmartDashboard.getNumber("i downspeed", 0.1);
+    SmartDashboard.putNumber("i upspeed", 0.1);
+    SmartDashboard.putNumber("i downspeed", 0.1);
 
     SmartDashboard.putNumber("Reef A X", 3.062); // 180 rot
     SmartDashboard.putNumber("Reef A Y", 3.890);
@@ -239,13 +242,7 @@ public class RobotContainer
       driverXbox.back().whileTrue(drivebase.centerModulesCommand());
       driverXbox.leftBumper().onTrue(Commands.none());
       driverXbox.rightBumper().onTrue(Commands.none());
-      opXbox.leftBumper().whileTrue(new InstantCommand(() -> intake.driveIntakePivot(-SmartDashboard.getNumber("i upspeed", 0.1))));
-      opXbox.rightBumper().whileTrue(new InstantCommand(() -> intake.driveIntakePivot(SmartDashboard.getNumber("i downspeed", 0.1))));
-      opXbox.leftTrigger().whileTrue(new Intake(intake, 0.3));
-      opXbox.rightTrigger().whileTrue(new Intake(intake, -0.3));
-
-
-
+      
     }
   }
 
@@ -296,7 +293,7 @@ public class RobotContainer
                     new InstantCommand(() -> elevator.setElevatorSpeed(0.1))))),
 
                 Map.entry(2, new ParallelCommandGroup(
-                  new Intake(intake, -0.5),
+                  new Intake(intake, 0.8),
                   new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR_ALGAE, false))),
 
                 Map.entry(3, new Climb(climb, -0.6))
@@ -311,11 +308,11 @@ public class RobotContainer
         // Coral: Outtake held piece, Algae: Outtake algae, Climb: Rectract climb
         driverXbox.rightTrigger().whileTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new SequentialCommandGroup(
-                  new EndEffectorIntake(endeffector, elevator, intake, false, false))),
+                Map.entry(1, new ParallelCommandGroup(
+                  new EndEffectorIntake(endeffector, elevator, intake, false, false), new Intake(intake, 0.5))),
 
                 Map.entry(2, new ParallelCommandGroup(
-                  new Intake(intake, 0.5),
+                  new Intake(intake, -0.5),
                   new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR_ALGAE, false))),
 
                 Map.entry(3, new Climb(climb, 0.6))
@@ -331,7 +328,7 @@ public class RobotContainer
         driverXbox.leftBumper().whileTrue(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new ParallelCommandGroup(
-                  new Intake(intake, 0.5), 
+                  new Intake(intake, -0.85), 
                   new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR, false))),
 
                 Map.entry(2, new InstantCommand()),
@@ -348,7 +345,7 @@ public class RobotContainer
         // Coral: Nothing, Algae: Nothing, Climb: Manual
         driverXbox.rightBumper().whileTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new InstantCommand()),
+                Map.entry(1, new SequentialCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L1, false), new Intake(intake, 0.5))),
 
                 Map.entry(2, new InstantCommand()),
 

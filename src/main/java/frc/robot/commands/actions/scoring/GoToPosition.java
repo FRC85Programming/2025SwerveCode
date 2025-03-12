@@ -40,14 +40,17 @@ public class GoToPosition extends Command
   @Override
   public boolean isFinished()
   {
-    return false;
-
+    if (position == Positions.L1 && intake.atTolerance()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @Override
   public void end(boolean interrupted)
   {
-    if (endable || position == Positions.INTAKE_FLOOR || position == Positions.INTAKE_FLOOR_ALGAE) {
+    if (endable || position == Positions.INTAKE_FLOOR || position == Positions.INTAKE_FLOOR_ALGAE || position == Positions.L1) {
       elevator.setSetpoint(elevator.getSetpoint(Positions.HOME));
       intake.setSetpoint(intake.getSetpoint(Positions.HOME));
       endeffector.setSetpoint(endeffector.getSetpoint(Positions.HOME));
