@@ -46,6 +46,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
         setSetpoint(0);
 
         SmartDashboard.putNumber("Pivot P", 0.08);
+        SmartDashboard.putNumber("Chatter Speed", 0.13);
 
         // Tell PID to wrap between 0 and 360 degrees
         //angleController.enableContinuousInput(Math.toRadians(0), Math.toRadians(1));
@@ -102,7 +103,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     public void holdCoral() {
         if (!coralLimit.get()) {
-            rollerMotor.set(0.2);
+            rollerMotor.set(SmartDashboard.getNumber("Chatter Speed", 0.13));
         } else {
             rollerMotor.set(0.0);
         }

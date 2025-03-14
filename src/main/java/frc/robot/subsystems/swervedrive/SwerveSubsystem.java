@@ -109,6 +109,10 @@ public class SwerveSubsystem extends SubsystemBase
   double pathPlannerRotationp = 0;
   double pathPlannerRotationi = 0;
   double pathPlannerRotationd = 0;
+
+  double leftScoreOffset = Constants.CORAL_OFFSET + 0.1;
+  double rightScoreOffset = Constants.CORAL_OFFSET;
+
   
     /**
      * Initialize {@link SwerveDrive} with the directory provided.
@@ -1006,6 +1010,9 @@ public class SwerveSubsystem extends SubsystemBase
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
 
+      leftScoreOffset = SmartDashboard.getNumber("Score Offset Left", leftScoreOffset);
+      rightScoreOffset = SmartDashboard.getNumber("Score Offset Right", rightScoreOffset);
+
       // Shift back so back of robot aligns with reef
       double translatedX = x1 + (Constants.ROBOT_WIDTH / 2) * Math.cos(z1);
       double translatedY = y1 + (Constants.ROBOT_LENGTH / 2) * Math.sin(z1);
@@ -1014,18 +1021,18 @@ public class SwerveSubsystem extends SubsystemBase
       double scoringOffset = 0.1643126;
       switch (side) {
           case Left:
-              translatedX += (scoringOffset + Constants.CORAL_OFFSET + 0.2) * Math.cos(z1 - Math.PI / 2);
-              translatedY += (scoringOffset + Constants.CORAL_OFFSET + 0.2) * Math.sin(z1 - Math.PI / 2);
+              translatedX += (scoringOffset + leftScoreOffset) * Math.cos(z1 - Math.PI / 2);
+              translatedY += (scoringOffset + leftScoreOffset) * Math.sin(z1 - Math.PI / 2);
               break;
           case Right:
-              translatedX += (scoringOffset - Constants.CORAL_OFFSET) * Math.cos(z1 + Math.PI / 2);
-              translatedY += (scoringOffset - Constants.CORAL_OFFSET) * Math.sin(z1 + Math.PI / 2);
+              translatedX += (scoringOffset - rightScoreOffset) * Math.cos(z1 + Math.PI / 2);
+              translatedY += (scoringOffset - rightScoreOffset) * Math.sin(z1 + Math.PI / 2);
               break;
       }
 
       // Move away from the reef by pushBackDistance
-      translatedX += 0.2 * Math.cos(z1);
-      translatedY += 0.2 * Math.sin(z1);
+      translatedX += SmartDashboard.getNumber("Score Offset Front To Back", 0.2) * Math.cos(z1);
+      translatedY += SmartDashboard.getNumber("Score Offset Front To Back", 0.2) * Math.sin(z1);
 
       // Rotate to face away from the reef
       return new Pose2d(translatedX, translatedY, new Rotation2d(z1));

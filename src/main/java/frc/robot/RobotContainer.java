@@ -192,8 +192,8 @@ public class RobotContainer
     SmartDashboard.putNumber("X Tolerance", 0.005);
     SmartDashboard.putNumber("X Tolerance", 0.005);
 
-    SmartDashboard.putNumber("i upspeed", 0.1);
-    SmartDashboard.putNumber("i downspeed", 0.1);
+    SmartDashboard.putNumber("i upspeed", 0.2);
+    SmartDashboard.putNumber("i downspeed", 0.2);
 
     SmartDashboard.putNumber("Reef A X", 3.062); // 180 rot
     SmartDashboard.putNumber("Reef A Y", 3.890);
@@ -208,9 +208,9 @@ public class RobotContainer
     SmartDashboard.putNumber("Reef F X", 0);
     SmartDashboard.putNumber("Reef F Y", 0);
 
-
-
-
+    SmartDashboard.putNumber("Score Offset Left", -.37);
+    SmartDashboard.putNumber("Score Offset Right", -.37);
+    SmartDashboard.putNumber("Score Offset Front To Back", .2);
   }
 
   /**

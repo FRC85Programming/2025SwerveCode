@@ -118,10 +118,10 @@ public class IntakeSubsystem extends SubsystemBase {
                 atTolerance = true;
             }
         } else if (currentAngle>setPoint){
-            driveIntakePivot(-SmartDashboard.getNumber("i upspeed", 0.1));
+            driveIntakePivot(-SmartDashboard.getNumber("i upspeed", 0.2));
             atTolerance = false;
         } else {
-            driveIntakePivot(SmartDashboard.getNumber("i downspeed", 0.1));
+            driveIntakePivot(SmartDashboard.getNumber("i downspeed", 0.2));
             atTolerance = false;
         }
 
@@ -195,7 +195,7 @@ public class IntakeSubsystem extends SubsystemBase {
             case INTAKE_STATION:
                 return Constants.IntakeConstants.INTAKE_STATION_INTAKE_POSITION;
             case INTAKE_FLOOR_ALGAE:
-                return SmartDashboard.getNumber("Floor Alg Pos", 10.5);
+                return SmartDashboard.getNumber("Floor Alg Pos", 13);
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }

@@ -26,9 +26,9 @@ public class EndEffectorIntake extends Command {
     @Override
     public void execute() {
         if (!shouldIntake) {
-            endeffector.runRollers(-0.7);
+            endeffector.runRollers(-0.6);
         } else {
-            endeffector.runRollers(0.7);
+            endeffector.runRollers(0.6);
         }
     }
 
@@ -44,7 +44,7 @@ public class EndEffectorIntake extends Command {
     @Override
     public void end(boolean interrupted) {
         endeffector.runRollers(0);
-        if (!shouldIntake) {
+        if (!shouldIntake && !endable) {
             endeffector.setSetpoint(0);
             elevator.setSetpoint(0);
         }

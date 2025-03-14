@@ -35,9 +35,9 @@ public class HoldPose extends Command {
                                              0.0, 
                                              0.0);
         
-        xTranslationPID.setTolerance(0.05);
-        yTranslationPID.setTolerance(0.05);
-
+        xTranslationPID.setTolerance(0.01);
+        yTranslationPID.setTolerance(0.01);
+                                     
         rotationPID.setTolerance(0.01);
 
         rotationPID.enableContinuousInput(-Math.PI, Math.PI);
@@ -64,16 +64,6 @@ public class HoldPose extends Command {
 
     @Override
     public void execute() {
-
-        xTranslationPID.setTolerance(0.01);
-        yTranslationPID.setTolerance(0.01);
-
-        rotationPID.setTolerance(0.01);
-
-        xTranslationPID.setP(SmartDashboard.getNumber("X P", 6));
-        yTranslationPID.setP(SmartDashboard.getNumber("Y P", 6));
-
-        rotationPID.setP(SmartDashboard.getNumber("Rot P", 6));
 
         currentPose = swerve.getPose();
         
