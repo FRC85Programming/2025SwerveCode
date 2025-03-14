@@ -23,11 +23,13 @@ public class Intake extends Command
 
   private final IntakeSubsystem intakeSubsystem;
   double power;
+  int piece;
 
-  public Intake(IntakeSubsystem intakeSubsystem, double power)
+  public Intake(IntakeSubsystem intakeSubsystem, double power, int piece)
   {
     this.intakeSubsystem = intakeSubsystem;
     this.power = power;
+    this.piece = piece;
   }
 
   @Override
@@ -45,6 +47,9 @@ public class Intake extends Command
   @Override
   public void end(boolean interrupted)
   {
+    if (piece == 0) {
+      intakeSubsystem.setSetpoint(0);
+    }
     intakeSubsystem.runRollers(0);
   }
 }

@@ -26,6 +26,8 @@ public class ClimbSubsystem extends SubsystemBase {
     boolean atLimit = false;
     String selectedCage = "N";
 
+    boolean homed = false;
+
     public ClimbSubsystem() {
         SparkFlexConfig brakemode = new SparkFlexConfig();
         brakemode.idleMode(IdleMode.kBrake);
@@ -52,15 +54,16 @@ public class ClimbSubsystem extends SubsystemBase {
 
 
         if (climbLimit.get()) {
-            if (!atLimit) {
-                climbMotor.getEncoder().setPosition(0);
-            }
             atLimit = true;
         } else {
             atLimit = false;
+            if (!homed) {
+                climbMotor.getEncoder().setPosition(0);
+                homed = true;
+            }
         }
 
-        if ((climbMotor.getEncoder().getPosition() < -95 && speed < 0) || (climbMotor.getEncoder().getPosition() > 11.88 && atLimit && speed > 0)) {
+        if ((climbMotor.getEncoder().getPosition() < -87 && speed < 0) || (climbMotor.getEncoder().getPosition() > 11.88 && atLimit && speed > 0)) {
             climbMotor.set(0);
         } else {
             climbMotor.set(speed);

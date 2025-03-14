@@ -40,7 +40,7 @@ public class GoToPosition extends Command
   @Override
   public boolean isFinished()
   {
-    if (position == Positions.L1 && intake.atTolerance()) {
+    if ((position == Positions.L1 || position == Positions.ALGAE_SCORE) && intake.atTolerance()) {
       return true;
     } else {
       return false;
@@ -50,7 +50,7 @@ public class GoToPosition extends Command
   @Override
   public void end(boolean interrupted)
   {
-    if (endable || position == Positions.INTAKE_FLOOR || position == Positions.INTAKE_FLOOR_ALGAE || position == Positions.L1) {
+    if ((endable || position == Positions.INTAKE_FLOOR) && position != Positions.INTAKE_FLOOR_ALGAE && position != Positions.ALGAE_SCORE) {
       elevator.setSetpoint(elevator.getSetpoint(Positions.HOME));
       intake.setSetpoint(intake.getSetpoint(Positions.HOME));
       endeffector.setSetpoint(endeffector.getSetpoint(Positions.HOME));

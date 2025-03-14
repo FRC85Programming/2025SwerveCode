@@ -112,7 +112,7 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Intake output clamped", output);*/
         SmartDashboard.putNumber("intake difference", Math.abs(currentAngle-setPoint));
 
-        if (Math.abs(currentAngle-setPoint) < SmartDashboard.getNumber("Intake Tolerance", 0.5)) {
+        if (Math.abs(currentAngle-setPoint) < 0.5) {
             driveIntakePivot(0.0);
             if (setPoint != 0) {
                 atTolerance = true;
@@ -180,7 +180,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public double getSetpoint(Positions position) {
         switch (position) {
             case L1:
-                return SmartDashboard.getNumber("L1 Position", 5);
+                return Constants.IntakeConstants.L1_INTAKE_POSITION;
             case L2:
                 return Constants.IntakeConstants.L2_INTAKE_POSITION;
             case L3:
@@ -190,12 +190,13 @@ public class IntakeSubsystem extends SubsystemBase {
             case HOME:
                 return Constants.IntakeConstants.HOME_INTAKE_POSITION;
             case INTAKE_FLOOR:
-                //return Constants.IntakeConstants.INTAKE_FLOOR_INTAKE_POSITION;
-                return SmartDashboard.getNumber("Floor Coral Pos", 22.4);
+                return Constants.IntakeConstants.INTAKE_FLOOR_INTAKE_POSITION;
             case INTAKE_STATION:
                 return Constants.IntakeConstants.INTAKE_STATION_INTAKE_POSITION;
             case INTAKE_FLOOR_ALGAE:
-                return SmartDashboard.getNumber("Floor Alg Pos", 13);
+                return Constants.IntakeConstants.INTAKE_FLOOR_INTAKE_POSITION_ALGAE;
+            case ALGAE_SCORE:
+                return Constants.IntakeConstants.ALGAE_SCORE_POSITION;
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }

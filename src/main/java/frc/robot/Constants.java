@@ -29,7 +29,7 @@ public final class Constants
   public static final double ROBOT_WIDTH = 0.762;
   public static final double ROBOT_LENGTH = 0.7366;
   public static final double CORAL_OFFSET = -0.36;
-  public static final double CORAL_OFFSET_Y = 0.1016;
+  public static final double CORAL_OFFSET_Y = 0;
   // Both sides
   public static final double BUMPER_WIDTH = 0.1651;
 
@@ -60,14 +60,15 @@ public final class Constants
     public static final double INTAKE_ROOT_Z = 0.292;
 
     // Positions
-    public static final double L1_INTAKE_POSITION = Math.PI/6;
+    public static final double L1_INTAKE_POSITION = 7;
     public static final double L2_INTAKE_POSITION = 0.0;
     public static final double L3_INTAKE_POSITION = 0.0;
     public static final double L4_INTAKE_POSITION = 0.0;
     public static final double HOME_INTAKE_POSITION = 0.0;
-    public static double INTAKE_FLOOR_INTAKE_POSITION = SmartDashboard.getNumber("Floor Coral Pos", 27);
-    public static double INTAKE_FLOOR_INTAKE_POSITION_ALGAE = SmartDashboard.getNumber("Floor Alg Pos", 0.1);
-    public static double INTAKE_STATION_INTAKE_POSITION = 0.0;
+    public static final double INTAKE_FLOOR_INTAKE_POSITION = 27;
+    public static final double INTAKE_FLOOR_INTAKE_POSITION_ALGAE = 13;
+    public static final double INTAKE_STATION_INTAKE_POSITION = 0.0;
+    public static final double ALGAE_SCORE_POSITION = 0.01;
   }
 
   public static final class ElevatorConstants {
@@ -156,7 +157,7 @@ public final class Constants
     // Joystick Deadband
     public static final double DEADBAND        = 0.1;
     public static final double LEFT_Y_DEADBAND = 0.1;
-    public static final double RIGHT_X_DEADBAND = 0.1;
+    public static final double RIGHT_X_DEADBAND = 0.2;
     public static final double TURN_CONSTANT    = 6;
   }
 

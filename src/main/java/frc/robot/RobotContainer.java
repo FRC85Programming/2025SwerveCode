@@ -14,14 +14,17 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -168,6 +171,7 @@ public class RobotContainer
     // Configure the trigger bindings
     configureBindings();
     rebind();
+
     
     DriverStation.silenceJoystickConnectionWarning(true);
     SmartDashboard.putNumber("Intake Wheel Speed", 0.5);
@@ -293,7 +297,7 @@ public class RobotContainer
                     new InstantCommand(() -> elevator.setElevatorSpeed(0.1))))),
 
                 Map.entry(2, new ParallelCommandGroup(
-                  new Intake(intake, 0.8),
+                  new Intake(intake, 0.8,1 ),
                   new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR_ALGAE, false))),
 
                 Map.entry(3, new Climb(climb, -0.6))
@@ -309,11 +313,9 @@ public class RobotContainer
         driverXbox.rightTrigger().whileTrue(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new ParallelCommandGroup(
-                  new EndEffectorIntake(endeffector, elevator, intake, false, false), new Intake(intake, 0.5))),
+                  new EndEffectorIntake(endeffector, elevator, intake, false, false))),
 
-                Map.entry(2, new ParallelCommandGroup(
-                  new Intake(intake, -0.5),
-                  new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR_ALGAE, false))),
+                Map.entry(2, new Intake(intake, -0.8, 1)),
 
                 Map.entry(3, new Climb(climb, 0.6))
             ),
@@ -328,7 +330,7 @@ public class RobotContainer
         driverXbox.leftBumper().whileTrue(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new ParallelCommandGroup(
-                  new Intake(intake, -0.85), 
+                  new Intake(intake, -0.85, 0), 
                   new GoToPosition(elevator, endeffector, intake, Positions.INTAKE_FLOOR, false))),
 
                 Map.entry(2, new InstantCommand()),
@@ -345,9 +347,9 @@ public class RobotContainer
         // Coral: Nothing, Algae: Nothing, Climb: Manual
         driverXbox.rightBumper().whileTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new SequentialCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L1, false), new Intake(intake, 0.5))),
+                Map.entry(1, new SequentialCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L1, false), new WaitCommand(0.4), new Intake(intake, 0.5, 0))),
 
-                Map.entry(2, new InstantCommand()),
+                Map.entry(2, new ParallelCommandGroup(new InstantCommand(() -> intake.setSetpoint(0)), new Intake(intake, 0.5, 1))),
 
                 Map.entry(3, new Climb(climb, 0.3))
             ),
@@ -438,4 +440,10 @@ public class RobotContainer
       new Pose3d()});*/
         
   }
+
+  public double getRightAxis(XboxController joystick) {
+    if(Math.abs(joystick.getRightX()) < 0.2) 
+      return 0;
+    else return joystick.getRightX();
+}
 }
