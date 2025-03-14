@@ -180,6 +180,8 @@ public class ElevatorSubsystem extends SubsystemBase {
                 return Constants.ElevatorConstants.L2_ALGAE_ELEVATOR_POSITION;
             case L3_ALGAE:
                 return Constants.ElevatorConstants.L3_ALGAE_ELEVATOR_POSITION;
+            case AUTO_L4:
+                return Constants.ElevatorConstants.L4_ELEVATOR_POSITION;
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }

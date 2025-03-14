@@ -7,6 +7,7 @@ import org.photonvision.PhotonUtils;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.actions.scoring.GoToPosition;
@@ -41,9 +42,9 @@ public class PreGoToPosition extends Command {
         addRequirements(elevator, endeffector);
     }
 
+
     @Override
     public void initialize() {
-        moveSubsystemsCommand = new GoToPosition(elevator, endeffector, intake, position, true);
 
     }
 
@@ -53,8 +54,13 @@ public class PreGoToPosition extends Command {
 
         // If the robot is within a certain range of the selected scoring position, automatically move the subsystems to the scoring positions 
         if (PhotonUtils.getDistanceToPose(swerve.getPose(), scorePose.get()) < goToPositionRange) {
-            elevator.setSetpoint(elevator.getSetpoint(position));
-            endeffector.setSetpoint(endeffector.getSetpoint(position));
+            if (position == Positions.L4) {
+                elevator.setSetpoint(elevator.getSetpoint(position));
+                endeffector.setSetpoint(3.7);
+            } else {
+                elevator.setSetpoint(elevator.getSetpoint(position));
+                endeffector.setSetpoint(endeffector.getSetpoint(position));
+            }
         }
     
     }
@@ -62,6 +68,12 @@ public class PreGoToPosition extends Command {
     @Override
     public boolean isFinished() {
         return elevator.atSetpoint() && endeffector.atSetpoint();
+
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        DriverStation.reportWarning("Go To Position", false);
 
     }
 }

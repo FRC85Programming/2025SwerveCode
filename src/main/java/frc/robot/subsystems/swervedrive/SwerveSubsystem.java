@@ -55,6 +55,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.internal.DriverStationModeThread;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -389,12 +390,12 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   public Pose2d getClosestSource() {
-    double distanceToLeftSource = PhotonUtils.getDistanceToPose(getPose(), Constants.PositionConstants.sourcePositionLeft);
-    double distanceToRightSource = PhotonUtils.getDistanceToPose(getPose(), Constants.PositionConstants.sourcePositionRight);
+    double distanceToLeftSource = PhotonUtils.getDistanceToPose(getPose(), Constants.PositionConstants.sourcePositionLeftBlue);
+    double distanceToRightSource = PhotonUtils.getDistanceToPose(getPose(), Constants.PositionConstants.sourcePositionRightBlue);
     if (distanceToLeftSource > distanceToRightSource) {
-      return Constants.PositionConstants.sourcePositionRight;
+      return Constants.PositionConstants.sourcePositionRightBlue;
     } else {
-      return Constants.PositionConstants.sourcePositionLeft;
+      return Constants.PositionConstants.sourcePositionLeftBlue;
     }
   }
 
@@ -965,10 +966,19 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   public Pose2d getSelectedIntakePositionPose(String position) {
-    if (position.equals("1")) {
-      return PositionConstants.sourcePositionRight;
+    if (DriverStation.getAlliance().get() == Alliance.Blue)
+    {
+      if (position.equals("2")) {
+        return PositionConstants.sourcePositionRightBlue;
+      } else {
+        return PositionConstants.sourcePositionLeftBlue;
+      }
     } else {
-      return PositionConstants.sourcePositionLeft;
+      if (position.equals("2")) {
+        return PositionConstants.sourcePositionRightRed;
+      } else {
+        return PositionConstants.sourcePositionLeftRed;
+      }
     }
   }
 

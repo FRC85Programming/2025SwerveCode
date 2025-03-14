@@ -1,5 +1,9 @@
 package frc.robot.commands.actions.scoring;
 
+import java.security.Timestamp;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
@@ -13,6 +17,7 @@ public class EndEffectorIntake extends Command {
     ElevatorSubsystem elevator;
     IntakeSubsystem intake;
     boolean endable;
+    double startsecs = 0;
 
 
     public EndEffectorIntake (EndEffectorSubsystem endeffector, ElevatorSubsystem elevator, IntakeSubsystem intake, boolean shouldIntake, boolean endable) {
@@ -33,17 +38,27 @@ public class EndEffectorIntake extends Command {
     }
 
     @Override
+    public void initialize() {
+        startsecs = Timer.getFPGATimestamp();
+    }
+
+    @Override
     public boolean isFinished() {
-        if (shouldIntake == false) {
-            return endable && !endeffector.getCoralSwitch();
+        if (Timer.getFPGATimestamp() - startsecs > 0.3) {
+            if (shouldIntake == false) {
+                return endable && !endeffector.getCoralSwitch();
+            } else {
+                return endable && endeffector.getCoralSwitch();
+            }
         } else {
-            return endable && endeffector.getCoralSwitch();
+            return false;
         }
     }
     
     @Override
     public void end(boolean interrupted) {
         endeffector.runRollers(0);
+        DriverStation.reportWarning("Intake end", false);
         if (!shouldIntake && !endable) {
             endeffector.setSetpoint(0);
             elevator.setSetpoint(0);

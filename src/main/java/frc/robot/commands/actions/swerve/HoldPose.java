@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.leds.LedSubsystem;
@@ -38,7 +39,10 @@ public class HoldPose extends Command {
         xTranslationPID.setTolerance(0.01);
         yTranslationPID.setTolerance(0.01);
                                      
+        //rotationPID.setTolerance(0.01);
+
         rotationPID.setTolerance(0.01);
+
 
         rotationPID.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -91,7 +95,7 @@ public class HoldPose extends Command {
     
     @Override
     public void end(boolean interrupted) {
-        SmartDashboard.putBoolean("Ended Holdpose", true);
+        DriverStation.reportWarning("Hold Pose End", false);
         LedSubsystem.stopPattern();
         swerve.drive(new ChassisSpeeds(0, 0, 0));
     }

@@ -47,6 +47,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Pivot P", 0.08);
         SmartDashboard.putNumber("Chatter Speed", 0.13);
+        SmartDashboard.putNumber("L4 Angle", Constants.EndEffectorConstants.L4_PIVOT_POSITION);
 
         // Tell PID to wrap between 0 and 360 degrees
         //angleController.enableContinuousInput(Math.toRadians(0), Math.toRadians(1));
@@ -186,7 +187,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
             case L3:
                 return Constants.EndEffectorConstants.L3_PIVOT_POSITION;
             case L4:
-                return Constants.EndEffectorConstants.L4_PIVOT_POSITION;
+                return SmartDashboard.getNumber("L4 Angle", Constants.EndEffectorConstants.L4_PIVOT_POSITION);
             case HOME:
                 return Constants.EndEffectorConstants.HOME_PIVOT_POSITION;
             case INTAKE_FLOOR:
@@ -197,6 +198,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
                 return Constants.EndEffectorConstants.L2_ALGAE_PIVOT_POSITION;
             case L3_ALGAE:
                 return Constants.EndEffectorConstants.L3_ALGAE_PIVOT_POSITION;
+            case AUTO_L4:
+                return Constants.EndEffectorConstants.L4_PIVOT_POSITION;
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }

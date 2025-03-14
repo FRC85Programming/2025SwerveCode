@@ -59,8 +59,8 @@ public class GenerateAuto extends Command {
                     new WaitCommand(0.2),
                     new InstantCommand(() -> elevator.setSetpoint(0)),
                     new InstantCommand(() -> endeffector.setSetpoint(0)),
-                    new ParallelCommandGroup(new DriveAndHoldPose(swerve, () -> selectedSourcePose, true), 
-                            new EndEffectorIntake(endeffector, elevator, intake, true, true)));
+                    new DriveAndHoldPose(swerve, () -> selectedSourcePose, true), 
+                    new EndEffectorIntake(endeffector, elevator, intake, true, true));
             }
         }
         autoRoutine.schedule();
