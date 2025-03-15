@@ -18,6 +18,7 @@ public class EndEffectorIntake extends Command {
     IntakeSubsystem intake;
     boolean endable;
     double startsecs = 0;
+    double coraltime = 0;
 
 
     public EndEffectorIntake (EndEffectorSubsystem endeffector, ElevatorSubsystem elevator, IntakeSubsystem intake, boolean shouldIntake, boolean endable) {
@@ -30,6 +31,7 @@ public class EndEffectorIntake extends Command {
 
     @Override
     public void execute() {
+        checkSwitch();
         if (!shouldIntake) {
             endeffector.runRollers(-0.6);
         } else {
@@ -44,14 +46,20 @@ public class EndEffectorIntake extends Command {
 
     @Override
     public boolean isFinished() {
-        if (Timer.getFPGATimestamp() - startsecs > 0.3) {
-            if (shouldIntake == false) {
-                return endable && !endeffector.getCoralSwitch();
-            } else {
-                return endable && endeffector.getCoralSwitch();
+        if (shouldIntake == true) {
+            return endable && endeffector.getCoralSwitch() && Timer.getFPGATimestamp() - coraltime > 0.2 && coraltime > 0;
+        } else {
+            return endable && !endeffector.getCoralSwitch() && Timer.getFPGATimestamp() - startsecs > 0.3;
+        }
+    }
+
+    private void checkSwitch() {
+        if (endeffector.getCoralSwitch()) {
+            if (coraltime == 0) {
+                coraltime = Timer.getFPGATimestamp();
             }
         } else {
-            return false;
+            coraltime = 0;
         }
     }
     

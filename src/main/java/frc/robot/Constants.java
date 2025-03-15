@@ -129,13 +129,13 @@ public final class Constants
     public static final double L1_PIVOT_POSITION = 0;
     public static final double L2_PIVOT_POSITION = 4.0;
     public static final double L3_PIVOT_POSITION = 3.7; 
-    public static final double L4_PIVOT_POSITION = 3.5;
+    public static final double L4_PIVOT_POSITION = 3.4;
     public static final double L2_ALGAE_PIVOT_POSITION = 4.6;
     public static final double L3_ALGAE_PIVOT_POSITION = 4.6;
     public static final double HOME_PIVOT_POSITION = .1;
     public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
     public static final double INTAKE_STATION_PIVOT_POSITION = 0;
-    public static final double AUTO_L4_PIVOT = 3.7;
+    public static final double AUTO_L4_PIVOT = 3.5;
 
 
     public static final int CORAL_LIMIT_SWITCH = 2;
@@ -174,11 +174,12 @@ public final class Constants
     public static final Pose2d pathPlanningTestPose = new Pose2d(1.8, 3, new Rotation2d(Math.toRadians(0)));
 
     // Source positions
-    public static final Pose2d sourcePositionLeftBlue = new Pose2d(.9, 6.8, new Rotation2d(Math.toRadians(120)));
-    public static final Pose2d sourcePositionRightBlue = new Pose2d(1.157, 1.083, new Rotation2d(Math.toRadians(-125)));
+    public static final Pose2d sourcePositionLeftBlue = new Pose2d(1.139, 6.970, new Rotation2d(Math.toRadians(120)));
+    public static final Pose2d sourcePositionRightBlue = new Pose2d(1.139, 1.064, new Rotation2d(Math.toRadians(-125)));
 
-    public static final Pose2d sourcePositionRightRed = new Pose2d(16.395, 6.940, new Rotation2d(Math.toRadians(55)));
-    public static final Pose2d sourcePositionLeftRed = new Pose2d(16.376, 1.071, new Rotation2d(Math.toRadians(-55)));
+    public static final Pose2d sourcePositionRightRed = new Pose2d(16.413, 6.956, new Rotation2d(Math.toRadians(55)));
+    public static final Pose2d sourcePositionLeftRed = new Pose2d(16.413, 1.083, new Rotation2d(Math.toRadians(-55)));
+    //public static final Pose2d sourcePositionLeftRed = new Pose2d(10.33851716736436, 0.8489293051832107, new Rotation2d(Math.toRadians(-85.49693839781317)));
 
     // Processor positions
     public static final Pose2d processorPositionBlue = new Pose2d(5.980, 0.734, new Rotation2d(-90));

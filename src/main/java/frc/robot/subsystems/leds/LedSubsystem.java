@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -40,7 +41,7 @@ public class LedSubsystem extends SubsystemBase {
         iceGradient
             .scrollAtAbsoluteSpeed(MetersPerSecond.of(0.03), ledSpacing);  // Slow Scroll                                  
     private static final LEDPattern scrollingRainbow = LEDPattern.rainbow(255, 255).scrollAtAbsoluteSpeed(MetersPerSecond.of(0.1), ledSpacing);
-    private static final LEDPattern blinkingbluegreen = LEDPattern.solid(new Color("#45d4c2")).blink(Seconds.of(0.1));
+    private static final LEDPattern blinkingblueyellow = LEDPattern.solid(Color.kBlue).blink(Seconds.of(0.4)).overlayOn(LEDPattern.solid(Color.kYellow));
     private static final LEDPattern blinkingwhite = LEDPattern.solid(Color.kWhite).blink(Seconds.of(0.1));
 
 
@@ -105,7 +106,7 @@ public class LedSubsystem extends SubsystemBase {
             if (RobotContainer.getCurrentMode() == RobotStates.CORAL) {
                 return blinkingwhite;
             } else if (RobotContainer.getCurrentMode() == RobotStates.ALGAE) {
-                return blinkingbluegreen;
+                return blinkingblueyellow;
             } else if (RobotContainer.getCurrentMode() == RobotStates.CLIMB) {
                 return scrollingRainbow;
             } else {

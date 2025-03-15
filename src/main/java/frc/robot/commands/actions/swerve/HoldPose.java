@@ -41,8 +41,6 @@ public class HoldPose extends Command {
                                      
         //rotationPID.setTolerance(0.01);
 
-        rotationPID.setTolerance(0.01);
-
 
         rotationPID.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -76,6 +74,9 @@ public class HoldPose extends Command {
         double thetaSpeed = rotationPID.calculate(currentPose.getRotation().getRadians());
         
         ChassisSpeeds wheelSpeeds = new ChassisSpeeds(xSpeed, ySpeed, -thetaSpeed);
+
+        rotationPID.setTolerance(SmartDashboard.getNumber("Hold Pose Rotation Tolerance", 0.01));
+
 
         if (xTranslationPID.atSetpoint() && yTranslationPID.atSetpoint() && rotationPID.atSetpoint()) {
             LedSubsystem.startFastBlinkingGreen();

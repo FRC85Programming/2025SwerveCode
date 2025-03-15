@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix.CANifier.LEDChannel;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -220,6 +221,9 @@ public class RobotContainer
     SmartDashboard.putNumber("Score Offset Left", -.37);
     SmartDashboard.putNumber("Score Offset Right", -.37);
     SmartDashboard.putNumber("Score Offset Front To Back", .2);
+
+    SmartDashboard.putNumber("Hold Pose Rotation Tolerance", 0.01);
+
 
     CameraServer.startAutomaticCapture();
   }

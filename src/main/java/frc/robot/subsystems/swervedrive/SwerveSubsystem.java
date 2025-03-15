@@ -184,6 +184,7 @@ public class SwerveSubsystem extends SubsystemBase
                                   Constants.MAX_SPEED,
                                   new Pose2d(new Translation2d(Meter.of(2), Meter.of(0)),
                                              Rotation2d.fromDegrees(0)));
+
   }
 
   /**
@@ -204,6 +205,16 @@ public class SwerveSubsystem extends SubsystemBase
     displayMotorRPMs();
 
     publishDriveMetersPerSecond();
+
+    SmartDashboard.putNumber("Tag 1 X", aprilTagFieldLayout.getTagPose(1).get().getX());
+    SmartDashboard.putNumber("Tag 1 Y", aprilTagFieldLayout.getTagPose(1).get().getY());
+    SmartDashboard.putNumber("Tag 2 X", aprilTagFieldLayout.getTagPose(2).get().getX());
+    SmartDashboard.putNumber("Tag 2 Y", aprilTagFieldLayout.getTagPose(2).get().getY());
+    SmartDashboard.putNumber("Tag 12 X", aprilTagFieldLayout.getTagPose(12).get().getX());
+    SmartDashboard.putNumber("Tag 12 Y", aprilTagFieldLayout.getTagPose(12).get().getY());
+    SmartDashboard.putNumber("Tag 12 X", aprilTagFieldLayout.getTagPose(12).get().getX());
+    SmartDashboard.putNumber("Tag 13 X", aprilTagFieldLayout.getTagPose(12).get().getX());
+    SmartDashboard.putNumber("Tag 13 Y", aprilTagFieldLayout.getTagPose(13).get().getY());
 
     /*Logger.recordOutput("FieldSimulation/Coral", 
         SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));*/

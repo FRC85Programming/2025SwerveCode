@@ -199,7 +199,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
             case L3_ALGAE:
                 return Constants.EndEffectorConstants.L3_ALGAE_PIVOT_POSITION;
             case AUTO_L4:
-                return Constants.EndEffectorConstants.L4_PIVOT_POSITION;
+                return Constants.EndEffectorConstants.AUTO_L4_PIVOT;
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }

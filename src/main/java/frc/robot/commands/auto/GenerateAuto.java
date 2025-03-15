@@ -60,7 +60,6 @@ public class GenerateAuto extends Command {
                     new InstantCommand(() -> elevator.setSetpoint(0)),
                     new InstantCommand(() -> endeffector.setSetpoint(0)),
                     new DriveAndHoldPose(swerve, () -> selectedSourcePose, true), 
-                    new WaitCommand(0.3),
                     new EndEffectorIntake(endeffector, elevator, intake, true, true));
             }
         }
