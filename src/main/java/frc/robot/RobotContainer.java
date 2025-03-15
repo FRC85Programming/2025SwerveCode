@@ -408,6 +408,10 @@ public class RobotContainer
                 else return 3;
             }
         ));
+
+        driverXbox.pov(90).whileTrue(new InstantCommand(() -> drivebase.slowSpeed(true)));
+        driverXbox.pov(90).onFalse(new InstantCommand(() -> drivebase.slowSpeed(false)));
+
   }
 
   /**

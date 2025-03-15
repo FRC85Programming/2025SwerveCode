@@ -111,9 +111,10 @@ public class SwerveSubsystem extends SubsystemBase
   double pathPlannerRotationi = 0;
   double pathPlannerRotationd = 0;
 
-  double leftScoreOffset = Constants.CORAL_OFFSET + 0.1;
+  double leftScoreOffset = Constants.CORAL_OFFSET;
   double rightScoreOffset = Constants.CORAL_OFFSET;
 
+  double speedMultiplier = 1;
   
     /**
      * Initialize {@link SwerveDrive} with the directory provided.
@@ -646,7 +647,7 @@ public class SwerveSubsystem extends SubsystemBase
   public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity)
   {
     return run(() -> {
-      swerveDrive.driveFieldOriented(velocity.get());
+      swerveDrive.driveFieldOriented(new ChassisSpeeds(velocity.get().vxMetersPerSecond * speedMultiplier, velocity.get().vyMetersPerSecond * speedMultiplier, velocity.get().omegaRadiansPerSecond * speedMultiplier));
     });
   }
 
@@ -700,7 +701,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds)
   {
-    swerveDrive.setChassisSpeeds(chassisSpeeds);
+    swerveDrive.setChassisSpeeds(new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond*speedMultiplier, chassisSpeeds.vyMetersPerSecond*speedMultiplier, chassisSpeeds.omegaRadiansPerSecond*speedMultiplier));
   }
 
   /**
@@ -1057,5 +1058,13 @@ public class SwerveSubsystem extends SubsystemBase
 
       // Rotate to face away from the reef
       return new Pose2d(translatedX, translatedY, new Rotation2d(z1));
+  }
+
+  public void slowSpeed(boolean slow) {
+    if (slow) {
+      speedMultiplier = 0.2;
+    } else {
+      speedMultiplier = 1;
+    }
   }
 }
