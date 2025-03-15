@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.commands.actions.scoring.EndEffectorIntake;
+import frc.robot.commands.actions.scoring.GoToPosition;
 import frc.robot.commands.actions.swerve.DriveAndHoldPose;
 import frc.robot.commands.actions.swerve.DriveToPose;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
@@ -61,6 +62,21 @@ public class GenerateAuto extends Command {
                     new InstantCommand(() -> endeffector.setSetpoint(0)),
                     new DriveAndHoldPose(swerve, () -> selectedSourcePose, true), 
                     new EndEffectorIntake(endeffector, elevator, intake, true, true));
+
+                    // Potenial removal auto???
+                    /* 
+                        new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
+                        new WaitCommand(0.2),
+                        new EndEffectorIntake(endeffector, elevator, intake, false, true),
+                        new WaitCommand(0.2),
+                        new GoToPosition(elevator, endeffector, intake, Positions.L3_ALGAE, true),
+                        new ParallelRaceGroup(
+                            new EndEffectorIntake(endeffector, elevator, intake, false, false),
+                            new DriveAndHoldPose(swerve, () -> swerve.getScorePoseFromString("H"), true)));
+                    */
+
+                                    
+                    
             }
         }
         autoRoutine.schedule();
