@@ -61,7 +61,7 @@ public class IntakeSubsystem extends SubsystemBase {
         armMotor.set(0);
         armMotor.getEncoder().setPosition(0);
 
-        angleController.setTolerance(0.1);
+        angleController.setTolerance(0.5);
         //armMotor.getAlternateEncoder().setPosition(0);
 
         //setSetpoint(0);
@@ -79,7 +79,7 @@ public class IntakeSubsystem extends SubsystemBase {
         } else {
             runToPosition();
         }
-        angleController.setP(SmartDashboard.getNumber("Intake P", 0.1));
+        angleController.setP(0.2);
         SmartDashboard.putNumber("Intake Encoder", armMotor.getEncoder().getPosition());
         SmartDashboard.putBoolean("Homed", homed);
         SmartDashboard.putNumber("Setpoint Intake", setPoint);
@@ -109,10 +109,12 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Intake output", output);
         // Clamp output if necessary
         output = MathUtil.clamp(output, -1, 1);
-        SmartDashboard.putNumber("Intake output clamped", output);*/
+        SmartDashboard.putNumber("Intake output clamped", output);
         SmartDashboard.putNumber("intake difference", Math.abs(currentAngle-setPoint));
 
-        if (Math.abs(currentAngle-setPoint) < 0.5) {
+        driveIntakePivot(output);*/
+
+       if (Math.abs(currentAngle-setPoint) < 0.5) {
             driveIntakePivot(0.0);
             if (setPoint != 0) {
                 atTolerance = true;

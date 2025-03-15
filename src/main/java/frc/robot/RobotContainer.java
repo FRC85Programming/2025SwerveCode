@@ -85,6 +85,8 @@ public class RobotContainer
   private final ClimbSubsystem climb = new ClimbSubsystem();
   private static final LedSubsystem leds = new LedSubsystem();
 
+  private static RobotContainer instance;
+
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
   // controls are front-left positive
@@ -174,7 +176,8 @@ public class RobotContainer
     configureBindings();
     rebind();
 
-    
+    instance = this;
+
     DriverStation.silenceJoystickConnectionWarning(true);
     SmartDashboard.putNumber("Intake Wheel Speed", 0.5);
 
@@ -285,9 +288,13 @@ public class RobotContainer
         driverXbox.x().onTrue(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new InstantCommand(() -> setMode(RobotStates.ALGAE))),
+
                 Map.entry(2, new InstantCommand(() -> setMode(RobotStates.CORAL)))
             ),
-            () -> currentMode == RobotStates.CORAL ? 1 : 2
+            () -> { 
+                if (currentMode == RobotStates.CORAL) return 1;
+                else return 2;  
+            }
         ));
 
         // Coral: Intake with elevator correction, Algae: Intake algae, Climb: Deploy climb
@@ -428,6 +435,10 @@ public class RobotContainer
   }
 
   public static void setMode(RobotStates mode) {
+    if (mode == RobotStates.CLIMB) {
+      Command home = new ParallelCommandGroup(new InstantCommand(() -> instance.endeffector.setSetpoint(0)), new InstantCommand(() -> instance.elevator.setSetpoint(0)));
+      home.schedule();
+    }
     currentMode = mode;
   }
 

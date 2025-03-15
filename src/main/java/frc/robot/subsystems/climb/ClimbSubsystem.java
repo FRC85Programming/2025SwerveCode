@@ -63,7 +63,7 @@ public class ClimbSubsystem extends SubsystemBase {
             }
         }
 
-        if ((climbMotor.getEncoder().getPosition() < -87 && speed < 0) || (climbMotor.getEncoder().getPosition() > 20 && atLimit && speed > 0)) {
+        if ((climbMotor.getEncoder().getPosition() < -87 && speed < 0) || (climbMotor.getEncoder().getPosition() > 33 && atLimit && speed > 0)) {
             climbMotor.set(0);
         } else {
             climbMotor.set(speed);
