@@ -19,7 +19,7 @@
     "###/FMSInfo": {
       "Collapsed": "0",
       "Pos": "63,175",
-      "Size": "169,167"
+      "Size": "254,221"
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
@@ -29,27 +29,27 @@
     "###/SmartDashboard/SendableChooser[0]": {
       "Collapsed": "0",
       "Pos": "186,171",
-      "Size": "284,54"
+      "Size": "403,66"
     },
     "###/SmartDashboard/SendableChooser[1]": {
       "Collapsed": "0",
       "Pos": "102,93",
-      "Size": "284,54"
+      "Size": "403,66"
     },
     "###Addressable LEDs": {
       "Collapsed": "0",
       "Pos": "872,433",
-      "Size": "165,194"
+      "Size": "229,246"
     },
     "###FMS": {
       "Collapsed": "0",
       "Pos": "5,420",
-      "Size": "283,140"
+      "Size": "388,176"
     },
     "###Joysticks": {
       "Collapsed": "0",
       "Pos": "1122,498",
-      "Size": "796,189"
+      "Size": "1156,248"
     },
     "###Keyboard 0 Settings": {
       "Collapsed": "0",
@@ -74,12 +74,12 @@
     "###System Joysticks": {
       "Collapsed": "0",
       "Pos": "205,423",
-      "Size": "192,218"
+      "Size": "273,290"
     },
     "###Timing": {
       "Collapsed": "0",
       "Pos": "5,150",
-      "Size": "141,173"
+      "Size": "197,215"
     },
     "Debug##Default": {
       "Collapsed": "0",
@@ -89,7 +89,7 @@
     "Robot State": {
       "Collapsed": "0",
       "Pos": "6,25",
-      "Size": "99,116"
+      "Size": "137,152"
     }
   }
 }

@@ -112,21 +112,28 @@ document.addEventListener("DOMContentLoaded", function () {
         const dropdown2 = document.createElement('select');
         dropdown2.innerHTML = `<option value="1">Left Source</option>
                             <option value="2">Right Source</option>`;
+        
+        const dropdown3 = document.createElement('select');
+        dropdown3.innerHTML = `<option value="1">No Removal</option>
+                            <option value="2">Remove</option>`;
 
         selectionBox.appendChild(indicator);
         selectionBox.appendChild(dropdown1);
         selectionBox.appendChild(dropdown2);
+        selectionBox.appendChild(dropdown3);
+
 
         container.appendChild(selectionBox);
 
-        autoSelections.push({ position, dropdown1, dropdown2 });
+        autoSelections.push({ position, dropdown1, dropdown2, dropdown3 });
     }
 
     function updateAutoSelection() {
         const packagedSelections = autoSelections.map(selection => {
             const dropdown1Value = selection.dropdown1.value;
             const dropdown2Value = selection.dropdown2.value;
-            return `${selection.position.charAt(selection.position.length - 1).toUpperCase()}${dropdown1Value}${dropdown2Value}`;
+            const dropdown3Value = selection.dropdown3.value
+            return `${selection.position.charAt(selection.position.length - 1).toUpperCase()}${dropdown1Value}${dropdown2Value}${dropdown3Value}`;
         });
 
         fetch("/toggle", {

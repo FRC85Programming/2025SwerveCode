@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleSupplier;
@@ -115,6 +116,12 @@ public class SwerveSubsystem extends SubsystemBase
   double rightScoreOffset = Constants.CORAL_OFFSET;
 
   double speedMultiplier = 1;
+
+  Map<String, Positions> algaeMap = Map.ofEntries(
+    Map.entry("A", Positions.L3_ALGAE), Map.entry("B", Positions.L3_ALGAE), Map.entry("C", Positions.L2_ALGAE), Map.entry("D", Positions.L2_ALGAE),
+    Map.entry("E", Positions.L3_ALGAE), Map.entry("F", Positions.L3_ALGAE), Map.entry("G", Positions.L2_ALGAE), Map.entry("H", Positions.L2_ALGAE),
+    Map.entry("I", Positions.L3_ALGAE), Map.entry("J", Positions.L3_ALGAE), Map.entry("K", Positions.L2_ALGAE), Map.entry("L", Positions.L2_ALGAE)
+  );
   
     /**
      * Initialize {@link SwerveDrive} with the directory provided.
@@ -1066,5 +1073,23 @@ public class SwerveSubsystem extends SubsystemBase
     } else {
       speedMultiplier = 1;
     }
+  }
+
+  public String swapLetter(String letter) {
+    char ch = letter.charAt(0);
+    if (ch >= 'A' && ch <= 'L') {
+      char newCh = (ch % 2 == 0) ? (char) (ch - 1) : (char) (ch + 1);
+      String result = String.valueOf(newCh);
+      
+      SmartDashboard.putString("Selected Alt Pose", result);
+
+      return result;
+    } else {
+      return "A";
+    }
+  }
+
+  public Positions getAlgaePositionFromString(String scoreLocation) {
+    return algaeMap.get(scoreLocation);
   }
 }
