@@ -13,6 +13,6 @@ import frc.robot.util.Positions;
 
 public class ScoreSequence extends ParallelCommandGroup {
     public ScoreSequence(SwerveSubsystem swerve, ElevatorSubsystem elevator, EndEffectorSubsystem endeffector, IntakeSubsystem intake, Supplier<Pose2d> scorePose, Positions level) {
-        addCommands(new DriveAndHoldPose(swerve, scorePose, true), new PreGoToPosition(swerve, elevator, endeffector, intake, scorePose, level));
+        addCommands(new DriveAndHoldPose(swerve, scorePose, true) /*new PreGoToPosition(swerve, elevator, endeffector, intake, scorePose, level)*/);
     }
 }

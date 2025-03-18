@@ -53,23 +53,23 @@ public class GenerateAuto extends Command {
             Pose2d selectedReefPose = swerve.getScorePoseFromString(scorePoseString);
             Pose2d selectedSourcePose = swerve.getSelectedIntakePositionPose(autoScorePositions[i].substring(2, 3));
             Positions level = swerve.getLevelFromString(autoScorePositions[i].substring(1, 2));
-            boolean remove = autoScorePositions[i].substring(3,4) == "1" ? false : true;
+            boolean remove = autoScorePositions[i].substring(3,4).equals("1") ? false : true;
 
             if (selectedReefPose != null && selectedSourcePose != null && level != null) {
                 autoRoutine.addCommands(
                     new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
                     new WaitCommand(0.2),
-                    new EndEffectorIntake(endeffector, elevator, intake, false, true),
+                    //new EndEffectorIntake(endeffector, elevator, intake, false, true),
                     new WaitCommand(0.2),
                     new ConditionalCommand(new SequentialCommandGroup(
-                        new GoToPosition(elevator, endeffector, intake, swerve.getAlgaePositionFromString(scorePoseString), true), 
+                        //new GoToPosition(elevator, endeffector, intake, swerve.getAlgaePositionFromString(scorePoseString), true), 
                         new ParallelRaceGroup(
-                            new EndEffectorIntake(endeffector, elevator, intake, false, false),
+                            //new EndEffectorIntake(endeffector, elevator, intake, false, false),
                             new DriveAndHoldPose(swerve, () -> swerve.getScorePoseFromString(swerve.swapLetter(scorePoseString)), true))), new InstantCommand(), () -> remove),
                     new InstantCommand(() -> elevator.setSetpoint(0)),
                     new InstantCommand(() -> endeffector.setSetpoint(0)),
-                    new DriveAndHoldPose(swerve, () -> selectedSourcePose, true), 
-                    new EndEffectorIntake(endeffector, elevator, intake, true, true));
+                    new DriveAndHoldPose(swerve, () -> selectedSourcePose, true));
+                    //new EndEffectorIntake(endeffector, elevator, intake, true, true));
 
                     // Potenial removal auto???
                     /* 
