@@ -218,14 +218,15 @@ public class RobotContainer
     SmartDashboard.putNumber("Reef F X", 0);
     SmartDashboard.putNumber("Reef F Y", 0);
 
-    SmartDashboard.putNumber("Score Offset Left", -.37);
-    SmartDashboard.putNumber("Score Offset Right", -.37);
-    SmartDashboard.putNumber("Score Offset Front To Back", .2);
+    SmartDashboard.putNumber("Score Offset Left", -.44);
+    SmartDashboard.putNumber("Score Offset Right", -.44);
+    SmartDashboard.putNumber("Score Offset Front To Back", .13);
 
     SmartDashboard.putNumber("Hold Pose Rotation Tolerance", 0.01);
 
-
-    CameraServer.startAutomaticCapture();
+    SmartDashboard.putNumber("Transation X P", 10);
+    SmartDashboard.putNumber("Transation Y P", 10);
+    SmartDashboard.putNumber("Rotation P", 10);
   }
 
   /**
@@ -376,7 +377,15 @@ public class RobotContainer
         ));
 
         // Coral: Removal of algae, Else: Nothing
-        driverXbox.pov(0).onTrue(new SelectCommand(
+        driverXbox.pov(0).whileTrue(new SelectCommand(
+            Map.ofEntries(
+                Map.entry(1, new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L2, false), new EndEffectorIntake(endeffector, elevator, intake, true, false))),
+                Map.entry(2, new InstantCommand())
+            ),
+            () -> currentMode == RobotStates.CORAL ? 1 : 2
+        ));
+
+        driverXbox.pov(0).onFalse(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L3, false), new EndEffectorIntake(endeffector, elevator, intake, true, false))),
                 Map.entry(2, new InstantCommand())

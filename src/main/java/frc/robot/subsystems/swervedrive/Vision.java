@@ -351,10 +351,10 @@ public class Vision
      * Front Camera
      */
     BACK_CAM("camera-back",// 12.125 up, y 14.5, 10.5 x
-             new Rotation3d(180, Units.degreesToRadians(3), Units.degreesToRadians(180)),
+             new Rotation3d(180, Units.degreesToRadians(-1), Units.degreesToRadians(176)),
              new Translation3d(Units.inchesToMeters(-14.5),
-                               Units.inchesToMeters(-10.5),
-                               Units.inchesToMeters(12.125)),
+                               Units.inchesToMeters(-10.4375),
+                               Units.inchesToMeters(12.5)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
     /*BACK2_CAM("camera-back2",
              new Rotation3d(0, Units.degreesToRadians(-26), Units.degreesToRadians(180)),

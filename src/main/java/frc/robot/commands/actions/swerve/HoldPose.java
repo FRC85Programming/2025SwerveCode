@@ -66,6 +66,9 @@ public class HoldPose extends Command {
 
     @Override
     public void execute() {
+        xTranslationPID.setP(SmartDashboard.getNumber("Transation X P", 10));
+        yTranslationPID.setP(SmartDashboard.getNumber("Transation Y P", 10));
+        rotationPID.setP(SmartDashboard.getNumber("Rotation P", 10));
 
         currentPose = swerve.getPose();
         

@@ -16,6 +16,7 @@ import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.scoring.GoToPosition;
 import frc.robot.commands.actions.swerve.DriveAndHoldPose;
 import frc.robot.commands.actions.swerve.DriveToPose;
+import frc.robot.commands.actions.swerve.ShakeCommand;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -58,33 +59,19 @@ public class GenerateAuto extends Command {
             if (selectedReefPose != null && selectedSourcePose != null && level != null) {
                 autoRoutine.addCommands(
                     new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
-                    new WaitCommand(0.2),
-                    //new EndEffectorIntake(endeffector, elevator, intake, false, true),
-                    new WaitCommand(0.2),
+                    new WaitCommand(0.1),
+                    new EndEffectorIntake(endeffector, elevator, intake, false, true),
                     new ConditionalCommand(new SequentialCommandGroup(
-                        //new GoToPosition(elevator, endeffector, intake, swerve.getAlgaePositionFromString(scorePoseString), true), 
+                        new GoToPosition(elevator, endeffector, intake, swerve.getAlgaePositionFromString(scorePoseString), true), 
                         new ParallelRaceGroup(
-                            //new EndEffectorIntake(endeffector, elevator, intake, false, false),
+                            new EndEffectorIntake(endeffector, elevator, intake, false, false),
                             new DriveAndHoldPose(swerve, () -> swerve.getScorePoseFromString(swerve.swapLetter(scorePoseString)), true))), new InstantCommand(), () -> remove),
                     new InstantCommand(() -> elevator.setSetpoint(0)),
                     new InstantCommand(() -> endeffector.setSetpoint(0)),
-                    new DriveAndHoldPose(swerve, () -> selectedSourcePose, true));
-                    //new EndEffectorIntake(endeffector, elevator, intake, true, true));
-
-                    // Potenial removal auto???
-                    /* 
-                        new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
-                        new WaitCommand(0.2),
-                        new EndEffectorIntake(endeffector, elevator, intake, false, true),
-                        new WaitCommand(0.2),
-                        new GoToPosition(elevator, endeffector, intake, Positions.L3_ALGAE, true),
-                        new ParallelRaceGroup(
-                            new EndEffectorIntake(endeffector, elevator, intake, false, false),
-                            new DriveAndHoldPose(swerve, () -> swerve.getScorePoseFromString("H"), true)));
-                    */
-
-                                    
-                    
+                    new DriveToPose(swerve, () -> selectedSourcePose),
+                    new ParallelRaceGroup(
+                        new EndEffectorIntake(endeffector, elevator, intake, true, true),
+                        new SequentialCommandGroup(new WaitCommand(2), new ShakeCommand(swerve))));       
             }
         }
         autoRoutine.schedule();

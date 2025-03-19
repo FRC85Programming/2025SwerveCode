@@ -117,6 +117,8 @@ public class SwerveSubsystem extends SubsystemBase
 
   double speedMultiplier = 1;
 
+  boolean updatePathPlannerPid = false;
+
   Map<String, Positions> algaeMap = Map.ofEntries(
     Map.entry("A", Positions.L3_ALGAE), Map.entry("B", Positions.L3_ALGAE), Map.entry("C", Positions.L2_ALGAE), Map.entry("D", Positions.L2_ALGAE),
     Map.entry("E", Positions.L3_ALGAE), Map.entry("F", Positions.L3_ALGAE), Map.entry("G", Positions.L2_ALGAE), Map.entry("H", Positions.L2_ALGAE),
@@ -165,6 +167,16 @@ public class SwerveSubsystem extends SubsystemBase
     swerveDrive.setModuleEncoderAutoSynchronize(false,
                                                 1); // Enable if you want to resynchronize your absolute encoders and motor encoders periodically when they are not moving.
     swerveDrive.pushOffsetsToEncoders(); // Set the absolute encoder to be used over the internal encoder and push the offsets onto it. Throws warning if not possible
+
+    SmartDashboard.putNumber("Pathplanner Translate P", 2.5);
+    SmartDashboard.putNumber("Pathplanner Transalte I", 0.0);
+    SmartDashboard.putNumber("Pathplanner Translate D", 0.1);
+
+    SmartDashboard.putNumber("Pathplanner Rotation P", 5.0);
+    SmartDashboard.putNumber("Pathplanner Rotation I", 0.0);
+    SmartDashboard.putNumber("Pathplanner Rotation D", 0.0);
+
+    SmartDashboard.putBoolean("Update PID", false);
     
     //swerveDrive.stopOdometryThread(); // Part of the visionDriveTest usage to switch on vision mode
     setupPhotonVision();
@@ -206,6 +218,12 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
+    updatePathPlannerPid = SmartDashboard.getBoolean("Update PID", false);
+
+    if (updatePathPlannerPid) {
+      setupPathPlanner();
+      updatePathPlannerPid = SmartDashboard.putBoolean("Update PID", true);
+    }
 
     //swerveDrive.updateOdometry();
     vision.updatePoseEstimation(swerveDrive);
@@ -247,18 +265,14 @@ public class SwerveSubsystem extends SubsystemBase
 
       final boolean enableFeedforward = false;
       // Configure AutoBuilder last
-      if (Robot.isSimulation()) {
-        pathPlannerXp = 5;
+      pathPlannerXp = SmartDashboard.getNumber("Pathplanner Translate P", 2.5);
+      pathPlannerXd =  SmartDashboard.getNumber("Pathplanner Transalte I", 0.0);
+      pathPlannerXi = SmartDashboard.getNumber("Pathplanner Translate D", 0.1);
 
-        pathPlannerRotationp = 5;
-      } else {
-        pathPlannerXp = 2.5;
-        pathPlannerXd =  0.0;
-        pathPlannerXi = 0.1;
+      pathPlannerRotationp = SmartDashboard.getNumber("Pathplanner Rotation P", 5.0);
+      pathPlannerRotationi = SmartDashboard.getNumber("Pathplanner Rotation I", 0.0);
+      pathPlannerRotationd = SmartDashboard.getNumber("Pathplanner Rotation D", 0.0);
 
-        pathPlannerRotationp = 5.0;
-        pathPlannerRotationi = 0.0;
-      }
       AutoBuilder.configure(
           this::getPose,
           // Robot pose supplier
@@ -327,7 +341,9 @@ public class SwerveSubsystem extends SubsystemBase
 
     //Preload PathPlanner Path finding
     // IF USING CUSTOM PATHFINDER ADD BEFORE THIS LINE
-    PathfindingCommand.warmupCommand().schedule();
+    if (!AutoBuilder.isPathfindingConfigured()) {
+      PathfindingCommand.warmupCommand().schedule();
+    }
   }
 
   /**
@@ -391,7 +407,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
-        swerveDrive.getMaximumChassisVelocity()*0.50, 3,
+        swerveDrive.getMaximumChassisVelocity(), 3.5,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
 
     // Since AutoBuilder is configured, we can use it to build pathfinding commands
@@ -1060,8 +1076,8 @@ public class SwerveSubsystem extends SubsystemBase
       }
 
       // Move away from the reef by pushBackDistance
-      translatedX += SmartDashboard.getNumber("Score Offset Front To Back", 0.2) * Math.cos(z1);
-      translatedY += SmartDashboard.getNumber("Score Offset Front To Back", 0.2) * Math.sin(z1);
+      translatedX += SmartDashboard.getNumber("Score Offset Front To Back", 0.13) * Math.cos(z1);
+      translatedY += SmartDashboard.getNumber("Score Offset Front To Back", 0.13) * Math.sin(z1);
 
       // Rotate to face away from the reef
       return new Pose2d(translatedX, translatedY, new Rotation2d(z1));

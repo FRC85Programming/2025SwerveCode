@@ -61,8 +61,13 @@ public class PreGoToPosition extends Command {
                 elevator.setSetpoint(elevator.getSetpoint(position));
                 endeffector.setSetpoint(endeffector.getSetpoint(position));
             }
+        } else if (PhotonUtils.getDistanceToPose(swerve.getPose(), scorePose.get()) < goToPositionRange+1){
+            if (position == Positions.L4) {
+                endeffector.setSetpoint(endeffector.getSetpoint(Positions.AUTO_L4));
+            } else {
+                endeffector.setSetpoint(endeffector.getSetpoint(position));
+            }
         }
-    
     }
 
     @Override

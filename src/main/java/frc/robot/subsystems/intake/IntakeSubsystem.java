@@ -70,6 +70,7 @@ public class IntakeSubsystem extends SubsystemBase {
         // Tell PID to wrap between -180 and 180 degrees
         angleController.enableContinuousInput(-Math.PI, Math.PI);
         SmartDashboard.putNumber("Intake Tolerance", 0.5);
+        SmartDashboard.putNumber("Pivot Home", 0);
     }
 
     @Override
@@ -190,7 +191,7 @@ public class IntakeSubsystem extends SubsystemBase {
             case L4:
                 return Constants.IntakeConstants.L4_INTAKE_POSITION;
             case HOME:
-                return Constants.IntakeConstants.HOME_INTAKE_POSITION;
+                return SmartDashboard.getNumber("Pivot Home", 0);
             case INTAKE_FLOOR:
                 return Constants.IntakeConstants.INTAKE_FLOOR_INTAKE_POSITION;
             case INTAKE_STATION:
