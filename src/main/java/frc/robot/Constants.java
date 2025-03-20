@@ -167,6 +167,7 @@ public final class Constants
 
   public static class ClimbConstants {
     public static final int CLIMB_LIMIT_ID = 6;
+    public static final int LATCH_LIMIT_ID = 8;
   }
 
   public static class PositionConstants

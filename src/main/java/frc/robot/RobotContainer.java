@@ -224,8 +224,7 @@ public class RobotContainer
 
     SmartDashboard.putNumber("Hold Pose Rotation Tolerance", 0.01);
 
-
-    CameraServer.startAutomaticCapture();
+    //CameraServer.startAutomaticCapture();
   }
 
   /**
