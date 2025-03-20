@@ -1,21 +1,16 @@
 package frc.robot.subsystems.elevator;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SmartMotionConfigAccessor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -98,7 +93,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public double getElevatorPosition() {
         if (!Robot.isSimulation()) {
-            return elevatorEncoder.get()*0.813/11786;
+            return -elevatorEncoder.get()*0.813/11786;
         } else {
             return elevatorSim.getElevatorSimPosition();
         }
@@ -150,7 +145,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public int getElevatorEncoder() {
         if (!Robot.isSimulation()) {
-            return elevatorEncoder.get();
+            return -elevatorEncoder.get();
         } else {
             return elevatorSim.getSimEncoder();
         }

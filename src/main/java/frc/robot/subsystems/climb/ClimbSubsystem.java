@@ -21,6 +21,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     private SparkFlex climbMotor = new SparkFlex(57, MotorType.kBrushless);
     private DigitalInput climbLimit = new DigitalInput(Constants.ClimbConstants.CLIMB_LIMIT_ID);
+    private DigitalInput latchLimit = new DigitalInput(Constants.ClimbConstants.LATCH_LIMIT_ID);
 
     double position = 0;
     boolean atLimit = false;
@@ -39,6 +40,7 @@ public class ClimbSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Deep climb enc", climbMotor.getEncoder().getPosition());
+        SmartDashboard.putBoolean("Deep climb latch limit", latchLimit.get());
         checkClimbMode();
 
     }
@@ -48,10 +50,8 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     public void setClimbSpeed(double speed) {
-        climbMotor.set(speed);
 
         //-95.083427
-
 
         if (climbLimit.get()) {
             atLimit = true;
@@ -63,13 +63,11 @@ public class ClimbSubsystem extends SubsystemBase {
             }
         }
 
-        if ((climbMotor.getEncoder().getPosition() < -87 && speed < 0) || (climbMotor.getEncoder().getPosition() > 33 && atLimit && speed > 0)) {
+        if ((climbMotor.getEncoder().getPosition() < -87 && speed < 0) || (climbMotor.getEncoder().getPosition() > 33 && speed > 0) || (climbMotor.getEncoder().getPosition() > 0 && latchLimit.get())) {
             climbMotor.set(0);
         } else {
             climbMotor.set(speed);
         }
-        
-  
     }
 
     public Pose2d getCagePoseFromString(String cage) {
