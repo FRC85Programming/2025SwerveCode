@@ -71,6 +71,7 @@ public class IntakeSubsystem extends SubsystemBase {
         angleController.enableContinuousInput(-Math.PI, Math.PI);
         SmartDashboard.putNumber("Intake Tolerance", 0.5);
         SmartDashboard.putNumber("Pivot Home", 0);
+        SmartDashboard.putNumber("Intake Coral", 25);
     }
 
     @Override
@@ -193,7 +194,7 @@ public class IntakeSubsystem extends SubsystemBase {
             case HOME:
                 return SmartDashboard.getNumber("Pivot Home", 0);
             case INTAKE_FLOOR:
-                return Constants.IntakeConstants.INTAKE_FLOOR_INTAKE_POSITION;
+                return SmartDashboard.getNumber("Intake Coral", 25);
             case INTAKE_STATION:
                 return Constants.IntakeConstants.INTAKE_STATION_INTAKE_POSITION;
             case INTAKE_FLOOR_ALGAE:

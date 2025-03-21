@@ -28,6 +28,7 @@ public class ClimbSubsystem extends SubsystemBase {
     String selectedCage = "N";
 
     boolean homed = false;
+    boolean deployed = false;
 
     public ClimbSubsystem() {
         SparkFlexConfig brakemode = new SparkFlexConfig();
@@ -63,11 +64,19 @@ public class ClimbSubsystem extends SubsystemBase {
             }
         }
 
-        if ((climbMotor.getEncoder().getPosition() < -87 && speed < 0) || (climbMotor.getEncoder().getPosition() > 33 && speed > 0) || (climbMotor.getEncoder().getPosition() > 0 && latchLimit.get())) {
+        if ((climbMotor.getEncoder().getPosition() < -87 && speed < 0)) {
+            climbMotor.set(0);
+            deployed = true;
+        } else if ((climbMotor.getEncoder().getPosition() > 33 && speed > 0) || (climbMotor.getEncoder().getPosition() > 0 && latchLimit.get())) {
             climbMotor.set(0);
         } else {
             climbMotor.set(speed);
+            deployed = false;
         }
+    }
+
+    public boolean isDeployed() {
+        return deployed;
     }
 
     public Pose2d getCagePoseFromString(String cage) {

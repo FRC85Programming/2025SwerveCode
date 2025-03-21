@@ -50,7 +50,7 @@ public class PreGoToPosition extends Command {
 
     @Override
     public void execute() {
-        goToPositionRange = SmartDashboard.getNumber("Go To Position Range", 1);
+        goToPositionRange = 1.6;
 
         // If the robot is within a certain range of the selected scoring position, automatically move the subsystems to the scoring positions 
         if (PhotonUtils.getDistanceToPose(swerve.getPose(), scorePose.get()) < goToPositionRange) {

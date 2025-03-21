@@ -29,7 +29,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     private DutyCycleEncoder pivotAbsoluteEncoder = new DutyCycleEncoder(Constants.EndEffectorConstants.PIVOT_ENCODER);
 
-    private final PIDController angleController = new PIDController(0.1, 0, 0.0);
+    private final PIDController angleController = new PIDController(0.17, 0, 0.0);
 
     // Sim for intake arm
     private final EndEffectorSimulation endeffectorSim = new EndEffectorSimulation(this);
@@ -45,12 +45,14 @@ public class EndEffectorSubsystem extends SubsystemBase {
         endeffectorSim.setPivotEncoderSim(0.945);
         setSetpoint(0);
 
-        SmartDashboard.putNumber("Pivot P", 0.08);
+        SmartDashboard.putNumber("Pivot P", 0.15);
         SmartDashboard.putNumber("Chatter Speed", 0.13);
         SmartDashboard.putNumber("L4 Angle", Constants.EndEffectorConstants.L4_PIVOT_POSITION);
 
         // Tell PID to wrap between 0 and 360 degrees
         //angleController.enableContinuousInput(Math.toRadians(0), Math.toRadians(1));
+        angleController.setP(0.17);
+
     }
 
     @Override
@@ -62,8 +64,6 @@ public class EndEffectorSubsystem extends SubsystemBase {
         if (coralLimit.get()) {
             hasCoral = true;
         }
-
-        angleController.setP(0.1);
         SmartDashboard.putNumber("Arm Radians", getEncoderValueAsRadians());
         SmartDashboard.putNumber("Pivot Rotation", pivotAbsoluteEncoder.get());
         //SmartDashboard.putNumber("Simencoder", endeffectorSim.getPivotEncoderSim());
@@ -187,7 +187,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
             case L3:
                 return Constants.EndEffectorConstants.L3_PIVOT_POSITION;
             case L4:
-                return SmartDashboard.getNumber("L4 Angle", Constants.EndEffectorConstants.L4_PIVOT_POSITION);
+                return 3.5;
             case HOME:
                 return Constants.EndEffectorConstants.HOME_PIVOT_POSITION;
             case INTAKE_FLOOR:

@@ -265,9 +265,9 @@ public class SwerveSubsystem extends SubsystemBase
 
       final boolean enableFeedforward = false;
       // Configure AutoBuilder last
-      pathPlannerXp = SmartDashboard.getNumber("Pathplanner Translate P", 2.5);
-      pathPlannerXd =  SmartDashboard.getNumber("Pathplanner Transalte I", 0.0);
-      pathPlannerXi = SmartDashboard.getNumber("Pathplanner Translate D", 0.1);
+      pathPlannerXp = 2.5;
+      pathPlannerXd =  0;
+      pathPlannerXi = 0.1;
 
       pathPlannerRotationp = SmartDashboard.getNumber("Pathplanner Rotation P", 5.0);
       pathPlannerRotationi = SmartDashboard.getNumber("Pathplanner Rotation I", 0.0);
@@ -407,7 +407,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
-        swerveDrive.getMaximumChassisVelocity(), 3.5,
+        swerveDrive.getMaximumChassisVelocity()*0.65, 2.5,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
 
     // Since AutoBuilder is configured, we can use it to build pathfinding commands
@@ -1055,8 +1055,8 @@ public class SwerveSubsystem extends SubsystemBase
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
 
-      leftScoreOffset = SmartDashboard.getNumber("Score Offset Left", leftScoreOffset);
-      rightScoreOffset = SmartDashboard.getNumber("Score Offset Right", rightScoreOffset);
+      leftScoreOffset = -0.36;
+      rightScoreOffset = -0.36;
 
       // Shift back so back of robot aligns with reef
       double translatedX = x1 + (Constants.ROBOT_WIDTH / 2) * Math.cos(z1);
@@ -1076,8 +1076,8 @@ public class SwerveSubsystem extends SubsystemBase
       }
 
       // Move away from the reef by pushBackDistance
-      translatedX += SmartDashboard.getNumber("Score Offset Front To Back", 0.13) * Math.cos(z1);
-      translatedY += SmartDashboard.getNumber("Score Offset Front To Back", 0.13) * Math.sin(z1);
+      translatedX += 0.12 * Math.cos(z1);
+      translatedY += 0.12 * Math.sin(z1);
 
       // Rotate to face away from the reef
       return new Pose2d(translatedX, translatedY, new Rotation2d(z1));

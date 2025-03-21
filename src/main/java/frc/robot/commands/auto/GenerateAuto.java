@@ -16,7 +16,7 @@ import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.scoring.GoToPosition;
 import frc.robot.commands.actions.swerve.DriveAndHoldPose;
 import frc.robot.commands.actions.swerve.DriveToPose;
-import frc.robot.commands.actions.swerve.ShakeCommand;
+import frc.robot.commands.actions.swerve.HoldPose;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -69,9 +69,7 @@ public class GenerateAuto extends Command {
                     new InstantCommand(() -> elevator.setSetpoint(0)),
                     new InstantCommand(() -> endeffector.setSetpoint(0)),
                     new DriveToPose(swerve, () -> selectedSourcePose),
-                    new ParallelRaceGroup(
-                        new EndEffectorIntake(endeffector, elevator, intake, true, true),
-                        new SequentialCommandGroup(new WaitCommand(2), new ShakeCommand(swerve))));       
+                    new EndEffectorIntake(endeffector, elevator, intake, true, true));   
             }
         }
         autoRoutine.schedule();
