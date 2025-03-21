@@ -146,7 +146,7 @@ public class SwerveSubsystem extends SubsystemBase
       System.out.println("\t\"drive\": {\"factor\": " + driveConversionFactor + " }");
       System.out.println("}");
 
-      SmartDashboard.putNumber("Alignment", 0.37);
+      SmartDashboard.putNumber("Alignment", 0.39);
 
     
     try
@@ -170,7 +170,7 @@ public class SwerveSubsystem extends SubsystemBase
                                                 1); // Enable if you want to resynchronize your absolute encoders and motor encoders periodically when they are not moving.
     swerveDrive.pushOffsetsToEncoders(); // Set the absolute encoder to be used over the internal encoder and push the offsets onto it. Throws warning if not possible
 
-    SmartDashboard.putNumber("Pathplanner Translate P", 2.5);
+    SmartDashboard.putNumber("Pathplanner Translate P", 3.5);
     SmartDashboard.putNumber("Pathplanner Transalte I", 0.0);
     SmartDashboard.putNumber("Pathplanner Translate D", 0.1);
 
@@ -178,7 +178,7 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putNumber("Pathplanner Rotation I", 0.0);
     SmartDashboard.putNumber("Pathplanner Rotation D", 0.0);
 
-    SmartDashboard.putNumber("Pushback Distance", 0.25);
+    SmartDashboard.putNumber("Pushback Distance", 0.12);
 
 
     SmartDashboard.putBoolean("Update PID", false);
@@ -269,9 +269,9 @@ public class SwerveSubsystem extends SubsystemBase
 
       final boolean enableFeedforward = false;
       // Configure AutoBuilder last
-      pathPlannerXp = 2.5;
-      pathPlannerXd =  0;
-      pathPlannerXi = 0.1;
+      pathPlannerXp = SmartDashboard.getNumber("Pathplanner Translate P", 3.5);
+      pathPlannerXi = SmartDashboard.getNumber("Pathplanner Translate I", 0.0);
+      pathPlannerXd =  SmartDashboard.getNumber("Pathplanner Translate D", 0.1);;
 
       pathPlannerRotationp = SmartDashboard.getNumber("Pathplanner Rotation P", 5.0);
       pathPlannerRotationi = SmartDashboard.getNumber("Pathplanner Rotation I", 0.0);
@@ -1119,8 +1119,8 @@ public class SwerveSubsystem extends SubsystemBase
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
 
-      leftScoreOffset = -SmartDashboard.getNumber("Alignment", 0.37);
-      rightScoreOffset = -SmartDashboard.getNumber("Alignment", 0.37);
+      leftScoreOffset = -SmartDashboard.getNumber("Alignment", 0.39);
+      rightScoreOffset = -SmartDashboard.getNumber("Alignment", 0.39);
 
       // Shift back so back of robot aligns with reef
       double translatedX = x1 + (Constants.ROBOT_WIDTH / 2) * Math.cos(z1);
@@ -1140,8 +1140,8 @@ public class SwerveSubsystem extends SubsystemBase
       }
 
       // Move away from the reef by pushBackDistance
-      translatedX += 0.12 * Math.cos(z1);
-      translatedY += 0.12 * Math.sin(z1);
+      translatedX += SmartDashboard.getNumber("Pushback Distance", 0.12) * Math.cos(z1);
+      translatedY += SmartDashboard.getNumber("Pushback Distance", 0.12) * Math.sin(z1);
 
       // Rotate to face away from the reef
       return new Pose2d(translatedX, translatedY, new Rotation2d(z1));
@@ -1173,8 +1173,8 @@ public class SwerveSubsystem extends SubsystemBase
     }
 
     // Move away from the reef by pushBackDistance
-    translatedX += 0.12 + SmartDashboard.getNumber("Pushback Distance", 0.25) * Math.cos(z1);
-    translatedY += 0.12 + SmartDashboard.getNumber("Pushback Distance", 0.25) * Math.sin(z1);
+    translatedX += 0.12 + SmartDashboard.getNumber("Pushback Distance", 0.5) * Math.cos(z1);
+    translatedY += 0.12 + SmartDashboard.getNumber("Pushback Distance", 0.5) * Math.sin(z1);
 
     // Rotate to face away from the reef
     return new Pose2d(translatedX, translatedY, new Rotation2d(z1));

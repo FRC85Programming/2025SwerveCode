@@ -379,17 +379,9 @@ public class RobotContainer
         ));
 
         // Coral: Removal of algae, Else: Nothing
-        driverXbox.pov(0).whileTrue(new SelectCommand(
+        driverXbox.pov(0).onTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L2, false))),
-                Map.entry(2, new InstantCommand())
-            ),
-            () -> currentMode == RobotStates.CORAL ? 1 : 2
-        ));
-
-        driverXbox.pov(0).onFalse(new SelectCommand(
-            Map.ofEntries(
-                Map.entry(1, new SequentialCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L3, true), new GoToPosition(elevator, endeffector, intake, Positions.HOME, true))),
+                Map.entry(1, new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L3, false), new EndEffectorIntake(endeffector, elevator, intake, true, false))),
                 Map.entry(2, new InstantCommand())
             ),
             () -> currentMode == RobotStates.CORAL ? 1 : 2
@@ -409,9 +401,9 @@ public class RobotContainer
             Map.ofEntries(
                 Map.entry(1, new DriveAndHoldPose(drivebase, () -> drivebase.getScorePoseFromString(drivebase.getWebServer().getSelectedScorePosition()), false)),
 
-                Map.entry(2, new DriveAndHoldPose(drivebase, () -> intake.getCurrentProcessor(), false)),
+                Map.entry(2, new DriveToPose(drivebase, () -> intake.getCurrentProcessor())),
 
-                Map.entry(3, new DriveAndHoldPose(drivebase, () -> climb.getCagePoseFromString(drivebase.getWebServer().getSelectedCagePosition()), false))
+                Map.entry(3, new DriveToPose(drivebase, () -> climb.getCagePoseFromString(drivebase.getWebServer().getSelectedCagePosition())))
             ),
             () -> { 
                 if (currentMode == RobotStates.CORAL) return 1;

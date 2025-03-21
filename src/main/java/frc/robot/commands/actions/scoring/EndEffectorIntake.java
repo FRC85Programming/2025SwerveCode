@@ -66,6 +66,7 @@ public class EndEffectorIntake extends Command {
     @Override
     public void end(boolean interrupted) {
         endeffector.runRollers(0);
+        
         DriverStation.reportWarning("Intake end", false);
         if (!shouldIntake && !endable) {
             endeffector.setSetpoint(0);

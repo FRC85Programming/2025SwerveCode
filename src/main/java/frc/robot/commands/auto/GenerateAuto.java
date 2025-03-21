@@ -60,7 +60,7 @@ public class GenerateAuto extends Command {
             if (selectedReefPose != null && selectedSourcePose != null && level != null) {
                 autoRoutine.addCommands(
                     new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPosePushback, () -> selectedReefPose, level),
-                    new WaitCommand(0.2),
+                    new WaitCommand(0.1),
                     new EndEffectorIntake(endeffector, elevator, intake, false, true),
                     new ConditionalCommand(new SequentialCommandGroup(
                         new GoToPosition(elevator, endeffector, intake, swerve.getAlgaePositionFromString(scorePoseString), true), 
