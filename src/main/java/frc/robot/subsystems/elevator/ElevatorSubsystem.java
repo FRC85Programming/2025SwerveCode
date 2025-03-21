@@ -107,7 +107,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Low Limit", lowLimit.get());
         SmartDashboard.putBoolean("High Limit", highLimit.get());
 
-        if (lowLimit.get() && !Robot.isSimulation()) {
+        if (lowLimit.get() && !Robot.isSimulation() && !hasHomed) {
             elevatorEncoder.reset();
             hasHomed = true;
         }

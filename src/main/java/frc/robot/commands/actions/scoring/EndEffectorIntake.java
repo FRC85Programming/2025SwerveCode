@@ -4,6 +4,7 @@ import java.security.Timestamp;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
@@ -61,12 +62,13 @@ public class EndEffectorIntake extends Command {
         } else {
             coraltime = 0;
         }
+        SmartDashboard.putNumber("Coral Time", coraltime);
     }
     
     @Override
     public void end(boolean interrupted) {
         endeffector.runRollers(0);
-        
+
         DriverStation.reportWarning("Intake end", false);
         if (!shouldIntake && !endable) {
             endeffector.setSetpoint(0);

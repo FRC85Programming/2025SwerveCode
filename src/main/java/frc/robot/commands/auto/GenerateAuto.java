@@ -52,14 +52,13 @@ public class GenerateAuto extends Command {
         for (int i = 0; i < autoScorePositions.length; i++) {
             String scorePoseString = autoScorePositions[i].substring(0, 1);
             Pose2d selectedReefPose = swerve.getScorePoseFromString(scorePoseString);
-            Pose2d selectedReefPosePushback = swerve.getScorePoseFromStringPushback(scorePoseString);
             Pose2d selectedSourcePose = swerve.getSelectedIntakePositionPose(autoScorePositions[i].substring(2, 3));
             Positions level = swerve.getLevelFromString(autoScorePositions[i].substring(1, 2));
             boolean remove = autoScorePositions[i].substring(3,4).equals("1") ? false : true;
 
             if (selectedReefPose != null && selectedSourcePose != null && level != null) {
                 autoRoutine.addCommands(
-                    new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPosePushback, () -> selectedReefPose, level),
+                    new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
                     new WaitCommand(0.1),
                     new EndEffectorIntake(endeffector, elevator, intake, false, true),
                     new ConditionalCommand(new SequentialCommandGroup(

@@ -61,7 +61,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
         if (hasCoral) {
             holdCoral();
         }
-        if (coralLimit.get()) {
+        if (coralLimit.get() && rollerMotor.get() > 0) {
             hasCoral = true;
         }
         SmartDashboard.putNumber("Arm Radians", getEncoderValueAsRadians());
