@@ -72,7 +72,7 @@ public class PreGoToPosition extends Command {
 
     @Override
     public boolean isFinished() {
-        return elevator.atSetpoint() && endeffector.atSetpoint();
+        return false;
 
     }
 

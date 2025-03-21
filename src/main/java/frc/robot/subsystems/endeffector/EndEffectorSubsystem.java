@@ -187,7 +187,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
             case L3:
                 return Constants.EndEffectorConstants.L3_PIVOT_POSITION;
             case L4:
-                return 3.5;
+                return Constants.EndEffectorConstants.L4_PIVOT_POSITION;
             case HOME:
                 return Constants.EndEffectorConstants.HOME_PIVOT_POSITION;
             case INTAKE_FLOOR:

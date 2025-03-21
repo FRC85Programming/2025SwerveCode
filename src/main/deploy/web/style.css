@@ -196,8 +196,8 @@ body {
 .positionH {top: 10px; left: 500px;}
 .positionI {top: 60px; left: 405px;}
 .positionJ {top: 130px; left: 365px;}
-.positionL {top: 250px; left: 365px;}
-.positionK {top: 320px; left: 405px;}
+.positionK {top: 250px; left: 365px;}
+.positionL {top: 320px; left: 405px;}
 
 
 /* Auto Position Buttons */
@@ -226,8 +226,8 @@ body {
 .autoPositionH {top: -40px; left: 840px;}
 .autoPositionI {top: 10px; left: 745px;}
 .autoPositionJ {top: 80px; left: 705px;}
-.autoPositionL {top: 200px; left: 705px;}
-.autoPositionK {top: 270px; left: 745px;}
+.autoPositionK {top: 200px; left: 705px;}
+.autoPositionL {top: 270px; left: 745px;}
 .updateselectionbutton {
     position: absolute; 
     top: 375px; 

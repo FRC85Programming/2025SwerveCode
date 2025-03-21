@@ -135,7 +135,7 @@ public final class Constants
     public static final double HOME_PIVOT_POSITION = .1;
     public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
     public static final double INTAKE_STATION_PIVOT_POSITION = 0;
-    public static final double AUTO_L4_PIVOT = 3.5;
+    public static final double AUTO_L4_PIVOT = 3.4;
 
 
     public static final int CORAL_LIMIT_SWITCH = 2;
