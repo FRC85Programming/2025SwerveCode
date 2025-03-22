@@ -79,7 +79,7 @@ public class PreGoToPosition extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        DriverStation.reportWarning("Go To Position", false);
+        DriverStation.reportWarning("Pre Go To Position", false);
 
     }
 }

@@ -269,7 +269,7 @@ public class SwerveSubsystem extends SubsystemBase
 
       final boolean enableFeedforward = false;
       // Configure AutoBuilder last
-      pathPlannerXp = 4.5;
+      pathPlannerXp = 3.5;
       pathPlannerXi = SmartDashboard.getNumber("Pathplanner Translate I", 0.0);
       pathPlannerXd =  0.0;
 
@@ -1057,8 +1057,8 @@ public class SwerveSubsystem extends SubsystemBase
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
 
-      leftScoreOffset = -0.475;
-      rightScoreOffset = -0.475;
+      leftScoreOffset = -0.47;
+      rightScoreOffset = -0.47;
 
       // Shift back so back of robot aligns with reef
       double translatedX = x1 + (Constants.ROBOT_WIDTH / 2) * Math.cos(z1);

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.scoring.GoToPosition;
@@ -59,10 +60,13 @@ public class GenerateAuto extends Command {
             if (selectedReefPose != null && selectedSourcePose != null && level != null) {
                 autoRoutine.addCommands(
                     new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
-                    new GoToPosition(elevator, endeffector, intake, level, true),
-                    new WaitCommand(0.2),
-                    new EndEffectorIntake(endeffector, elevator, intake, false, true),
-                    new WaitCommand(0.2),
+                    //new GoToPosition(elevator, endeffector, intake, level, true),
+                    new InstantCommand(() -> endeffector.setSetpoint(Constants.EndEffectorConstants.AUTO_L4_PIVOT_POSITION)),
+                    new WaitCommand(0.6),
+                    new InstantCommand(() -> endeffector.runRollers(-0.4)),
+                    new WaitCommand(0.3),
+                    new InstantCommand(() -> endeffector.runRollers(0.0)),
+                    //new EndEffectorIntake(endeffector, elevator, intake, false, true),
                     new ConditionalCommand(new SequentialCommandGroup(
                         new GoToPosition(elevator, endeffector, intake, swerve.getAlgaePositionFromString(scorePoseString), true), 
                         new ParallelRaceGroup(

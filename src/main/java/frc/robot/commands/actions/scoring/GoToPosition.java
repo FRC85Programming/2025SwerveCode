@@ -1,5 +1,6 @@
 package frc.robot.commands.actions.scoring;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
@@ -58,7 +59,11 @@ public class GoToPosition extends Command
       endeffector.setSetpoint(endeffector.getSetpoint(Positions.HOME));
     }
   
-    SmartDashboard.putBoolean("Ended GoToPosition", true);
+    if (interrupted) {
+      DriverStation.reportWarning("Go To Position Interrupted", false);
+    } else {
+      DriverStation.reportWarning("Go To Position", false);
+    }
   }
 }
 

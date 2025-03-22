@@ -6,6 +6,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -37,7 +38,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     private double setPoint = 0.0;
     private double angleConversionFactor = (2*Math.PI)/9;
     boolean safe = true;
-    boolean hasCoral = false;
+    boolean hasCoral = true;
 
     public EndEffectorSubsystem() {
         // Zero the arm
@@ -175,7 +176,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return Math.abs(getPivotAngle() - setPoint) < 0.01;
+        return Math.abs(getPivotAngle() - setPoint) < 0.05;
     }
 
     public double getSetpoint(Positions position) {
