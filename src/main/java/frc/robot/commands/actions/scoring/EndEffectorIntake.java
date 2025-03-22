@@ -42,7 +42,7 @@ public class EndEffectorIntake extends Command {
 
     @Override
     public void initialize() {
-        startsecs = Timer.getFPGATimestamp();
+        startsecs = 0;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class EndEffectorIntake extends Command {
         if (shouldIntake == true) {
             return endable && endeffector.getCoralSwitch() && Timer.getFPGATimestamp() - coraltime > 0.2 && coraltime > 0;
         } else {
-            return endable && !endeffector.getCoralSwitch() && Timer.getFPGATimestamp() - startsecs > 0.3;
+            return endable && !endeffector.getCoralSwitch() && Timer.getFPGATimestamp() - startsecs > 0.3 && startsecs != 0;
         }
     }
 
@@ -60,6 +60,9 @@ public class EndEffectorIntake extends Command {
                 coraltime = Timer.getFPGATimestamp();
             }
         } else {
+            if (startsecs == 0) {
+                startsecs = Timer.getFPGATimestamp();
+            }
             coraltime = 0;
         }
         SmartDashboard.putNumber("Coral Time", coraltime);

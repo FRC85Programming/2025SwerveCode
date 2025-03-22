@@ -40,7 +40,9 @@ public class GoToPosition extends Command
   @Override
   public boolean isFinished()
   {
-    if ((position == Positions.L1 || position == Positions.ALGAE_SCORE) && intake.atTolerance()) {
+    if ((position == Positions.L1 || position == Positions.ALGAE_SCORE) && intake.atTolerance() ) {
+      return true;
+    } else if (endable && elevator.atSetpoint() && endeffector.atSetpoint()){
       return true;
     } else {
       return false;

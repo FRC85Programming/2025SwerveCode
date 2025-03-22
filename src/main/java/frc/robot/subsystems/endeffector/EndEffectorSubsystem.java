@@ -175,7 +175,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return Math.abs(getPivotAngle() - setPoint) < 0.05;
+        return Math.abs(getPivotAngle() - setPoint) < 0.01;
     }
 
     public double getSetpoint(Positions position) {
@@ -198,8 +198,6 @@ public class EndEffectorSubsystem extends SubsystemBase {
                 return Constants.EndEffectorConstants.L2_ALGAE_PIVOT_POSITION;
             case L3_ALGAE:
                 return Constants.EndEffectorConstants.L3_ALGAE_PIVOT_POSITION;
-            case AUTO_L4:
-                return Constants.EndEffectorConstants.AUTO_L4_PIVOT;
             default:
                 return Constants.ElevatorConstants.HOME_ELEVATOR_POSITION;
         }

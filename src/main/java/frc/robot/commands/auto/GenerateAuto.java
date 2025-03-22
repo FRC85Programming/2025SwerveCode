@@ -59,16 +59,17 @@ public class GenerateAuto extends Command {
             if (selectedReefPose != null && selectedSourcePose != null && level != null) {
                 autoRoutine.addCommands(
                     new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
-                    new WaitCommand(0.1),
+                    new GoToPosition(elevator, endeffector, intake, level, true),
+                    new WaitCommand(0.2),
                     new EndEffectorIntake(endeffector, elevator, intake, false, true),
+                    new WaitCommand(0.2),
                     new ConditionalCommand(new SequentialCommandGroup(
                         new GoToPosition(elevator, endeffector, intake, swerve.getAlgaePositionFromString(scorePoseString), true), 
                         new ParallelRaceGroup(
                             new EndEffectorIntake(endeffector, elevator, intake, false, false),
                             new DriveAndHoldPose(swerve, () -> swerve.getScorePoseFromString(swerve.swapLetter(scorePoseString)), true))), new InstantCommand(), () -> remove),
-                    new InstantCommand(() -> elevator.setSetpoint(0)),
-                    new InstantCommand(() -> endeffector.setSetpoint(0)),
-                    new DriveToPose(swerve, () -> selectedSourcePose),
+                    new ParallelCommandGroup(new DriveToPose(swerve, () -> selectedSourcePose), new InstantCommand(() -> elevator.setSetpoint(0)),
+                        new InstantCommand(() -> endeffector.setSetpoint(0))),
                     new EndEffectorIntake(endeffector, elevator, intake, true, true));   
             }
         }

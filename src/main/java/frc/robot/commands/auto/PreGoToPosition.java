@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.commands.actions.scoring.GoToPosition;
 import frc.robot.commands.actions.swerve.DriveToPose;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
@@ -56,14 +57,14 @@ public class PreGoToPosition extends Command {
         if (PhotonUtils.getDistanceToPose(swerve.getPose(), scorePose.get()) < goToPositionRange) {
             if (position == Positions.L4) {
                 elevator.setSetpoint(elevator.getSetpoint(position));
-                endeffector.setSetpoint(endeffector.getSetpoint(Positions.AUTO_L4));
+                endeffector.setSetpoint(Constants.EndEffectorConstants.STOW_ANGLE);
             } else {
                 elevator.setSetpoint(elevator.getSetpoint(position));
                 endeffector.setSetpoint(endeffector.getSetpoint(position));
             }
         } else if (PhotonUtils.getDistanceToPose(swerve.getPose(), scorePose.get()) < goToPositionRange+1){
             if (position == Positions.L4) {
-                endeffector.setSetpoint(endeffector.getSetpoint(Positions.AUTO_L4));
+                endeffector.setSetpoint(Constants.EndEffectorConstants.STOW_ANGLE);
             } else {
                 endeffector.setSetpoint(endeffector.getSetpoint(position));
             }

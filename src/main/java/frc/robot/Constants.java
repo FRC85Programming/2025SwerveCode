@@ -134,8 +134,8 @@ public final class Constants
     public static final double L3_ALGAE_PIVOT_POSITION = 4.6;
     public static final double HOME_PIVOT_POSITION = .1;
     public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
-    public static final double INTAKE_STATION_PIVOT_POSITION = 0;
-    public static final double AUTO_L4_PIVOT = 3.4;
+    public static final double INTAKE_STATION_PIVOT_POSITION = 0;   
+    public static final double STOW_ANGLE = 3; 
 
 
     public static final int CORAL_LIMIT_SWITCH = 2;
