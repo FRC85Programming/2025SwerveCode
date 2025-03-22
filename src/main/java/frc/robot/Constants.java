@@ -127,7 +127,7 @@ public final class Constants
     public static final double PIVOT_ROOT_Z = 0.98;
 
     public static final double L1_PIVOT_POSITION = 0;
-    public static final double L2_PIVOT_POSITION = 4.0;
+    public static final double L2_PIVOT_POSITION = 3.8;
     public static final double L3_PIVOT_POSITION = 3.7; 
     public static final double L4_PIVOT_POSITION = 3.4;
     public static final double AUTO_L4_PIVOT_POSITION = 3.55;

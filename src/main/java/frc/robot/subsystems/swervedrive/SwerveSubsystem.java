@@ -269,7 +269,7 @@ public class SwerveSubsystem extends SubsystemBase
 
       final boolean enableFeedforward = false;
       // Configure AutoBuilder last
-      pathPlannerXp = 3.5;
+      pathPlannerXp = 3.25;
       pathPlannerXi = SmartDashboard.getNumber("Pathplanner Translate I", 0.0);
       pathPlannerXd =  0.0;
 
@@ -924,62 +924,62 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   /**Takes in a string containing the desired score position and returns the pose of the apriltag on that side of the reef */
-  public Pose2d getScorePoseFromString(String positionString) {
+  public Pose2d getScorePoseFromString(String positionString, boolean auto) {
     if (DriverStation.getAlliance().get() == Alliance.Blue) {
       switch (positionString) {
         case "A":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(18).get().toPose2d());
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(18).get().toPose2d(), auto);
         case "B":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(18).get().toPose2d());
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(18).get().toPose2d(), auto);
         case "C":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(17).get().toPose2d());
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(17).get().toPose2d(), auto);
         case "D":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(17).get().toPose2d());
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(17).get().toPose2d(), auto);
         case "E":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(22).get().toPose2d());
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(22).get().toPose2d(), auto);
         case "F":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(22).get().toPose2d());
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(22).get().toPose2d(), auto);
         case "G":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(21).get().toPose2d());
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(21).get().toPose2d(), auto);
         case "H":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(21).get().toPose2d());
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(21).get().toPose2d(), auto);
         case "I":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(20).get().toPose2d());
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(20).get().toPose2d(), auto);
         case "J":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(20).get().toPose2d());
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(20).get().toPose2d(), auto);
         case "K":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(19).get().toPose2d());
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(19).get().toPose2d(), auto);
         case "L":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(19).get().toPose2d());
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(19).get().toPose2d(), auto);
         default:
           return PositionConstants.pathPlanningTestPose;
       }
     } else {
       switch (positionString) {
         case "A":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(7).get().toPose2d());
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(7).get().toPose2d(), auto);
         case "B":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(7).get().toPose2d());
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(7).get().toPose2d(), auto);
         case "C":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(8).get().toPose2d());
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(8).get().toPose2d(), auto);
         case "D":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(8).get().toPose2d());
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(8).get().toPose2d(), auto);
         case "E":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(9).get().toPose2d());
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(9).get().toPose2d(), auto);
         case "F":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(9).get().toPose2d());
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(9).get().toPose2d(), auto);
         case "G":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(10).get().toPose2d());
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(10).get().toPose2d(), auto);
         case "H":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(10).get().toPose2d());
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(10).get().toPose2d(), auto);
         case "I":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(11).get().toPose2d());
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(11).get().toPose2d(), auto);
         case "J":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(11).get().toPose2d());
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(11).get().toPose2d(), auto);
         case "K":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(6).get().toPose2d());
+          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(6).get().toPose2d(), auto);
         case "L":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(6).get().toPose2d());
+          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(6).get().toPose2d(), auto);
         default:
           return PositionConstants.pathPlanningTestPose;
       }
@@ -1052,10 +1052,11 @@ public class SwerveSubsystem extends SubsystemBase
       return new Pose2d(translatedX, translatedY, new Rotation2d(translatedRot + Math.PI));
   }
 
-  public Pose2d getScorePose(ReefPositions side, Pose2d tagPose) {
+  public Pose2d getScorePose(ReefPositions side, Pose2d tagPose, boolean auto) {
       double x1 = tagPose.getX();
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
+      double pushback = .175;
 
       leftScoreOffset = -0.47;
       rightScoreOffset = -0.47;
@@ -1077,9 +1078,13 @@ public class SwerveSubsystem extends SubsystemBase
               break;
       }
 
+      if (auto) {
+        pushback = .23;
+      }
+
       // Move away from the reef by pushBackDistance
-      translatedX += SmartDashboard.getNumber("Pushback Distance", 0.16) * Math.cos(z1);
-      translatedY += SmartDashboard.getNumber("Pushback Distance", 0.16) * Math.sin(z1);
+      translatedX += pushback * Math.cos(z1);
+      translatedY += pushback * Math.sin(z1);
 
       // Rotate to face away from the reef
       return new Pose2d(translatedX, translatedY, new Rotation2d(z1));

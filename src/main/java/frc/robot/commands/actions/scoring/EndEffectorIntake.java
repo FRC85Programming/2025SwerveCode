@@ -34,7 +34,7 @@ public class EndEffectorIntake extends Command {
     public void execute() {
         checkSwitch();
         if (!shouldIntake) {
-            endeffector.runRollers(-0.4);
+            endeffector.runRollers(-0.2);
         } else {
             endeffector.runRollers(0.6);
         }

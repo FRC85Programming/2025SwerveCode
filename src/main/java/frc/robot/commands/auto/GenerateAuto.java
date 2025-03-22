@@ -52,7 +52,7 @@ public class GenerateAuto extends Command {
 
         for (int i = 0; i < autoScorePositions.length; i++) {
             String scorePoseString = autoScorePositions[i].substring(0, 1);
-            Pose2d selectedReefPose = swerve.getScorePoseFromString(scorePoseString);
+            Pose2d selectedReefPose = swerve.getScorePoseFromString(scorePoseString, true);
             Pose2d selectedSourcePose = swerve.getSelectedIntakePositionPose(autoScorePositions[i].substring(2, 3));
             Positions level = swerve.getLevelFromString(autoScorePositions[i].substring(1, 2));
             boolean remove = autoScorePositions[i].substring(3,4).equals("1") ? false : true;
@@ -71,7 +71,7 @@ public class GenerateAuto extends Command {
                         new GoToPosition(elevator, endeffector, intake, swerve.getAlgaePositionFromString(scorePoseString), true), 
                         new ParallelRaceGroup(
                             new EndEffectorIntake(endeffector, elevator, intake, false, false),
-                            new DriveAndHoldPose(swerve, () -> swerve.getScorePoseFromString(swerve.swapLetter(scorePoseString)), true))), new InstantCommand(), () -> remove),
+                            new DriveAndHoldPose(swerve, () -> swerve.getScorePoseFromString(swerve.swapLetter(scorePoseString), true), true))), new InstantCommand(), () -> remove),
                     new ParallelCommandGroup(new DriveToPose(swerve, () -> selectedSourcePose), new InstantCommand(() -> elevator.setSetpoint(0)),
                         new InstantCommand(() -> endeffector.setSetpoint(0))),
                     new EndEffectorIntake(endeffector, elevator, intake, true, true));   

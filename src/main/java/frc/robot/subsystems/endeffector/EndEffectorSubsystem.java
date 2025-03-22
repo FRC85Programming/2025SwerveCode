@@ -39,6 +39,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     private double angleConversionFactor = (2*Math.PI)/9;
     boolean safe = true;
     boolean hasCoral = true;
+    
 
     public EndEffectorSubsystem() {
         // Zero the arm
@@ -49,6 +50,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Pivot P", 0.15);
         SmartDashboard.putNumber("Chatter Speed", 0.13);
         SmartDashboard.putNumber("L4 Angle", Constants.EndEffectorConstants.L4_PIVOT_POSITION);
+        SmartDashboard.putNumber("L2 Angle", 4.0);
 
         // Tell PID to wrap between 0 and 360 degrees
         //angleController.enableContinuousInput(Math.toRadians(0), Math.toRadians(1));
