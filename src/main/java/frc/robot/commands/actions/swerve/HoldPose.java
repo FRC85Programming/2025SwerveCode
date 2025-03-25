@@ -38,6 +38,10 @@ public class HoldPose extends Command {
         
         xTranslationPID.setTolerance(0.01);
         yTranslationPID.setTolerance(0.01);
+
+        xTranslationPID.setP(5);
+        yTranslationPID.setP(5);
+        rotationPID.setP(10);
                                      
         //rotationPID.setTolerance(0.01);
 
@@ -66,9 +70,6 @@ public class HoldPose extends Command {
 
     @Override
     public void execute() {
-        xTranslationPID.setP(5);
-        yTranslationPID.setP(5);
-        rotationPID.setP(10);
 
         currentPose = swerve.getPose();
         

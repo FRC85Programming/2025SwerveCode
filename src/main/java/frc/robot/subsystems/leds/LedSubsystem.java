@@ -4,17 +4,11 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
-import java.lang.ProcessBuilder.Redirect;
-import java.sql.Driver;
-
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -31,8 +25,6 @@ public class LedSubsystem extends SubsystemBase {
     private static final Distance ledSpacing = Meters.of(1 / 120.0);
 
     private static final LEDPattern blank = LEDPattern.solid(Color.kBlack);
-    private static final LEDPattern red = LEDPattern.solid(Color.kRed).breathe(Units.Seconds.of(4));
-    private static final LEDPattern blue = LEDPattern.solid(Color.kBlue).breathe(Units.Seconds.of(4));
     private static final LEDPattern blinkingorange = LEDPattern.solid(Color.kOrange).blink(Seconds.of(0.1));
     private static final LEDPattern slowblinkinggreen = LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.5));
     private static final LEDPattern fastblinkinggreen = LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.1));

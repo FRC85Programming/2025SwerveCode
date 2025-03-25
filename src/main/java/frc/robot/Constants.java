@@ -176,11 +176,11 @@ public final class Constants
     public static final Pose2d pathPlanningTestPose = new Pose2d(1.8, 3, new Rotation2d(Math.toRadians(0)));
 
     // Source positions
-    public static final Pose2d sourcePositionLeftBlue = new Pose2d(1.139, 6.970, new Rotation2d(Math.toRadians(120)));
-    public static final Pose2d sourcePositionRightBlue = new Pose2d(1.139, 1.064, new Rotation2d(Math.toRadians(-125)));
+    public static final Pose2d sourcePositionLeftBlue = new Pose2d(1.630, 7.328, new Rotation2d(Math.toRadians(120)));
+    public static final Pose2d sourcePositionRightBlue = new Pose2d(2.097, 0.356, new Rotation2d(Math.toRadians(-125)));
 
-    public static final Pose2d sourcePositionRightRed = new Pose2d(16.413, 6.956, new Rotation2d(Math.toRadians(55)));
-    public static final Pose2d sourcePositionLeftRed = new Pose2d(16.413, 1.083, new Rotation2d(Math.toRadians(-55)));
+    public static final Pose2d sourcePositionRightRed = new Pose2d(16.002, 7.278, new Rotation2d(Math.toRadians(55)));
+    public static final Pose2d sourcePositionLeftRed = new Pose2d(15.504, 0.417, new Rotation2d(Math.toRadians(-55)));
     //public static final Pose2d sourcePositionLeftRed = new Pose2d(10.33851716736436, 0.8489293051832107, new Rotation2d(Math.toRadians(-85.49693839781317)));
 
     // Processor positions
