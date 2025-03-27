@@ -145,7 +145,7 @@ public class SwerveSubsystem extends SubsystemBase
       System.out.println("\t\"drive\": {\"factor\": " + driveConversionFactor + " }");
       System.out.println("}");
 
-      SmartDashboard.putNumber("Alignment", 0.42);
+      SmartDashboard.putNumber("Alignment", 0.46);
 
     
     try
@@ -1043,7 +1043,7 @@ public class SwerveSubsystem extends SubsystemBase
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
 
-      scoreOffset = -0.47;
+      scoreOffset = -SmartDashboard.getNumber("Alignment", 0.46);
 
       // Shift back so back of robot aligns with reef
       double translatedX = x1 + (Constants.ROBOT_WIDTH / 2) * Math.cos(z1);

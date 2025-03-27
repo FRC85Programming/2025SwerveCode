@@ -44,6 +44,7 @@ import frc.robot.commands.actions.scoring.Intake;
 import frc.robot.commands.actions.swerve.Climb;
 import frc.robot.commands.actions.swerve.DriveAndHoldPose;
 import frc.robot.commands.actions.swerve.DriveToPose;
+import frc.robot.commands.actions.swerve.HoldPose;
 import frc.robot.commands.actions.swerve.IntakeWheels;
 import frc.robot.commands.auto.GenerateAuto;
 import frc.robot.commands.drivebase.AbsoluteDriveAdv;
@@ -414,7 +415,7 @@ public class RobotContainer
         // All: Drive to relevant position
         driverXbox.pov(270).whileTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new DriveAndHoldPose(drivebase, () -> drivebase.getScorePose(drivebase.getSideFromString(drivebase.getWebServer().getSelectedScorePosition()), new Pose2d(), false), false)),
+                Map.entry(1, new HoldPose(drivebase, () -> drivebase.getScorePose(drivebase.getSideFromString(drivebase.getWebServer().getSelectedScorePosition()), new Pose2d(), false), false)),
 
                 Map.entry(2, new DriveToPose(drivebase, () -> intake.getCurrentProcessor())),
 

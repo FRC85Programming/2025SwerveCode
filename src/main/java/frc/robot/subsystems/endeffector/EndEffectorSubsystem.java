@@ -94,7 +94,11 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
 
         // Clamp to prevent exceeding 12V
-        pidVoltage = Math.max(-Constants.MAX_VOLTAGE, Math.min(Constants.MAX_VOLTAGE, pidVoltage));
+        if (pidVoltage > 0) {
+            pidVoltage = Math.max(-Constants.MAX_VOLTAGE, Math.min(Constants.MAX_VOLTAGE, pidVoltage));
+        } else {
+            pidVoltage = Math.max(-Constants.MAX_VOLTAGE/2, Math.min(Constants.MAX_VOLTAGE/2, pidVoltage/2));
+        }
 
         SmartDashboard.putNumber("currentAngle", currentAngle);
         setPivotVoltage(pidVoltage);

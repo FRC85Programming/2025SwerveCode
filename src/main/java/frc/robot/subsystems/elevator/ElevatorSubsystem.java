@@ -118,7 +118,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setElevatorSpeed(double speed) {
-        speed = MathUtil.clamp(speed, -0.4, 0.4);
+        if (speed > 0) {
+            speed = MathUtil.clamp(speed, -0.2, 0.2);
+        } else {
+            speed = MathUtil.clamp(speed, -0.4, 0.4);
+        }
         //elevatorMotorRight.set(-speed);
 
         if (!Robot.isSimulation()) {
