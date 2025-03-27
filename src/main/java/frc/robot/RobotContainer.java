@@ -414,7 +414,7 @@ public class RobotContainer
         // All: Drive to relevant position
         driverXbox.pov(270).whileTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new DriveAndHoldPose(drivebase, () -> drivebase.getScorePose(ReefPositions.Left, new Pose2d(), false), false)),
+                Map.entry(1, new DriveAndHoldPose(drivebase, () -> drivebase.getScorePose(drivebase.getSideFromString(drivebase.getWebServer().getSelectedScorePosition()), new Pose2d(), false), false)),
 
                 Map.entry(2, new DriveToPose(drivebase, () -> intake.getCurrentProcessor())),
 

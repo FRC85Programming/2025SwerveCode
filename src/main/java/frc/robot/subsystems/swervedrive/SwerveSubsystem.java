@@ -1001,6 +1001,14 @@ public class SwerveSubsystem extends SubsystemBase
       }
     }
   }
+
+  public ReefPositions getSideFromString(String side) {
+    if (side.equals("L")) {
+      return ReefPositions.Left;
+    } else {
+      return ReefPositions.Right;
+    }
+  }
   
   public Positions getLevelFromString(String position) {
     switch(position) {

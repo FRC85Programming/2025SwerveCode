@@ -185,8 +185,8 @@ body {
 }
 
 /* Button Positions */
-.positionA {top: 265px; left: 500px;}
-.positionB {top: 265px; left: 593px;}
+.positionL {top: 265px; left: 500px;}
+.positionR {top: 265px; left: 593px;}
 
 
 /* Auto Position Buttons */
@@ -198,7 +198,7 @@ body {
     position: absolute;
 }
 
-.positionA, .positionB {
+.positionL, .positionR {
     width: 50px;
     height: 50px;
     position: absolute;
@@ -229,9 +229,9 @@ body {
     cursor: pointer;
 }
 
-.cageCA { left: 815px; top: -30px;}
+.cageCA { left: 435px; top: -30px;}
 .cageCB { left: 535px; top: -30px;}
-.cageCC { left: 1025px; top: -30px;}
+.cageCC { left: 635px; top: -30px;}
 
 .resetautoselectionsbutton {
     position: absolute; 
