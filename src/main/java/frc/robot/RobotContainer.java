@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.CANifier.LEDChannel;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -31,6 +32,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PositionConstants;
 import frc.robot.commands.drivebase.AbsoluteDriveAdv;
@@ -50,6 +53,7 @@ import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
 import frc.robot.util.Positions;
+import frc.robot.util.ReefPositions;
 import frc.robot.util.RobotStates;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.leds.LedSubsystem;
@@ -229,6 +233,17 @@ public class RobotContainer
     SmartDashboard.putNumber("Transation X P", 10);
     SmartDashboard.putNumber("Transation Y P", 10);
     SmartDashboard.putNumber("Rotation P", 10);
+
+    NamedCommands.registerCommand("Stow Angle", new InstantCommand(() -> endeffector.setSetpoint(EndEffectorConstants.STOW_ANGLE)));
+    NamedCommands.registerCommand("L4 Height", new InstantCommand(() -> elevator.setSetpoint(ElevatorConstants.L4_ELEVATOR_POSITION)));
+    NamedCommands.registerCommand("L4 Angle", new InstantCommand(() -> endeffector.setSetpoint(EndEffectorConstants.AUTO_L4_PIVOT_POSITION)));
+    NamedCommands.registerCommand("Score", new SequentialCommandGroup(new WaitCommand(0.6),
+                    new InstantCommand(() -> endeffector.runRollers(-0.4)),
+                    new WaitCommand(0.3),
+                    new InstantCommand(() -> endeffector.runRollers(0.0))));
+    NamedCommands.registerCommand("Home", new ParallelCommandGroup(new InstantCommand(() -> elevator.setSetpoint(0)),
+                                                                  new InstantCommand(() -> endeffector.setSetpoint(0))));
+    NamedCommands.registerCommand("Intake", new EndEffectorIntake(endeffector, elevator, intake, false, false));
   }
 
   /**
@@ -399,7 +414,7 @@ public class RobotContainer
         // All: Drive to relevant position
         driverXbox.pov(270).whileTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new DriveAndHoldPose(drivebase, () -> drivebase.getScorePoseFromString(drivebase.getWebServer().getSelectedScorePosition(), false), false)),
+                Map.entry(1, new DriveAndHoldPose(drivebase, () -> drivebase.getScorePose(ReefPositions.Left, new Pose2d(), false), false)),
 
                 Map.entry(2, new DriveToPose(drivebase, () -> intake.getCurrentProcessor())),
 
@@ -424,7 +439,8 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
-    return new GenerateAuto(drivebase, elevator, endeffector, intake);
+    //return new GenerateAuto(drivebase, elevator, endeffector, intake);
+    return AutoBuilder.buildAuto("Blue-Right-Auto");
   }
 
   public void setDriveMode()

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.079829545454547,
-        "y": 2.539232954545454
+        "x": 1.5655744949564605,
+        "y": 0.7541792929331131
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.797891654846173,
-        "y": 2.6086301103046874
+        "x": 2.1862822033711518,
+        "y": 1.271665307689366
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Blue-Right-Source"
     },
     {
       "anchor": {
-        "x": 5.276856278094722,
-        "y": 2.9280130805758846
+        "x": 3.9392495908319516,
+        "y": 2.808494112036466
       },
       "prevControl": {
-        "x": 5.519880938993844,
-        "y": 2.8693699719026013
+        "x": 3.331075714966448,
+        "y": 2.2975399491086694
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "E"
+      "linkedName": "C"
     }
   ],
   "rotationTargets": [],
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "Stow Angle",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.3,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -45,7 +45,7 @@
     },
     {
       "name": "L4 Height",
-      "waypointRelativePos": 0.6,
+      "waypointRelativePos": 0.7,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -65,13 +65,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -119.99999999999999
   },
   "reversed": false,
   "folder": "Blue-Right-Auto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -125.00000000000001
   },
   "useDefaultConstraints": true
 }

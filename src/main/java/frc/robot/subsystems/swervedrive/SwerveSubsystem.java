@@ -112,8 +112,7 @@ public class SwerveSubsystem extends SubsystemBase
   double pathPlannerRotationi = 0;
   double pathPlannerRotationd = 0;
 
-  double leftScoreOffset = Constants.CORAL_OFFSET;
-  double rightScoreOffset = Constants.CORAL_OFFSET;
+  double scoreOffset;
 
   double speedMultiplier = 1;
 
@@ -986,22 +985,6 @@ public class SwerveSubsystem extends SubsystemBase
     }
   }
 
-  
-  public Positions getLevelFromString(String position) {
-    switch(position) {
-      case "1":
-        return Positions.L1;
-      case "2":
-        return Positions.L2;
-      case "3":
-        return Positions.L3;
-      case "4":
-        return Positions.L4;
-      default:
-        return Positions.HOME;
-    }
-  }
-
   public Pose2d getSelectedIntakePositionPose(String position) {
     if (DriverStation.getAlliance().get() == Alliance.Blue)
     {
@@ -1018,71 +1001,60 @@ public class SwerveSubsystem extends SubsystemBase
       }
     }
   }
+  
+  public Positions getLevelFromString(String position) {
+    switch(position) {
+      case "1":
+        return Positions.L1;
+      case "2":
+        return Positions.L2;
+      case "3":
+        return Positions.L3;
+      case "4":
+        return Positions.L4;
+      default:
+        return Positions.HOME;
+    }
+  }
 
   public WebServer getWebServer() {
     return webServer;
   }
 
-  public Pose2d getScorePoseOLD(ReefPositions side, Pose2d tagPose) {
-      double x1 = tagPose.getX();
-      double y1 = tagPose.getY();
-      double z1 = tagPose.getRotation().getRadians();
-  
-      double translatedX = x1 + (Constants.ROBOT_WIDTH / 2) * Math.cos(z1);
-      double translatedY = y1 + (Constants.ROBOT_WIDTH / 2) * Math.sin(z1);
-      double translatedRot = z1 - Math.PI;
+  public Pose2d getScorePose(ReefPositions side, Pose2d tagPose, boolean auto) {
+      double pushback;
 
-      switch (side) {
-        case Left:
-        // 0.1643126 corresponds to reef spacing? Idk what this means
-          translatedX += (0.1643126 + Constants.CORAL_OFFSET)
-              * Math.cos(z1 - Math.PI / 2);
-          translatedY += (0.1643126 + Constants.CORAL_OFFSET)
-              * Math.sin(z1 - Math.PI / 2);
-          break;
-  
-        case Right:
-          translatedX += (0.1643126 - Constants.CORAL_OFFSET)
-              * Math.cos(z1 + Math.PI / 2);
-          translatedY += (0.1643126 - Constants.CORAL_OFFSET)
-              * Math.sin(z1 + Math.PI / 2);
-          break;
+      if (!auto) {
+        tagPose = getClosestReefAprilTag();
+        pushback = .175;
+      } else {
+        pushback = .23;
       }
 
-      return new Pose2d(translatedX, translatedY, new Rotation2d(translatedRot + Math.PI));
-  }
-
-  public Pose2d getScorePose(ReefPositions side, Pose2d tagPose, boolean auto) {
       double x1 = tagPose.getX();
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
-      double pushback = .175;
 
-      leftScoreOffset = -0.47;
-      rightScoreOffset = -0.47;
+      scoreOffset = -0.47;
 
       // Shift back so back of robot aligns with reef
       double translatedX = x1 + (Constants.ROBOT_WIDTH / 2) * Math.cos(z1);
       double translatedY = y1 + (Constants.ROBOT_LENGTH / 2) * Math.sin(z1);
 
       // Shift left/right based on scoring location
-      double scoringOffset = 0.1643126;
+      double reefOffset = 0.1643126;
       switch (side) {
           case Left:
-              translatedX += (scoringOffset + leftScoreOffset) * Math.cos(z1 - Math.PI / 2);
-              translatedY += (scoringOffset + leftScoreOffset) * Math.sin(z1 - Math.PI / 2);
+              translatedX += (reefOffset + scoreOffset) * Math.cos(z1 - Math.PI / 2);
+              translatedY += (reefOffset + scoreOffset) * Math.sin(z1 - Math.PI / 2);
               break;
           case Right:
-              translatedX += (scoringOffset - rightScoreOffset) * Math.cos(z1 + Math.PI / 2);
-              translatedY += (scoringOffset - rightScoreOffset) * Math.sin(z1 + Math.PI / 2);
+              translatedX += (reefOffset - scoreOffset) * Math.cos(z1 + Math.PI / 2);
+              translatedY += (reefOffset - scoreOffset) * Math.sin(z1 + Math.PI / 2);
               break;
       }
 
-      if (auto) {
-        pushback = .23;
-      }
-
-      // Move away from the reef by pushBackDistance
+      // Move away from the reef by the pusback distance
       translatedX += pushback * Math.cos(z1);
       translatedY += pushback * Math.sin(z1);
 
@@ -1115,5 +1087,27 @@ public class SwerveSubsystem extends SubsystemBase
 
   public Positions getAlgaePositionFromString(String scoreLocation) {
     return algaeMap.get(scoreLocation);
+  }
+
+  public Pose2d getClosestReefAprilTag() {
+    // Use the robot pose and return the closest AprilTag on a REEF
+    List<Integer> tagIDs = List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11);
+
+    double minDistance = Double.MAX_VALUE;
+    Pose2d closestTagPose = new Pose2d();
+
+    for (int tagID : tagIDs) {
+      var tagPoseOptional = aprilTagFieldLayout.getTagPose(tagID);
+      var tagPose = tagPoseOptional.get();
+      Pose2d tagPose2d = new Pose2d(tagPose.getX(), tagPose.getY(), new Rotation2d(tagPose.getRotation().getZ()));
+      double distance = getPose().getTranslation().getDistance(tagPose2d.getTranslation());
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestTagPose = tagPose2d;
+      }
+    }
+
+    return closestTagPose;
   }
 }

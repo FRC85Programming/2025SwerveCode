@@ -5,6 +5,16 @@
         "visible": true
       }
     },
+    "DIO": {
+      "window": {
+        "visible": true
+      }
+    },
+    "Encoders": {
+      "window": {
+        "visible": true
+      }
+    },
     "Other Devices": {
       "SPARK MAX [12] RELATIVE ENCODER": {
         "header": {
@@ -65,6 +75,9 @@
         "header": {
           "open": true
         }
+      },
+      "window": {
+        "visible": false
       }
     }
   },
