@@ -119,7 +119,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void setElevatorSpeed(double speed) {
         if (speed > 0) {
-            speed = MathUtil.clamp(speed, -0.2, 0.2);
+            speed = MathUtil.clamp(speed, -0.3, 0.3);
         } else {
             speed = MathUtil.clamp(speed, -0.4, 0.4);
         }

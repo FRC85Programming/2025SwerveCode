@@ -440,8 +440,7 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
-    //return new GenerateAuto(drivebase, elevator, endeffector, intake);
-    return AutoBuilder.buildAuto("Blue-Right-Auto");
+    return new GenerateAuto(drivebase, elevator, endeffector, intake);
   }
 
   public void setDriveMode()

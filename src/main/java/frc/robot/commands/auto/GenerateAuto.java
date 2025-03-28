@@ -62,7 +62,7 @@ public class GenerateAuto extends Command {
                     new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
                     //new GoToPosition(elevator, endeffector, intake, level, true),
                     new InstantCommand(() -> endeffector.setSetpoint(Constants.EndEffectorConstants.AUTO_L4_PIVOT_POSITION)),
-                    new WaitCommand(0.6),
+                    new WaitCommand(0.4),
                     new InstantCommand(() -> endeffector.runRollers(-0.4)),
                     new WaitCommand(0.3),
                     new InstantCommand(() -> endeffector.runRollers(0.0)),

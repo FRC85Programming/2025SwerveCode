@@ -104,11 +104,11 @@ public class SwerveSubsystem extends SubsystemBase
 
   String selectedPosition;
 
-  double pathPlannerXp = 0;
+  double pathPlannerXp = 2.75;
   double pathPlannerXi = 0;
   double pathPlannerXd = 0;
 
-  double pathPlannerRotationp = 0;
+  double pathPlannerRotationp = 5.0;
   double pathPlannerRotationi = 0;
   double pathPlannerRotationd = 0;
 
@@ -145,7 +145,7 @@ public class SwerveSubsystem extends SubsystemBase
       System.out.println("\t\"drive\": {\"factor\": " + driveConversionFactor + " }");
       System.out.println("}");
 
-      SmartDashboard.putNumber("Alignment", 0.46);
+      SmartDashboard.putNumber("Alignment", 0.3);
 
     
     try
@@ -177,7 +177,7 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putNumber("Pathplanner Rotation I", 0.0);
     SmartDashboard.putNumber("Pathplanner Rotation D", 0.0);
 
-    SmartDashboard.putNumber("Pushback Distance", 0.23);
+    SmartDashboard.putNumber("Pushback", 0.21);
 
 
     SmartDashboard.putBoolean("Update PID", false);
@@ -268,13 +268,10 @@ public class SwerveSubsystem extends SubsystemBase
 
       final boolean enableFeedforward = false;
       // Configure AutoBuilder last
-      pathPlannerXp = 3.25;
-      pathPlannerXi = SmartDashboard.getNumber("Pathplanner Translate I", 0.0);
+      pathPlannerXp = 2.75;
       pathPlannerXd =  0.0;
 
-      pathPlannerRotationp = SmartDashboard.getNumber("Pathplanner Rotation P", 5.0);
-      pathPlannerRotationi = SmartDashboard.getNumber("Pathplanner Rotation I", 0.0);
-      pathPlannerRotationd = SmartDashboard.getNumber("Pathplanner Rotation D", 0.0);
+      pathPlannerRotationp = 5.0;
 
       AutoBuilder.configure(
           this::getPose,
@@ -1031,19 +1028,18 @@ public class SwerveSubsystem extends SubsystemBase
 
   public Pose2d getScorePose(ReefPositions side, Pose2d tagPose, boolean auto) {
       double pushback;
+      scoreOffset = -SmartDashboard.getNumber("Alignment", 0.46);
 
       if (!auto) {
         tagPose = getClosestReefAprilTag();
-        pushback = .175;
+        pushback = SmartDashboard.getNumber("Pushback", 0.175);
       } else {
-        pushback = .23;
+        pushback = .2;
       }
 
       double x1 = tagPose.getX();
       double y1 = tagPose.getY();
       double z1 = tagPose.getRotation().getRadians();
-
-      scoreOffset = -SmartDashboard.getNumber("Alignment", 0.46);
 
       // Shift back so back of robot aligns with reef
       double translatedX = x1 + (Constants.ROBOT_WIDTH / 2) * Math.cos(z1);
