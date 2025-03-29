@@ -8,12 +8,16 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants;
+import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class HoldPose extends Command {
 
     SwerveSubsystem swerve;
+    EndEffectorSubsystem endeffector;
     Supplier<Pose2d> poseFinal;
     Pose2d currentPose;
 
@@ -24,6 +28,7 @@ public class HoldPose extends Command {
 
     public HoldPose(SwerveSubsystem swerve, Supplier<Pose2d> finalPose, boolean endable) {
         this.swerve = swerve;
+        this.endeffector = endeffector;
         this.poseFinal = finalPose;
         this.xTranslationPID = new PIDController(9.0, 
                                                 0.0, 
@@ -41,9 +46,13 @@ public class HoldPose extends Command {
   
         //rotationPID.setTolerance(0.01);
 
-        SmartDashboard.putNumber("Hold P X", 4);
-        SmartDashboard.putNumber("Hold P Y", 4);
-        SmartDashboard.putNumber("Hold P R", 5);
+        SmartDashboard.putNumber("Hold P X", 3);
+        SmartDashboard.putNumber("Hold P Y", 3);
+        SmartDashboard.putNumber("Hold P R", 3);
+
+        SmartDashboard.putNumber("Hold P X A", 9);
+        SmartDashboard.putNumber("Hold P Y A", 9);
+        SmartDashboard.putNumber("Hold P R A", 7);
 
 
         rotationPID.enableContinuousInput(-Math.PI, Math.PI);
@@ -70,9 +79,9 @@ public class HoldPose extends Command {
 
     @Override
     public void execute() {
-        xTranslationPID.setP(SmartDashboard.getNumber("Hold P X", 4));
-        yTranslationPID.setP(SmartDashboard.getNumber("Hold P Y", 4));
-        rotationPID.setP(SmartDashboard.getNumber("Hold P R", 5));
+        xTranslationPID.setP(5);
+        yTranslationPID.setP(5);
+        rotationPID.setP(5);
 
         currentPose = swerve.getPose();
         

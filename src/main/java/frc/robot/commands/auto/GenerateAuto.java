@@ -60,20 +60,21 @@ public class GenerateAuto extends Command {
             if (selectedReefPose != null && selectedSourcePose != null && level != null) {
                 autoRoutine.addCommands(
                     new ScoreSequence(swerve, elevator, endeffector, intake, () -> selectedReefPose, level),
-                    //new GoToPosition(elevator, endeffector, intake, level, true),
                     new InstantCommand(() -> endeffector.setSetpoint(Constants.EndEffectorConstants.AUTO_L4_PIVOT_POSITION)),
-                    new WaitCommand(0.4),
+                    //new GoToPosition(elevator, endeffector, intake, level, true),
+                    new WaitCommand(0.55),
                     new InstantCommand(() -> endeffector.runRollers(-0.4)),
                     new WaitCommand(0.3),
                     new InstantCommand(() -> endeffector.runRollers(0.0)),
+                    new InstantCommand(() -> elevator.setSetpoint(0)),
+                    new InstantCommand(() -> endeffector.setSetpoint(0)),
                     //new EndEffectorIntake(endeffector, elevator, intake, false, true),
                     new ConditionalCommand(new SequentialCommandGroup(
                         new GoToPosition(elevator, endeffector, intake, swerve.getAlgaePositionFromString(scorePoseString), true), 
                         new ParallelRaceGroup(
                             new EndEffectorIntake(endeffector, elevator, intake, false, false),
-                            new DriveAndHoldPose(swerve, () -> swerve.getScorePoseFromString(swerve.swapLetter(scorePoseString), true), true))), new InstantCommand(), () -> remove),
-                    new ParallelCommandGroup(new DriveToPose(swerve, () -> selectedSourcePose), new InstantCommand(() -> elevator.setSetpoint(0)),
-                        new InstantCommand(() -> endeffector.setSetpoint(0))),
+                            new DriveAndHoldPose(swerve, endeffector, () -> swerve.getScorePoseFromString(swerve.swapLetter(scorePoseString), true), true))), new InstantCommand(), () -> remove),
+                    new DriveToPose(swerve, () -> selectedSourcePose),
                     new EndEffectorIntake(endeffector, elevator, intake, true, true));   
             }
         }

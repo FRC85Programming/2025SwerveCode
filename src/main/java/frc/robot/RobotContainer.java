@@ -397,7 +397,7 @@ public class RobotContainer
         // Coral: Removal of algae, Else: Nothing
         driverXbox.pov(0).onTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L3, false), new EndEffectorIntake(endeffector, elevator, intake, true, false))),
+                Map.entry(1, new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L3_ALGAE, false), new EndEffectorIntake(endeffector, elevator, intake, true, false))),
                 Map.entry(2, new InstantCommand())
             ),
             () -> currentMode == RobotStates.CORAL ? 1 : 2
@@ -406,7 +406,7 @@ public class RobotContainer
         // Coral: Removal of algae, Else: Nothing
         driverXbox.pov(180).onTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L2, false), new EndEffectorIntake(endeffector, elevator, intake, true, false))),
+                Map.entry(1, new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L2_ALGAE, false), new EndEffectorIntake(endeffector, elevator, intake, true, false))),
                 Map.entry(2, new InstantCommand())
             ),
             () -> currentMode == RobotStates.CORAL ? 1 : 2

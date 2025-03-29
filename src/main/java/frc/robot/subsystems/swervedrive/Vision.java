@@ -362,6 +362,12 @@ public class Vision
                                Units.inchesToMeters(-13.843),
                                Units.inchesToMeters(7.015)),
              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
+    /*BACKRIGHTTWO_CAM("camera-backright2",
+             new Rotation3d(Units.degreesToRadians(5), Units.degreesToRadians(-13), Units.degreesToRadians(141)),
+             new Translation3d(Units.inchesToMeters(-14),
+                               Units.inchesToMeters(-13.25),
+                               Units.inchesToMeters(9.5)),
+             VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));*/
     /*FRONT_LEFT_CAM("camera-frontleft",
              new Rotation3d(0, Units.degreesToRadians(-20), Units.degreesToRadians(45)),
              new Translation3d(Units.inchesToMeters(-14.68),

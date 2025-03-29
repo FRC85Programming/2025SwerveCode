@@ -80,6 +80,7 @@ import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
+import frc.robot.util.FieldData;
 
 public class SwerveSubsystem extends SubsystemBase
 {
@@ -118,11 +119,7 @@ public class SwerveSubsystem extends SubsystemBase
 
   boolean updatePathPlannerPid = false;
 
-  Map<String, Positions> algaeMap = Map.ofEntries(
-    Map.entry("A", Positions.L3_ALGAE), Map.entry("B", Positions.L3_ALGAE), Map.entry("C", Positions.L2_ALGAE), Map.entry("D", Positions.L2_ALGAE),
-    Map.entry("E", Positions.L3_ALGAE), Map.entry("F", Positions.L3_ALGAE), Map.entry("G", Positions.L2_ALGAE), Map.entry("H", Positions.L2_ALGAE),
-    Map.entry("I", Positions.L3_ALGAE), Map.entry("J", Positions.L3_ALGAE), Map.entry("K", Positions.L2_ALGAE), Map.entry("L", Positions.L2_ALGAE)
-  );
+  PIDController sourceAngleController = new PIDController(5, 0, 0);
   
     /**
      * Initialize {@link SwerveDrive} with the directory provided.
@@ -169,16 +166,9 @@ public class SwerveSubsystem extends SubsystemBase
                                                 1); // Enable if you want to resynchronize your absolute encoders and motor encoders periodically when they are not moving.
     swerveDrive.pushOffsetsToEncoders(); // Set the absolute encoder to be used over the internal encoder and push the offsets onto it. Throws warning if not possible
 
-    SmartDashboard.putNumber("Pathplanner Translate P", 2.5);
-    SmartDashboard.putNumber("Pathplanner Transalte I", 0.0);
-    SmartDashboard.putNumber("Pathplanner Translate D", 0.1);
+    SmartDashboard.putNumber("Pushback", 0.17);
 
-    SmartDashboard.putNumber("Pathplanner Rotation P", 5.0);
-    SmartDashboard.putNumber("Pathplanner Rotation I", 0.0);
-    SmartDashboard.putNumber("Pathplanner Rotation D", 0.0);
-
-    SmartDashboard.putNumber("Pushback", 0.21);
-
+    SmartDashboard.putNumber("Source Align Distance", 1);
 
     SmartDashboard.putBoolean("Update PID", false);
     
@@ -229,22 +219,14 @@ public class SwerveSubsystem extends SubsystemBase
       updatePathPlannerPid = SmartDashboard.putBoolean("Update PID", true);
     }
 
+    SmartDashboard.putNumber("Score to Current Offset", PhotonUtils.getDistanceToPose(getPose(), getScorePose(ReefPositions.Right, getClosestReefAprilTag(), false)));
+
     //swerveDrive.updateOdometry();
     vision.updatePoseEstimation(swerveDrive);
 
     displayMotorRPMs();
 
     publishDriveMetersPerSecond();
-
-    SmartDashboard.putNumber("Tag 1 X", aprilTagFieldLayout.getTagPose(1).get().getX());
-    SmartDashboard.putNumber("Tag 1 Y", aprilTagFieldLayout.getTagPose(1).get().getY());
-    SmartDashboard.putNumber("Tag 2 X", aprilTagFieldLayout.getTagPose(2).get().getX());
-    SmartDashboard.putNumber("Tag 2 Y", aprilTagFieldLayout.getTagPose(2).get().getY());
-    SmartDashboard.putNumber("Tag 12 X", aprilTagFieldLayout.getTagPose(12).get().getX());
-    SmartDashboard.putNumber("Tag 12 Y", aprilTagFieldLayout.getTagPose(12).get().getY());
-    SmartDashboard.putNumber("Tag 12 X", aprilTagFieldLayout.getTagPose(12).get().getX());
-    SmartDashboard.putNumber("Tag 13 X", aprilTagFieldLayout.getTagPose(12).get().getX());
-    SmartDashboard.putNumber("Tag 13 Y", aprilTagFieldLayout.getTagPose(13).get().getY());
     /*Logger.recordOutput("FieldSimulation/Coral", 
         SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));*/
   }
@@ -268,7 +250,7 @@ public class SwerveSubsystem extends SubsystemBase
 
       final boolean enableFeedforward = false;
       // Configure AutoBuilder last
-      pathPlannerXp = 2.75;
+      pathPlannerXp = 3.5;
       pathPlannerXd =  0.0;
 
       pathPlannerRotationp = 5.0;
@@ -407,7 +389,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
-        swerveDrive.getMaximumChassisVelocity()*0.65, 2.5,
+        swerveDrive.getMaximumChassisVelocity()*0.8, 3,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
 
     // Since AutoBuilder is configured, we can use it to build pathfinding commands
@@ -425,14 +407,26 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   public Pose2d getClosestSource() {
-    double distanceToLeftSource = PhotonUtils.getDistanceToPose(getPose(), Constants.PositionConstants.sourcePositionLeftBlue);
-    double distanceToRightSource = PhotonUtils.getDistanceToPose(getPose(), Constants.PositionConstants.sourcePositionRightBlue);
-    if (distanceToLeftSource > distanceToRightSource) {
-      return Constants.PositionConstants.sourcePositionRightBlue;
-    } else {
-      return Constants.PositionConstants.sourcePositionLeftBlue;
+      boolean isBlueAlliance = DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue;
+
+      Pose2d leftSource = isBlueAlliance 
+          ? Constants.PositionConstants.sourcePositionLeftBlue 
+          : Constants.PositionConstants.sourcePositionLeftRed;
+
+      Pose2d rightSource = isBlueAlliance 
+          ? Constants.PositionConstants.sourcePositionRightBlue 
+          : Constants.PositionConstants.sourcePositionRightRed;
+
+      return PhotonUtils.getDistanceToPose(getPose(), leftSource) 
+          <= PhotonUtils.getDistanceToPose(getPose(), rightSource) 
+          ? leftSource 
+          : rightSource;
     }
-  }
+
+    public boolean isWithinSourceRange() {
+      return PhotonUtils.getDistanceToPose(getPose(), getClosestSource()) < SmartDashboard.getNumber("Source Align Distance", 1);
+    }
+
 
   /**
    * Drive with {@link SwerveSetpointGenerator} from 254, implemented by PathPlanner.
@@ -669,9 +663,19 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity)
   {
-    return run(() -> {
-      swerveDrive.driveFieldOriented(new ChassisSpeeds(velocity.get().vxMetersPerSecond * speedMultiplier, velocity.get().vyMetersPerSecond * speedMultiplier, velocity.get().omegaRadiansPerSecond * speedMultiplier));
-    });
+    if (isWithinSourceRange()) {
+      return run(() -> {
+        swerveDrive.driveFieldOriented(new ChassisSpeeds(velocity.get().vxMetersPerSecond * speedMultiplier, 
+        velocity.get().vyMetersPerSecond * speedMultiplier, 
+        sourceAngleController.calculate(
+          getPose().getRotation().getRadians(), 
+          getClosestSource().getRotation().getRadians())));
+      });
+    } else {
+      return run(() -> {
+        swerveDrive.driveFieldOriented(new ChassisSpeeds(velocity.get().vxMetersPerSecond * speedMultiplier, velocity.get().vyMetersPerSecond * speedMultiplier, velocity.get().omegaRadiansPerSecond * speedMultiplier));
+      });
+    }
   }
 
   /**
@@ -922,63 +926,9 @@ public class SwerveSubsystem extends SubsystemBase
   /**Takes in a string containing the desired score position and returns the pose of the apriltag on that side of the reef */
   public Pose2d getScorePoseFromString(String positionString, boolean auto) {
     if (DriverStation.getAlliance().get() == Alliance.Blue) {
-      switch (positionString) {
-        case "A":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(18).get().toPose2d(), auto);
-        case "B":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(18).get().toPose2d(), auto);
-        case "C":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(17).get().toPose2d(), auto);
-        case "D":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(17).get().toPose2d(), auto);
-        case "E":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(22).get().toPose2d(), auto);
-        case "F":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(22).get().toPose2d(), auto);
-        case "G":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(21).get().toPose2d(), auto);
-        case "H":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(21).get().toPose2d(), auto);
-        case "I":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(20).get().toPose2d(), auto);
-        case "J":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(20).get().toPose2d(), auto);
-        case "K":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(19).get().toPose2d(), auto);
-        case "L":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(19).get().toPose2d(), auto);
-        default:
-          return PositionConstants.pathPlanningTestPose;
-      }
+      return getScorePose(FieldData.positionMap.get(positionString), aprilTagFieldLayout.getTagPose(FieldData.apriltagIdMapBlue.get(positionString)).get().toPose2d(), auto);
     } else {
-      switch (positionString) {
-        case "A":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(7).get().toPose2d(), auto);
-        case "B":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(7).get().toPose2d(), auto);
-        case "C":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(8).get().toPose2d(), auto);
-        case "D":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(8).get().toPose2d(), auto);
-        case "E":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(9).get().toPose2d(), auto);
-        case "F":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(9).get().toPose2d(), auto);
-        case "G":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(10).get().toPose2d(), auto);
-        case "H":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(10).get().toPose2d(), auto);
-        case "I":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(11).get().toPose2d(), auto);
-        case "J":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(11).get().toPose2d(), auto);
-        case "K":
-          return getScorePose(ReefPositions.Left, aprilTagFieldLayout.getTagPose(6).get().toPose2d(), auto);
-        case "L":
-          return getScorePose(ReefPositions.Right, aprilTagFieldLayout.getTagPose(6).get().toPose2d(), auto);
-        default:
-          return PositionConstants.pathPlanningTestPose;
-      }
+      return getScorePose(FieldData.positionMap.get(positionString), aprilTagFieldLayout.getTagPose(FieldData.apriltagIdMapRed.get(positionString)).get().toPose2d(), auto);
     }
   }
 
@@ -1028,13 +978,15 @@ public class SwerveSubsystem extends SubsystemBase
 
   public Pose2d getScorePose(ReefPositions side, Pose2d tagPose, boolean auto) {
       double pushback;
-      scoreOffset = -SmartDashboard.getNumber("Alignment", 0.46);
+      // Set to zero for calibration
+      //scoreOffset = -SmartDashboard.getNumber("Alignment", 0.3);
+      scoreOffset = -0.3;
 
       if (!auto) {
         tagPose = getClosestReefAprilTag();
-        pushback = SmartDashboard.getNumber("Pushback", 0.175);
+        pushback = SmartDashboard.getNumber("Pushback", 0.21);
       } else {
-        pushback = .2;
+        pushback = .24;
       }
 
       double x1 = tagPose.getX();
@@ -1090,7 +1042,7 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   public Positions getAlgaePositionFromString(String scoreLocation) {
-    return algaeMap.get(scoreLocation);
+    return FieldData.algaeMap.get(scoreLocation);
   }
 
   public Pose2d getClosestReefAprilTag() {

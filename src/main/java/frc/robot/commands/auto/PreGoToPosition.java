@@ -51,7 +51,7 @@ public class PreGoToPosition extends Command {
 
     @Override
     public void execute() {
-        goToPositionRange = 1.6;
+        goToPositionRange = 1.3;
 
         // If the robot is within a certain range of the selected scoring position, automatically move the subsystems to the scoring positions 
         if (PhotonUtils.getDistanceToPose(swerve.getPose(), scorePose.get()) < goToPositionRange) {

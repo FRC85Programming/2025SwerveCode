@@ -21,7 +21,7 @@ import swervelib.math.Matter;
  */
 public final class Constants
 {
-  public static final double ROBOT_MASS = 120 * 0.453592; // 32lbs * kg per pound
+  public static final double ROBOT_MASS = 125 * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
   public static final double MAX_SPEED  = Units.feetToMeters(18.0);
@@ -91,7 +91,7 @@ public final class Constants
     public static final double L2_ELEVATOR_POSITION = 0.0001;
     public static final double L3_ELEVATOR_POSITION = 0.3;
     public static final double L4_ELEVATOR_POSITION = 0.76;
-    public static final double L2_ALGAE_ELEVATOR_POSITION = .41;
+    public static final double L2_ALGAE_ELEVATOR_POSITION = 0;
     public static final double L3_ALGAE_ELEVATOR_POSITION = .41;
     public static final double HOME_ELEVATOR_POSITION = 0.0;
     public static final double INTAKE_FLOOR_ELEVATOR_POSITION = 0.0;
@@ -131,8 +131,8 @@ public final class Constants
     public static final double L3_PIVOT_POSITION = 3.7; 
     public static final double L4_PIVOT_POSITION = 3.4;
     public static final double AUTO_L4_PIVOT_POSITION = 3.55;
-    public static final double L2_ALGAE_PIVOT_POSITION = 4.6;
-    public static final double L3_ALGAE_PIVOT_POSITION = 4.6;
+    public static final double L2_ALGAE_PIVOT_POSITION = 4.27;
+    public static final double L3_ALGAE_PIVOT_POSITION = 4.27;
     public static final double HOME_PIVOT_POSITION = .1;
     public static final double INTAKE_FLOOR_PIVOT_POSITION = 0;
     public static final double INTAKE_STATION_PIVOT_POSITION = 0;   
@@ -176,11 +176,11 @@ public final class Constants
     public static final Pose2d pathPlanningTestPose = new Pose2d(1.8, 3, new Rotation2d(Math.toRadians(0)));
 
     // Source positions
-    public static final Pose2d sourcePositionLeftBlue = new Pose2d(1.630, 7.328, new Rotation2d(Math.toRadians(120)));
-    public static final Pose2d sourcePositionRightBlue = new Pose2d(2.097, 0.356, new Rotation2d(Math.toRadians(-125)));
+    public static final Pose2d sourcePositionLeftBlue = new Pose2d(1.213, 7.054, new Rotation2d(Math.toRadians(120)));
+    public static final Pose2d sourcePositionRightBlue = new Pose2d(1.985, 0.447, new Rotation2d(Math.toRadians(-125)));
 
-    public static final Pose2d sourcePositionRightRed = new Pose2d(16.002, 7.278, new Rotation2d(Math.toRadians(55)));
-    public static final Pose2d sourcePositionLeftRed = new Pose2d(15.504, 0.417, new Rotation2d(Math.toRadians(-55)));
+    public static final Pose2d sourcePositionRightRed = new Pose2d(16.022, 7.257, new Rotation2d(Math.toRadians(55)));
+    public static final Pose2d sourcePositionLeftRed = new Pose2d(16.479, 1.118, new Rotation2d(Math.toRadians(-55)));
     //public static final Pose2d sourcePositionLeftRed = new Pose2d(10.33851716736436, 0.8489293051832107, new Rotation2d(Math.toRadians(-85.49693839781317)));
 
     // Processor positions
