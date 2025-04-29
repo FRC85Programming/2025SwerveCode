@@ -51,6 +51,7 @@ import frc.robot.commands.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
+import frc.robot.subsystems.swervedrive.QuestOdometry;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.webserver.WebServer;
 import frc.robot.util.Positions;
@@ -92,6 +93,7 @@ public class RobotContainer
   private final EndEffectorSubsystem endeffector = new EndEffectorSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
   private static final LedSubsystem leds = new LedSubsystem();
+  private static final QuestOdometry quest = new QuestOdometry();
 
   private static RobotContainer instance;
 
@@ -284,13 +286,14 @@ public class RobotContainer
   private void rebind() {
         // TODO: Make positions a press instead of a hold
         // Coral: L2, Algae: None
-        driverXbox.a().whileTrue(new SelectCommand(
+        /*driverXbox.a().whileTrue(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new GoToPosition(elevator, endeffector, intake, Positions.L2, false)),
                 Map.entry(2, new InstantCommand())
             ),
             () -> currentMode == RobotStates.CORAL ? 1 : 2
-        ));
+        ));*/
+        driverXbox.a().onTrue(new InstantCommand(() -> Logger.recordOutput("Quest Path", drivebase.getQuestTrackPath(new Pose2d(1, 1, new Rotation2d())))));
         // Coral: L3, Algae: None
         driverXbox.b().whileTrue(new SelectCommand(
             Map.ofEntries(

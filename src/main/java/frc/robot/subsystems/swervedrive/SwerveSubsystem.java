@@ -53,6 +53,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -72,6 +74,9 @@ import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import frc.robot.subsystems.webserver.WebServer;
 import frc.robot.util.Positions;
 import frc.robot.util.ReefPositions;
+import frc.robot.util.QuestTrack.GridMap;
+import frc.robot.util.QuestTrack.Node;
+import frc.robot.util.QuestTrack.Pathfinder;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -103,6 +108,9 @@ public class SwerveSubsystem extends SubsystemBase
 
   private final WebServer webServer = new WebServer();
 
+  GridMap grid = new GridMap();
+  Pathfinder pathfinder = new Pathfinder(grid);
+
   String selectedPosition;
 
   double pathPlannerXp = 2.75;
@@ -120,6 +128,8 @@ public class SwerveSubsystem extends SubsystemBase
   boolean updatePathPlannerPid = false;
 
   PIDController sourceAngleController = new PIDController(5, 0, 0);
+
+  List<Pose2d> poseList;
   
     /**
      * Initialize {@link SwerveDrive} with the directory provided.
@@ -404,6 +414,24 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putNumber("X Speed MPS", SwerveDriveTelemetry.measuredChassisSpeedsObj.vxMetersPerSecond);
     SmartDashboard.putNumber("Y Speed MPS", SwerveDriveTelemetry.measuredChassisSpeedsObj.vyMetersPerSecond);
     SmartDashboard.putNumber("Max Speed MPS", SwerveDriveTelemetry.maxSpeed);
+  }
+
+  public Trajectory getQuestTrackPath(Pose2d goalPose) {
+    TrajectoryConfig config =
+        new TrajectoryConfig(
+                Constants.MAX_SPEED,
+                3);
+
+    List<Node> nodeList = pathfinder.findPath(grid.convertFieldPoseToGridPose(getPose()), grid.convertFieldPoseToGridPose(goalPose));
+
+    for (int i = 0; i < nodeList.size(); i++) {
+      poseList.add(grid.convertGridPoseToFieldPose(nodeList.get(i)));
+    }
+
+    
+    return TrajectoryGenerator.generateTrajectory(
+            poseList,
+            config);
   }
 
   public Pose2d getClosestSource() {
