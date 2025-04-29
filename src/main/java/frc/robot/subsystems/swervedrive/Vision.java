@@ -18,7 +18,10 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.util.QuestNav.QuestNav;
+
 import java.awt.Desktop;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +60,7 @@ public class Vision
   private Field2d visionField = new Field2d();
 
   static int updates = 0;
+
   /**
    * Photon Vision Simulation
    */
@@ -83,11 +87,14 @@ public class Vision
    * @param currentPose Current pose supplier, should reference {@link SwerveDrive#getPose()}
    * @param field       Current field, should be {@link SwerveDrive#field}
    */
+
+
   public Vision(Supplier<Pose2d> currentPose, Field2d field)
   {
     this.currentPose = currentPose;
     this.field2d = field;
     SmartDashboard.putData("Vision Field", visionField);
+
 
     if (Robot.isSimulation())
     {
@@ -102,6 +109,7 @@ public class Vision
       openSimCameraViews();
     }
   }
+
 
   /**
    * Calculates a target pose relative to an AprilTag on the field.

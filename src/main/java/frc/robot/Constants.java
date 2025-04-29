@@ -24,7 +24,8 @@ public final class Constants
   public static final double ROBOT_MASS = 125 * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED  = Units.feetToMeters(18.0);
+  //public static final double MAX_SPEED  = Units.feetToMeters(18.0);
+  public static final double MAX_SPEED  = Units.feetToMeters(5);
   public static final double MAX_VOLTAGE = 12;
   public static final double ROBOT_WIDTH = 0.762;
   public static final double ROBOT_LENGTH = 0.7366;

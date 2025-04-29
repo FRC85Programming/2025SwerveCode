@@ -41,6 +41,7 @@ import frc.robot.commands.actions.climb.DeployClimb;
 import frc.robot.commands.actions.scoring.EndEffectorIntake;
 import frc.robot.commands.actions.scoring.GoToPosition;
 import frc.robot.commands.actions.scoring.Intake;
+import frc.robot.commands.actions.scoring.ManualIntakePivot;
 import frc.robot.commands.actions.swerve.Climb;
 import frc.robot.commands.actions.swerve.DriveAndHoldPose;
 import frc.robot.commands.actions.swerve.DriveToPose;
@@ -282,7 +283,12 @@ public class RobotContainer
 
   @SuppressWarnings({"unchecked", "rawtypes" })
   private void rebind() {
-        // TODO: Make positions a press instead of a hold
+      /*driverXbox.pov(90).whileTrue(new Intake(intake, 0.5, 0));
+      driverXbox.pov(270).whileTrue(new Intake(intake, -0.5, 0));*/
+
+      driverXbox.start().onTrue(new InstantCommand(() -> drivebase.resetOdometry(new Pose2d())));
+
+      // TODO: Make positions a press instead of a hold
         // Coral: L2, Algae: None
         driverXbox.a().whileTrue(new SelectCommand(
             Map.ofEntries(
@@ -308,7 +314,7 @@ public class RobotContainer
             () -> currentMode == RobotStates.CORAL ? 1 : 2
         ));
         // Coral: Switch modes, Algae: Switch modes, Climb: Switch modes
-        driverXbox.x().onTrue(new SelectCommand(
+        /*driverXbox.x().onTrue(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new InstantCommand(() -> setMode(RobotStates.ALGAE))),
 
@@ -318,8 +324,7 @@ public class RobotContainer
                 if (currentMode == RobotStates.CORAL) return 1;
                 else return 2;  
             }
-        ));
-
+        ));*/
         // Coral: Intake with elevator correction, Algae: Intake algae, Climb: Deploy climb
         driverXbox.leftTrigger().whileTrue(new SelectCommand(
             Map.ofEntries(
@@ -377,7 +382,6 @@ public class RobotContainer
                 else return 3;
             }
         ));
-
         // Coral: Nothing, Algae: Nothing, Climb: Manual
         driverXbox.rightBumper().whileTrue(new SelectCommand(
             Map.ofEntries(
@@ -395,25 +399,25 @@ public class RobotContainer
         ));
 
         // Coral: Removal of algae, Else: Nothing
-        driverXbox.pov(0).onTrue(new SelectCommand(
+        /*driverXbox.pov(0).onTrue(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L3_ALGAE, false), new EndEffectorIntake(endeffector, elevator, intake, true, false))),
                 Map.entry(2, new InstantCommand())
             ),
             () -> currentMode == RobotStates.CORAL ? 1 : 2
-        ));
+        ));*/
 
         // Coral: Removal of algae, Else: Nothing
-        driverXbox.pov(180).onTrue(new SelectCommand(
+        /*driverXbox.pov(180).onTrue(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new ParallelCommandGroup(new GoToPosition(elevator, endeffector, intake, Positions.L2_ALGAE, false), new EndEffectorIntake(endeffector, elevator, intake, true, false))),
                 Map.entry(2, new InstantCommand())
             ),
             () -> currentMode == RobotStates.CORAL ? 1 : 2
-        ));
+        ));*/
 
         // All: Drive to relevant position
-        driverXbox.pov(270).whileTrue(new SelectCommand(
+        /*driverXbox.pov(270).whileTrue(new SelectCommand(
             Map.ofEntries(
                 Map.entry(1, new HoldPose(drivebase, () -> drivebase.getScorePose(drivebase.getSideFromString(drivebase.getWebServer().getSelectedScorePosition()), new Pose2d(), false), false)),
 
@@ -426,7 +430,7 @@ public class RobotContainer
                 else if (currentMode == RobotStates.ALGAE) return 2;  
                 else return 3;
             }
-        ));
+        ));*/
 
         driverXbox.pov(90).whileTrue(new InstantCommand(() -> drivebase.slowSpeed(true)));
         driverXbox.pov(90).onFalse(new InstantCommand(() -> drivebase.slowSpeed(false)));

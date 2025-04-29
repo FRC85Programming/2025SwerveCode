@@ -84,9 +84,8 @@ public class IntakeSubsystem extends SubsystemBase {
         }
         angleController.setP(0.2);
         SmartDashboard.putNumber("Intake Encoder", armMotor.getEncoder().getPosition());
-        SmartDashboard.putBoolean("Homed", homed);
+        SmartDashboard.putBoolean("Home Limit", homeLimit.get());
         SmartDashboard.putNumber("Setpoint Intake", setPoint);
-        
     }
     
     
@@ -151,6 +150,10 @@ public class IntakeSubsystem extends SubsystemBase {
         }
     }
 
+    public void driveIntakePivotRaw(double speed) {
+        armMotor.set(speed);
+    }
+
     public void setSetpoint(double setPoint) {
         this.setPoint = setPoint;
     }
@@ -195,7 +198,7 @@ public class IntakeSubsystem extends SubsystemBase {
             case HOME:
                 return SmartDashboard.getNumber("Pivot Home", 0);
             case INTAKE_FLOOR:
-                return SmartDashboard.getNumber("Intake Coral", 27);
+                return 25.5;
             case INTAKE_STATION:
                 return Constants.IntakeConstants.INTAKE_STATION_INTAKE_POSITION;
             case INTAKE_FLOOR_ALGAE:
