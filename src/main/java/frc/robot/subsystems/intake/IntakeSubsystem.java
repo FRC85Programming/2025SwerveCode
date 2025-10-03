@@ -36,8 +36,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private DigitalInput homeLimit = new DigitalInput(Constants.IntakeConstants.INTAKE_HOME_LIMIT_ID);
 
     // Sparkmax declaration
-    private SparkFlex armMotor = new SparkFlex(51, MotorType.kBrushless);
-    private SparkFlex rollerMotor = new SparkFlex(52, MotorType.kBrushless);
+    //private SparkFlex armMotor = new SparkFlex(51, MotorType.kBrushless);
+    //private SparkFlex rollerMotor = new SparkFlex(52, MotorType.kBrushless);
 
     private final PIDController angleController = new PIDController(0.1, 0, 0.0);
 
@@ -54,12 +54,12 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem() {
         SparkFlexConfig brakemode = new SparkFlexConfig();
         brakemode.idleMode(IdleMode.kBrake);
-        armMotor.configure(brakemode, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        rollerMotor.configure(brakemode, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        //armMotor.configure(brakemode, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        //rollerMotor.configure(brakemode, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // Zero the arm
-        armMotor.set(0);
-        armMotor.getEncoder().setPosition(0);
+        //armMotor.set(0);
+        //armMotor.getEncoder().setPosition(0);
 
         angleController.setTolerance(0.5);
         //armMotor.getAlternateEncoder().setPosition(0);
@@ -83,7 +83,7 @@ public class IntakeSubsystem extends SubsystemBase {
             runToPosition();
         }
         angleController.setP(0.2);
-        SmartDashboard.putNumber("Intake Encoder", armMotor.getEncoder().getPosition());
+        //SmartDashboard.putNumber("Intake Encoder", armMotor.getEncoder().getPosition());
         SmartDashboard.putBoolean("Home Limit", homeLimit.get());
         SmartDashboard.putNumber("Setpoint Intake", setPoint);
     }
@@ -103,7 +103,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void runToPosition() {
-        double currentAngle = armMotor.getEncoder().getPosition();
+        //double currentAngle = armMotor.getEncoder().getPosition();
 
         // PID calculates required motor speed (-1 to 1)
         /*double output = angleController.calculate(currentAngle, setPoint);
@@ -116,7 +116,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
         driveIntakePivot(output);*/
 
-       if (Math.abs(currentAngle-setPoint) < 0.5) {
+       /*if (Math.abs(currentAngle-setPoint) < 0.5) {
             driveIntakePivot(0.0);
             if (setPoint != 0) {
                 atTolerance = true;
@@ -131,11 +131,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
         if (RobotBase.isSimulation()) {
             //intakeSim.setInputVoltage(output * 12.0);
-        }
+        }*/
     }
 
     public void driveIntakePivot(double speed) {
-        if (homeLimit.get()) {
+        /*if (homeLimit.get()) {
             if (!homed) {
                 armMotor.getEncoder().setPosition(0); 
             }
@@ -147,11 +147,11 @@ public class IntakeSubsystem extends SubsystemBase {
             }
         } else {
             armMotor.set(speed);
-        }
+        }*/
     }
 
     public void driveIntakePivotRaw(double speed) {
-        armMotor.set(speed);
+        //armMotor.set(speed);
     }
 
     public void setSetpoint(double setPoint) {
@@ -170,7 +170,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public double getIntakeAngle() {
-        return armMotor.getEncoder().getPosition() * pivotAngleConversionFactor;
+        return 0.0 /*armMotor.getEncoder().getPosition() * pivotAngleConversionFactor*/;
     }
 
     /** Set the speed of the intake rollers 
@@ -178,7 +178,7 @@ public class IntakeSubsystem extends SubsystemBase {
      * TODO: Figure out what direction in and out is
      */
     public void runRollers(double speed) {
-        rollerMotor.set(speed);
+        //.set(speed);
     }
 
     public Pose3d getIntakeSimPose() {

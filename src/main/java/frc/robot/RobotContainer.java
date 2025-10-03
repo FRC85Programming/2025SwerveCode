@@ -417,9 +417,9 @@ public class RobotContainer
         ));*/
 
         // All: Drive to relevant position
-        /*driverXbox.pov(270).whileTrue(new SelectCommand(
+        driverXbox.pov(270).whileTrue(new SelectCommand(
             Map.ofEntries(
-                Map.entry(1, new HoldPose(drivebase, () -> drivebase.getScorePose(drivebase.getSideFromString(drivebase.getWebServer().getSelectedScorePosition()), new Pose2d(), false), false)),
+                Map.entry(1, new HoldPose(drivebase, () -> drivebase.getScorePose(drivebase.getSideFromString("L"), new Pose2d(), false), false)),
 
                 Map.entry(2, new DriveToPose(drivebase, () -> intake.getCurrentProcessor())),
 
@@ -430,7 +430,22 @@ public class RobotContainer
                 else if (currentMode == RobotStates.ALGAE) return 2;  
                 else return 3;
             }
-        ));*/
+        ));
+
+        driverXbox.pov(180).whileTrue(new SelectCommand(
+          Map.ofEntries(
+              Map.entry(1, new HoldPose(drivebase, () -> drivebase.getScorePose(drivebase.getSideFromString("R"), new Pose2d(), false), false)),
+
+              Map.entry(2, new DriveToPose(drivebase, () -> intake.getCurrentProcessor())),
+
+              Map.entry(3, new DriveToPose(drivebase, () -> climb.getCagePoseFromString(drivebase.getWebServer().getSelectedCagePosition())))
+          ),
+          () -> { 
+              if (currentMode == RobotStates.CORAL) return 1;
+              else if (currentMode == RobotStates.ALGAE) return 2;  
+              else return 3;
+          }
+      ));
 
         driverXbox.pov(90).whileTrue(new InstantCommand(() -> drivebase.slowSpeed(true)));
         driverXbox.pov(90).onFalse(new InstantCommand(() -> drivebase.slowSpeed(false)));
